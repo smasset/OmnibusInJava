@@ -1,8 +1,11 @@
+package cabin.server;
+
+import static spark.Spark.get;
+
 import spark.Request;
 import spark.Response;
 import spark.Route;
-
-import static spark.Spark.get;
+import cabin.Elevator;
 
 public class Server {
     private final Elevator elevator;

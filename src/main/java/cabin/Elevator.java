@@ -1,3 +1,5 @@
+package cabin;
+
 public class Elevator {
 
     private String commands[] = {
