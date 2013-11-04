@@ -1,17 +1,16 @@
 package cabin.server;
 
 import static spark.Spark.get;
-
 import spark.Request;
 import spark.Response;
 import spark.Route;
-import cabin.Elevator;
+import cabin.OmnibusElevator;
 
 public class Server {
-    private final Elevator elevator;
+    private final OmnibusElevator elevator;
 
     public Server() {
-        elevator = new Elevator();
+        elevator = new OmnibusElevator();
     }
 
     public void start() {

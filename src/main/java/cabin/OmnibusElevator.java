@@ -1,6 +1,6 @@
 package cabin;
 
-public class Elevator {
+public class OmnibusElevator {
 
     private String commands[] = {
         "OPEN","CLOSE","UP",
