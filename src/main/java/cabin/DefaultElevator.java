@@ -3,6 +3,15 @@ package cabin;
 import cabin.command.Command;
 
 public class DefaultElevator implements Elevator {
+	protected int maxFloor = Elevator.DEFAULT_MAX_FLOOR;
+
+	public DefaultElevator() {
+		this(Elevator.DEFAULT_MAX_FLOOR);
+	}
+
+	public DefaultElevator(int maxFloor) {
+		this.maxFloor = maxFloor;
+	}
 
 	@Override
 	public Command nextCommand() {

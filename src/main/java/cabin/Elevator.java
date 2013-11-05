@@ -3,6 +3,8 @@ package cabin;
 import cabin.command.Command;
 
 public interface Elevator {
+	public static final int DEFAULT_MAX_FLOOR = 5;
+
 	public Command nextCommand();
 
 	public void call(Integer from, String direction);
