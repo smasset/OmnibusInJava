@@ -1,23 +1,31 @@
 package cabin;
 
-public class OmnibusElevator {
+import cabin.command.Command;
 
-    private String commands[] = {
-        "OPEN","CLOSE","UP",
-        "OPEN","CLOSE","UP",
-        "OPEN","CLOSE","UP",
-        "OPEN","CLOSE","UP",
-        "OPEN","CLOSE","UP",
-        "OPEN","CLOSE","DOWN",
-        "OPEN","CLOSE","DOWN",
-        "OPEN","CLOSE","DOWN",
-        "OPEN","CLOSE","DOWN",
-        "OPEN","CLOSE","DOWN"
+public class OmnibusElevator extends DefaultElevator {
+
+    private Command commands[] = {
+        Command.OPEN, Command.CLOSE, Command.UP,
+        Command.OPEN, Command.CLOSE, Command.UP,
+        Command.OPEN, Command.CLOSE, Command.UP,
+        Command.OPEN, Command.CLOSE, Command.UP,
+        Command.OPEN, Command.CLOSE, Command.UP,
+        Command.OPEN, Command.CLOSE, Command.DOWN,
+        Command.OPEN, Command.CLOSE, Command.DOWN,
+        Command.OPEN, Command.CLOSE, Command.DOWN,
+        Command.OPEN, Command.CLOSE, Command.DOWN,
+        Command.OPEN, Command.CLOSE, Command.DOWN
     };
 
     private int count = 0;
 
-    public String nextCommand() {
+    @Override
+    public Command nextCommand() {
         return commands[(count++)%commands.length];
     }
+
+	@Override
+	public void reset(String cause) {
+		this.count = 0;
+	}
 }
