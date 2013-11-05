@@ -10,7 +10,7 @@ public class DefaultElevator implements Elevator {
 	}
 
 	@Override
-	public void call(Integer from, Integer to) {
+	public void call(Integer from, String direction) {
 	}
 
 	@Override

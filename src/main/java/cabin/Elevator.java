@@ -5,7 +5,7 @@ import cabin.command.Command;
 public interface Elevator {
 	public Command nextCommand();
 
-	public void call(Integer from, Integer to);
+	public void call(Integer from, String direction);
 
     public void go(Integer floor);
 
