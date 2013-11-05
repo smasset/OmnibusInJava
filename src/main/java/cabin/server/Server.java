@@ -5,17 +5,10 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 import cabin.Elevator;
-import cabin.OmnibusElevator;
 
 public class Server {
-	private final Elevator elevator;
-
-	public Server() {
-		elevator = new OmnibusElevator();
-	}
-
-	public void start() {
-		get(new Route("/:path") {
+	public void addElevator(String context, final Elevator elevator) {
+		get(new Route(context + ":path") {
 			@Override
 			public Object handle(Request request, Response response) {
 				Object result = "";
@@ -56,10 +49,6 @@ public class Server {
 			}
 		});
 
-	}
-
-	public static void main(String[] args) {
-		new Server().start();
 	}
 
 }
