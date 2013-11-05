@@ -27,12 +27,15 @@ public class Server {
 					result = elevator.nextCommand();
 					break;
 				case call:
-					// TODO : Get parameters from request
-					elevator.call(null, null);
+					Integer atFloor = new Integer(request.queryParams(QueryParams.atFloor.toString()));
+					String direction = request.queryParams(QueryParams.to.toString());
+
+					elevator.call(atFloor, direction);
 					break;
 				case go:
-					// TODO : Get parameter from request
-					elevator.go(null);
+					Integer floorToGo = new Integer(request.queryParams(QueryParams.floorToGo.toString()));
+
+					elevator.go(floorToGo);
 					break;
 				case userHasEntered:
 					elevator.userHasEntered();
@@ -41,8 +44,9 @@ public class Server {
 					elevator.userHasExited();
 					break;
 				case reset:
-					// TODO : Get parameter from request
-					elevator.reset(null);
+					String cause = request.queryParams(QueryParams.cause.toString());
+
+					elevator.reset(cause);
 					break;
 				default:
 					break;
