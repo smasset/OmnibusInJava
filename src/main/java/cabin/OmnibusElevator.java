@@ -38,7 +38,7 @@ public class OmnibusElevator extends DefaultElevator {
 	}
 
 	@Override
-	public void reset(String cause) {
+	public void reset(Integer minFloor, Integer maxFloor, String cause) {
 		this.count = 0;
 	}
 }

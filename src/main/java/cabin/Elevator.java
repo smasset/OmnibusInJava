@@ -16,6 +16,6 @@ public interface Elevator {
 
     public void userHasExited();
 
-    public void reset(String cause);
+    public void reset(Integer minFloor, Integer maxFloor, String cause);
 
 }
