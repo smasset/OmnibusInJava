@@ -19,13 +19,15 @@ public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 
 	protected synchronized Command getNextCommand() {
 		Command result = Command.NOTHING;
-		Integer nextFloor = this.getNextFloor();
+
+		// this.print();
 
 		switch (this.currentState) {
 
 		case UP:
 		case DOWN:
 		case STOPPED:
+			Integer nextFloor = this.getNextFloor();
 			if (nextFloor != null) {
 				int comparison = Integer.compare(this.currentFloor, nextFloor);
 
