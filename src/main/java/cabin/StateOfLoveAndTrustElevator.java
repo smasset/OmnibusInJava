@@ -66,4 +66,18 @@ public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 	public Command nextCommand() {
 		return this.getNextCommand();
 	}
+
+	@Override
+	public void reset(Integer minFloor, Integer maxFloor, String cause) {
+		if (minFloor != null) {
+			this.minFloor = minFloor;
+		}
+
+		if (maxFloor != null) {
+			this.maxFloor = maxFloor;
+		}
+
+		this.currentState = CabinState.STOPPED;
+		this.currentFloor = super.minFloor;
+	}
 }

@@ -2,7 +2,6 @@ package cabin;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-
 public class FifoElevator extends StateOfLoveAndTrustElevator {
 	private ConcurrentLinkedQueue<Integer> requests = new ConcurrentLinkedQueue<>();
 
@@ -49,6 +48,12 @@ public class FifoElevator extends StateOfLoveAndTrustElevator {
 		if (this.currentFloor.equals(this.requests.peek())) {
 			this.requests.poll();
 		}
+	}
+
+	@Override
+	public void reset(Integer minFloor, Integer maxFloor, String cause) {
+		super.reset(minFloor, maxFloor, cause);
+		this.requests.clear();
 	}
 
 	protected void print() {
