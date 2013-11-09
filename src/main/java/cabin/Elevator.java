@@ -3,6 +3,7 @@ package cabin;
 import cabin.command.Command;
 
 public interface Elevator {
+	public static final int DEFAULT_MIN_FLOOR = 0;
 	public static final int DEFAULT_MAX_FLOOR = 5;
 
 	public Command nextCommand();

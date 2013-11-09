@@ -3,13 +3,15 @@ package cabin;
 import cabin.command.Command;
 
 public class DefaultElevator implements Elevator {
+	protected int minFloor = Elevator.DEFAULT_MIN_FLOOR;
 	protected int maxFloor = Elevator.DEFAULT_MAX_FLOOR;
 
 	public DefaultElevator() {
-		this(Elevator.DEFAULT_MAX_FLOOR);
+		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR);
 	}
 
-	public DefaultElevator(int maxFloor) {
+	public DefaultElevator(int minFloor, int maxFloor) {
+		this.minFloor = minFloor;
 		this.maxFloor = maxFloor;
 	}
 
