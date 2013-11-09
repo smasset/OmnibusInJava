@@ -5,6 +5,8 @@ import cabin.command.Command;
 public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 	protected CabinState currentState = CabinState.STOPPED;
 
+	protected CabinState lastDirection = CabinState.UP;
+
 	protected Integer currentFloor = super.minFloor;
 
 	protected abstract Integer getNextFloor();
@@ -37,10 +39,12 @@ public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 				} else if (comparison > 0) {
 					this.currentFloor--;
 					result = Command.DOWN;
+					this.lastDirection = CabinState.DOWN;
 					this.currentState = CabinState.DOWN;
 				} else {
 					this.currentFloor++;
 					result = Command.UP;
+					this.lastDirection = CabinState.UP;
 					this.currentState = CabinState.UP;
 				}
 			}
@@ -80,6 +84,7 @@ public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 		}
 
 		this.currentState = CabinState.STOPPED;
+		this.lastDirection = CabinState.UP;
 		this.currentFloor = super.minFloor;
 	}
 }
