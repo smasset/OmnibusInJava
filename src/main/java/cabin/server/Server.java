@@ -41,11 +41,15 @@ public class Server {
 					elevator.userHasExited();
 					break;
 				case reset:
-					Integer minFloor = new Integer(request.queryParams(QueryParams.lowerFloor.toString()));
-					Integer maxFloor = new Integer(request.queryParams(QueryParams.higherFloor.toString()));
+					String minFloor = request.queryParams(QueryParams.lowerFloor.toString());
+					Integer iMinFloor = minFloor != null ? new Integer(minFloor) : null;
+
+					String maxFloor = request.queryParams(QueryParams.higherFloor.toString());
+					Integer iMaxFloor = maxFloor != null ? new Integer(maxFloor) : null;
+
 					String cause = request.queryParams(QueryParams.cause.toString());
 
-					elevator.reset(minFloor, maxFloor, cause);
+					elevator.reset(iMinFloor, iMaxFloor, cause);
 					break;
 				default:
 					break;
