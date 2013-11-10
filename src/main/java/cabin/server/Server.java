@@ -20,15 +20,19 @@ public class Server {
 					result = elevator.nextCommand();
 					break;
 				case call:
-					Integer atFloor = new Integer(request.queryParams(QueryParams.atFloor.toString()));
+					String atFloor = request.queryParams(QueryParams.atFloor.toString());
 					String direction = request.queryParams(QueryParams.to.toString());
 
-					elevator.call(atFloor, direction);
+					if (atFloor != null) {
+						elevator.call(new Integer(atFloor), direction);
+					}
 					break;
 				case go:
-					Integer floorToGo = new Integer(request.queryParams(QueryParams.floorToGo.toString()));
+					String floorToGo = request.queryParams(QueryParams.floorToGo.toString());
 
-					elevator.go(floorToGo);
+					if (floorToGo != null) {
+						elevator.go(new Integer(floorToGo));
+					}
 					break;
 				case userHasEntered:
 					elevator.userHasEntered();
