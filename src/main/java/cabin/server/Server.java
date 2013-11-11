@@ -1,18 +1,54 @@
 package cabin.server;
 
 import static spark.Spark.get;
+
+import java.util.UUID;
+import java.util.logging.Logger;
+
 import spark.Request;
 import spark.Response;
 import spark.Route;
 import cabin.Elevator;
 
 public class Server {
+	private static final Logger requestLogger = Logger.getLogger("requests");
+	private static final Logger responseLogger = Logger.getLogger("responses");
+	
+
 	public void addElevator(String context, final Elevator elevator) {
 		get(new Route(context + ":path") {
+
+			private String getRequestString(String uuid, Request request) {
+				StringBuilder requestString = new StringBuilder();
+
+				requestString.append("IN  ¤ ");
+				requestString.append(uuid);
+				requestString.append(" ¤ ");
+				requestString.append(request.pathInfo());
+				if (request.queryString() != null) {
+					requestString.append("?");
+					requestString.append(request.queryString());
+				}
+
+				return requestString.toString();
+			}
+
+			private String getResponseString(String uuid, Object response) {
+				StringBuilder responseString = new StringBuilder();
+
+				responseString.append("OUT ¤ ");
+				responseString.append(uuid);
+				responseString.append(" ¤ ");
+				responseString.append(response);
+
+				return responseString.toString();
+			}
+
 			@Override
 			public Object handle(Request request, Response response) {
 				Object result = "";
 
+				String uuid = UUID.randomUUID().toString();
 				String path = request.params(":path");
 
 				switch (Method.valueOf(path)) {
@@ -54,6 +90,9 @@ public class Server {
 				default:
 					break;
 				}
+
+				requestLogger.info(this.getRequestString(uuid, request));
+				responseLogger.info(this.getResponseString(uuid, result));
 
 				return result;
 			}
