@@ -24,6 +24,8 @@ public class Server {
 				requestString.append("IN  ¤ ");
 				requestString.append(uuid);
 				requestString.append(" ¤ ");
+				requestString.append(request.ip());
+				requestString.append(" ¤ ");
 				requestString.append(request.pathInfo());
 				if (request.queryString() != null) {
 					requestString.append("?");
