@@ -33,7 +33,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>Server</mainClass>
+                    <mainClass>Launcher</mainClass>
                 </configuration>
             </plugin>
         </plugins>
