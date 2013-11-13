@@ -1,5 +1,6 @@
 import spark.Spark;
 import cabin.DefaultElevator;
+import cabin.FifoElevator;
 import cabin.OmnibusElevator;
 import cabin.server.Server;
 
@@ -16,5 +17,6 @@ public class Launcher {
 
 		cabinServer.addElevator("/", new DefaultElevator());
 		cabinServer.addElevator("/omnibus/", new OmnibusElevator());
+		cabinServer.addElevator("/fifo/", new FifoElevator());
 	}
 }
