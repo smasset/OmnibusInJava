@@ -77,8 +77,8 @@ public class LoveInAnElevator extends StateOfLoveAndTrustElevator {
 	}
 
 	@Override
-	public void reset(Integer minFloor, Integer maxFloor, String cause) {
-		super.reset(minFloor, maxFloor, cause);
+	public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause) {
+		super.reset(minFloor, maxFloor, cabinSize, cause);
 		this.requests.clear();
 	}
 

@@ -6,5 +6,6 @@ public enum QueryParams {
 	floorToGo,
 	lowerFloor,
 	higherFloor,
+	cabinSize,
 	cause;
 }

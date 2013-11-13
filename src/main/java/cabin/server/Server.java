@@ -74,9 +74,12 @@ public class Server {
 					String maxFloor = request.queryParams(QueryParams.higherFloor.toString());
 					Integer iMaxFloor = maxFloor != null ? new Integer(maxFloor) : null;
 
+					String cabinSize = request.queryParams(QueryParams.cabinSize.toString());
+					Integer iCabinSize = cabinSize != null ? new Integer(cabinSize) : null;
+
 					String cause = request.queryParams(QueryParams.cause.toString());
 
-					elevator.reset(iMinFloor, iMaxFloor, cause);
+					elevator.reset(iMinFloor, iMaxFloor, iCabinSize, cause);
 					break;
 				default:
 					break;
