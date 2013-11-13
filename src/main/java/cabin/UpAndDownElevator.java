@@ -87,7 +87,7 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 	public void call(Integer from, String direction) {
 		FloorRequest newRequest = this.requests.get(from);
 		if (newRequest == null) {
-			newRequest = new FloorRequest(direction);
+			newRequest = new FloorRequest(from, direction);
 		}
 
 		this.requests.put(from, newRequest.incrementCount());

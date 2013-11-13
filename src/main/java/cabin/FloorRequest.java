@@ -1,15 +1,25 @@
 package cabin;
 
 public class FloorRequest {
+	private Integer floor = null;
 	private String direction = null;
 	private Integer count = 0;
 
-	public FloorRequest() {
-		this(null);
+	public FloorRequest(Integer floor) {
+		this(floor, null);
 	}
 
-	public FloorRequest(String direction) {
+	public FloorRequest(Integer floor, String direction) {
+		this.floor = floor;
 		this.direction = direction;
+	}
+
+	public Integer getFloor() {
+		return floor;
+	}
+
+	public void setFloor(Integer floor) {
+		this.floor = floor;
 	}
 
 	public String getDirection() {
@@ -44,13 +54,14 @@ public class FloorRequest {
 
 	public boolean hasSameDirection(String direction) {
 		return this.direction == null|| direction.equals(this.direction);
-
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder string = new StringBuilder();
 
+		string.append("floor: ");
+		string.append(this.floor);
 		string.append("direction: ");
 		string.append(this.direction);
 		string.append(", count: ");
