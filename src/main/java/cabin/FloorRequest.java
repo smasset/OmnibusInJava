@@ -2,16 +2,16 @@ package cabin;
 
 public class FloorRequest {
 	private Integer floor = null;
-	private String direction = null;
+	private RequestType type = null;
 	private Integer count = 0;
 
 	public FloorRequest(Integer floor) {
-		this(floor, null);
+		this(floor, RequestType.OUT);
 	}
 
-	public FloorRequest(Integer floor, String direction) {
+	public FloorRequest(Integer floor, RequestType type) {
 		this.floor = floor;
-		this.direction = direction;
+		this.type = type;
 	}
 
 	public Integer getFloor() {
@@ -22,12 +22,12 @@ public class FloorRequest {
 		this.floor = floor;
 	}
 
-	public String getDirection() {
-		return direction;
+	public RequestType getType() {
+		return type;
 	}
 
-	public void setDirection(String direction) {
-		this.direction = direction;
+	public void setType(RequestType type) {
+		this.type = type;
 	}
 
 	public Integer getCount() {
@@ -53,7 +53,20 @@ public class FloorRequest {
 	}
 
 	public boolean hasSameDirection(String direction) {
-		return this.direction == null|| direction.equals(this.direction);
+		boolean hasSameDirection = true;
+
+		switch (direction) {
+		case Direction.UP:
+			hasSameDirection = !(this.type.equals(RequestType.DOWN));
+			break;
+		case Direction.DOWN:
+			hasSameDirection = !(this.type.equals(RequestType.UP));
+			break;
+		default:
+			break;
+		}
+
+		return hasSameDirection;
 	}
 
 	@Override
@@ -62,8 +75,8 @@ public class FloorRequest {
 
 		string.append("floor: ");
 		string.append(this.floor);
-		string.append("direction: ");
-		string.append(this.direction);
+		string.append("type: ");
+		string.append(this.type);
 		string.append(", count: ");
 		string.append(this.count);
 

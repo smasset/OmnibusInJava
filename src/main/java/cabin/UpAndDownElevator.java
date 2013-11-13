@@ -85,9 +85,34 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 
 	@Override
 	public void call(Integer from, String direction) {
+		RequestType newType = direction == null ? RequestType.OUT : null;
+
 		FloorRequest newRequest = this.requests.get(from);
 		if (newRequest == null) {
-			newRequest = new FloorRequest(from, direction);
+			if (direction != null) {
+				newType = RequestType.valueOf(direction);
+			}
+
+			newRequest = new FloorRequest(from, newType);
+		} else {
+			if (direction != null) {
+				newType = newRequest.getType();
+
+				switch (newRequest.getType()) {
+				case UP:
+					if (Direction.DOWN.equals(direction)) {
+						newType = RequestType.UP_DOWN;
+					}
+				case DOWN:
+					if (Direction.UP.equals(direction)) {
+						newType = RequestType.UP_DOWN;
+					}
+				default:
+					break;
+				}
+			}
+
+			newRequest.setType(newType);
 		}
 
 		this.requests.put(from, newRequest.incrementCount());
