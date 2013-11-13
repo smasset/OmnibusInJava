@@ -12,16 +12,14 @@ import cabin.Elevator;
 
 public class Server {
 	private static final Logger requestLogger = Logger.getLogger("requests");
-	private static final Logger responseLogger = Logger.getLogger("responses");
 	
 
 	public void addElevator(String context, final Elevator elevator) {
 		get(new Route(context + ":path") {
 
-			private String getRequestString(String uuid, Request request) {
+			private String getRequestString(String uuid, Request request, Object response) {
 				StringBuilder requestString = new StringBuilder();
 
-				requestString.append("IN  ¤ ");
 				requestString.append(uuid);
 				requestString.append(" ¤ ");
 				requestString.append(request.ip());
@@ -31,19 +29,10 @@ public class Server {
 					requestString.append("?");
 					requestString.append(request.queryString());
 				}
+				requestString.append(" ¤ ");
+				requestString.append(response);
 
 				return requestString.toString();
-			}
-
-			private String getResponseString(String uuid, Object response) {
-				StringBuilder responseString = new StringBuilder();
-
-				responseString.append("OUT ¤ ");
-				responseString.append(uuid);
-				responseString.append(" ¤ ");
-				responseString.append(response);
-
-				return responseString.toString();
 			}
 
 			@Override
@@ -93,8 +82,7 @@ public class Server {
 					break;
 				}
 
-				requestLogger.info(this.getRequestString(uuid, request));
-				responseLogger.info(this.getResponseString(uuid, result));
+				requestLogger.info(this.getRequestString(uuid, request, result));
 
 				return result;
 			}
