@@ -26,8 +26,6 @@ public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 
 		switch (this.currentState) {
 
-		case UP:
-		case DOWN:
 		case STOPPED:
 			Integer nextFloor = this.getNextFloor();
 			if (nextFloor != null) {
@@ -40,12 +38,10 @@ public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 					this.currentFloor--;
 					result = Command.DOWN;
 					this.lastDirection = Direction.DOWN;
-					this.currentState = CabinState.DOWN;
 				} else {
 					this.currentFloor++;
 					result = Command.UP;
 					this.lastDirection = Direction.UP;
-					this.currentState = CabinState.UP;
 				}
 			}
 			break;
