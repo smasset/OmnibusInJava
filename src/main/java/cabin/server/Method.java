@@ -1,10 +1,9 @@
 package cabin.server;
 
 public enum Method {
-    nextCommand,
-    call,
-    go,
-    userHasEntered,
-    userHasExited,
-    reset;
+	// Mandatory commands
+	nextCommand, call, go, userHasEntered, userHasExited, reset,
+
+	// Custom commands
+	status;
 }

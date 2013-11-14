@@ -18,4 +18,6 @@ public interface Elevator {
 
     public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause);
 
+    public String status();
+
 }

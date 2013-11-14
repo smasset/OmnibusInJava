@@ -1,6 +1,7 @@
 package cabin;
 
 import java.util.Map.Entry;
+import java.util.Map;
 import java.util.NavigableMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
@@ -186,6 +187,15 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 	public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause) {
 		super.reset(minFloor, maxFloor, cabinSize, cause);
 		this.requests.clear();
+	}
+
+	@Override
+	protected Map<String, String> getStatusInfo() {
+		Map<String, String> info = super.getStatusInfo();
+
+		info.put("requests", this.requests.toString());
+
+		return info;
 	}
 
 }

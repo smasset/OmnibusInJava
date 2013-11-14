@@ -1,5 +1,6 @@
 package cabin;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class FifoElevator extends StateOfLoveAndTrustElevator {
@@ -63,5 +64,14 @@ public class FifoElevator extends StateOfLoveAndTrustElevator {
 	protected void print() {
 		super.print();
 		System.out.println("requests     : " + this.requests);
+	}
+
+	@Override
+	protected Map<String, String> getStatusInfo() {
+		Map<String, String> info = super.getStatusInfo();
+
+		info.put("requests", this.requests.toString());
+
+		return info;
 	}
 }

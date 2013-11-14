@@ -1,8 +1,15 @@
 package cabin;
 
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+import java.util.logging.Logger;
+
 import cabin.command.Command;
 
 public class DefaultElevator implements Elevator {
+	private static final Logger statusLogger = Logger.getLogger("status");
+
 	protected int minFloor = Elevator.DEFAULT_MIN_FLOOR;
 	protected int maxFloor = Elevator.DEFAULT_MAX_FLOOR;
 
@@ -43,6 +50,8 @@ public class DefaultElevator implements Elevator {
 
 	@Override
 	public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause) {
+		statusLogger.info("Reset : " + cause + " ; status : " + this.shortStatus());
+
 		if (minFloor != null) {
 			this.minFloor = minFloor;
 		}
@@ -56,6 +65,43 @@ public class DefaultElevator implements Elevator {
 		}
 
 		this.cabinCount = 0;
+	}
+
+	protected Map<String, String> getStatusInfo() {
+		Map<String, String> info = new TreeMap<String, String>();
+
+		info.put("minFloor", Integer.toString(this.minFloor));
+		info.put("maxFloor", Integer.toString(this.maxFloor));
+		info.put("cabinSize", this.cabinSize != null ? cabinSize.toString() : "");
+		info.put("cabinCount", Integer.toString(this.cabinCount));
+
+		return info;
+	}
+
+	protected String status(boolean longStatus) {
+		StringBuilder sb = new StringBuilder();
+
+		for (Entry<String, String> currentInfo : this.getStatusInfo().entrySet()) {
+  		    sb.append(currentInfo.getKey());
+  		    sb.append(" : ");
+  		    sb.append(currentInfo.getValue());
+  		    if (longStatus) {
+  		    	sb.append("\n");
+  		    } else {
+  		    	sb.append(" ; ");
+  		    }
+		}
+
+		return sb.toString();
+	}
+
+	protected String shortStatus() {
+		return this.status(false);
+	}
+
+	@Override
+	public String status() {
+		return this.status(true);
 	}
 
 }

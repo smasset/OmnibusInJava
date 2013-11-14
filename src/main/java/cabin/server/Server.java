@@ -81,6 +81,9 @@ public class Server {
 
 					elevator.reset(iMinFloor, iMaxFloor, iCabinSize, cause);
 					break;
+				case status:
+					result = elevator.status();
+					break;
 				default:
 					break;
 				}

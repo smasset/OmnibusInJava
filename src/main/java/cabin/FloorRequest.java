@@ -75,9 +75,9 @@ public class FloorRequest {
 
 		string.append("floor: ");
 		string.append(this.floor);
-		string.append("type: ");
+		string.append("; type: ");
 		string.append(this.type);
-		string.append(", count: ");
+		string.append("; count: ");
 		string.append(this.count);
 
 		return string.toString();

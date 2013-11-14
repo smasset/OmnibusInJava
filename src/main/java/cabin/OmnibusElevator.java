@@ -1,5 +1,7 @@
 package cabin;
 
+import java.util.Map;
+
 import cabin.command.Command;
 
 public class OmnibusElevator extends DefaultElevator {
@@ -44,5 +46,14 @@ public class OmnibusElevator extends DefaultElevator {
 
 		this.commands = null;
 		this.count = 0;
+	}
+
+	@Override
+	protected Map<String, String> getStatusInfo() {
+		Map<String, String> info = super.getStatusInfo();
+
+		info.put("count", Integer.toString(this.count));
+
+		return info;
 	}
 }

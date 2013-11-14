@@ -1,5 +1,7 @@
 package cabin;
 
+import java.util.Map;
+
 import cabin.command.Command;
 
 public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
@@ -95,5 +97,18 @@ public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 
 		this.panicThreshold = cabinSize;
 		this.alertThreshold = cabinSize != null ? Double.valueOf(Math.ceil(0.8d * cabinSize)).intValue() : null;
+	}
+
+	@Override
+	protected Map<String, String> getStatusInfo() {
+		Map<String, String> info = super.getStatusInfo();
+
+		info.put("currentState", this.currentState.toString());
+		info.put("lastDirection", this.lastDirection);
+		info.put("currentFloor", this.currentFloor != null ? currentFloor.toString() : "");
+		info.put("panicThreshold", this.panicThreshold != null ? panicThreshold.toString() : "");
+		info.put("alertThreshold", this.alertThreshold != null ? alertThreshold.toString() : "");
+
+		return info;
 	}
 }
