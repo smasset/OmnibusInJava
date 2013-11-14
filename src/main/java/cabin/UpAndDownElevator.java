@@ -37,6 +37,7 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 			break;
 
 		default:
+			isPanicOddCommand = true;
 			NavigableMap<Integer, FloorRequest> nextRequests = this.requests.tailMap(this.currentFloor, true);
 			for (Entry<Integer, FloorRequest> currentEntry : nextRequests.entrySet()) {
 				if (currentEntry.getValue().hasSameDirection(this.lastDirection)) {
@@ -73,6 +74,7 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 			break;
 
 		default:
+			isPanicOddCommand = true;
 			NavigableMap<Integer, FloorRequest> nextRequests = this.requests.headMap(this.currentFloor, true).descendingMap();
 			for (Entry<Integer, FloorRequest> currentEntry : nextRequests.entrySet()) {
 				if (currentEntry.getValue().hasSameDirection(this.lastDirection)) {
