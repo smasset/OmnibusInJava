@@ -40,8 +40,6 @@ public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 	protected synchronized Command getNextCommand() {
 		Command result = Command.NOTHING;
 
-		// this.print();
-
 		switch (this.currentState) {
 
 		case STOPPED:
@@ -75,11 +73,6 @@ public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 		}
 
 		return result;
-	}
-
-	protected void print() {
-		System.out.println("currentState : " + this.currentState);
-		System.out.println("currentFloor : " + this.currentFloor);
 	}
 
 	@Override

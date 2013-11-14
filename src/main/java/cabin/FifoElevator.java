@@ -61,11 +61,6 @@ public class FifoElevator extends StateOfLoveAndTrustElevator {
 		this.requests.clear();
 	}
 
-	protected void print() {
-		super.print();
-		System.out.println("requests     : " + this.requests);
-	}
-
 	@Override
 	protected Map<String, String> getStatusInfo() {
 		Map<String, String> info = super.getStatusInfo();
