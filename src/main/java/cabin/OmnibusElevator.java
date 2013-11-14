@@ -40,13 +40,7 @@ public class OmnibusElevator extends DefaultElevator {
 
 	@Override
 	public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause) {
-		if (minFloor != null) {
-			this.minFloor = minFloor;
-		}
-
-		if (maxFloor != null) {
-			this.maxFloor = maxFloor;
-		}
+		super.reset(minFloor, maxFloor, cabinSize, cause);
 
 		this.commands = null;
 		this.count = 0;

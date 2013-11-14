@@ -58,8 +58,7 @@ public class LoveInAnElevator extends StateOfLoveAndTrustElevator {
 		this.go(from);
 	}
 
-	@Override
-	public void userHasExited() {
+	private void removeRequest() {
 		Integer currentFloorRequests = this.requests.get(this.currentFloor);
 
 		if (currentFloorRequests != null) {
@@ -72,8 +71,15 @@ public class LoveInAnElevator extends StateOfLoveAndTrustElevator {
 	}
 
 	@Override
+	public void userHasExited() {
+		super.userHasExited();
+		this.removeRequest();
+	}
+
+	@Override
 	public void userHasEntered() {
-		this.userHasExited();
+		super.userHasEntered();
+		this.removeRequest();
 	}
 
 	@Override

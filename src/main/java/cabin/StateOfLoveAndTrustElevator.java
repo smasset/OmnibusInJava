@@ -75,13 +75,7 @@ public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 
 	@Override
 	public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause) {
-		if (minFloor != null) {
-			this.minFloor = minFloor;
-		}
-
-		if (maxFloor != null) {
-			this.maxFloor = maxFloor;
-		}
+		super.reset(minFloor, maxFloor, cabinSize, cause);
 
 		this.currentState = CabinState.STOPPED;
 		this.lastDirection = CabinState.UP;

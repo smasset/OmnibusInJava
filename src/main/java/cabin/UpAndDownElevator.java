@@ -118,8 +118,7 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 		this.requests.put(from, newRequest.incrementCount());
 	}
 
-	@Override
-	public void userHasExited() {
+	private void removeRequest() {
 		FloorRequest currentFloorRequest = this.requests.get(this.currentFloor);
 
 		if (currentFloorRequest != null) {
@@ -132,8 +131,15 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 	}
 
 	@Override
+	public void userHasExited() {
+		super.userHasExited();
+		this.removeRequest();
+	}
+
+	@Override
 	public void userHasEntered() {
-		this.userHasExited();
+		super.userHasEntered();
+		this.removeRequest();
 	}
 
 	@Override

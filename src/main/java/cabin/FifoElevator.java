@@ -38,6 +38,8 @@ public class FifoElevator extends StateOfLoveAndTrustElevator {
 
 	@Override
 	public void userHasExited() {
+		super.userHasExited();
+
 		if (this.currentFloor.equals(this.requests.peek())) {
 			this.requests.poll();
 		}
@@ -45,6 +47,8 @@ public class FifoElevator extends StateOfLoveAndTrustElevator {
 
 	@Override
 	public void userHasEntered() {
+		super.userHasEntered();
+
 		if (this.currentFloor.equals(this.requests.peek())) {
 			this.requests.poll();
 		}
