@@ -15,6 +15,7 @@ public class DefaultElevator implements Elevator {
 
 	protected Integer cabinSize = null;
 	protected int cabinCount = 0;
+	protected boolean debug = false;
 
 	public DefaultElevator() {
 		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR);
@@ -50,7 +51,7 @@ public class DefaultElevator implements Elevator {
 
 	@Override
 	public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause) {
-		statusLogger.info("Reset : " + cause + " ; status : " + this.shortStatus());
+		statusLogger.info("Reset : " + cause + " ; status : " + this.status(false));
 
 		if (minFloor != null) {
 			this.minFloor = minFloor;
@@ -74,18 +75,20 @@ public class DefaultElevator implements Elevator {
 		info.put("maxFloor", Integer.toString(this.maxFloor));
 		info.put("cabinSize", this.cabinSize != null ? cabinSize.toString() : "");
 		info.put("cabinCount", Integer.toString(this.cabinCount));
+		info.put("debug", Boolean.toString(this.debug));
 
 		return info;
 	}
 
-	protected String status(boolean longStatus) {
+	@Override
+	public String status(boolean pretty) {
 		StringBuilder sb = new StringBuilder();
 
 		for (Entry<String, String> currentInfo : this.getStatusInfo().entrySet()) {
   		    sb.append(currentInfo.getKey());
   		    sb.append(" : ");
   		    sb.append(currentInfo.getValue());
-  		    if (longStatus) {
+  		    if (pretty) {
   		    	sb.append("\n");
   		    } else {
   		    	sb.append(" ; ");
@@ -95,13 +98,14 @@ public class DefaultElevator implements Elevator {
 		return sb.toString();
 	}
 
-	protected String shortStatus() {
-		return this.status(false);
+	@Override
+	public boolean isDebug() {
+		return this.debug;
 	}
 
 	@Override
-	public String status() {
-		return this.status(true);
+	public void setDebug(boolean debug) {
+		this.debug = debug;
 	}
 
 }

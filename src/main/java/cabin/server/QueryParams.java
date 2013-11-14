@@ -7,5 +7,6 @@ public enum QueryParams {
 	lowerFloor,
 	higherFloor,
 	cabinSize,
-	cause;
+	cause,
+	debug;
 }

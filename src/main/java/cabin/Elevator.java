@@ -18,6 +18,10 @@ public interface Elevator {
 
     public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause);
 
-    public String status();
+    public String status(boolean pretty);
+
+    public boolean isDebug();
+
+    public void setDebug(boolean debug);
 
 }

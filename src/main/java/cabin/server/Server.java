@@ -39,7 +39,9 @@ public class Server {
 			public Object handle(Request request, Response response) {
 				Object result = "";
 
-				statusLogger.info("status : " + elevator.status());
+				if (elevator.isDebug()) {
+					statusLogger.info("status : " + elevator.status(false));
+				}
 
 				String uuid = UUID.randomUUID().toString();
 				String path = request.params(":path");
@@ -83,8 +85,12 @@ public class Server {
 
 					elevator.reset(iMinFloor, iMaxFloor, iCabinSize, cause);
 					break;
+				case debug:
+					String debug = request.queryParams(QueryParams.debug.toString());
+					elevator.setDebug(Boolean.valueOf(debug));
+					break;
 				case status:
-					result = elevator.status();
+					result = elevator.status(true);
 					break;
 				default:
 					break;
