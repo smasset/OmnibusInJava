@@ -20,7 +20,7 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 
 		NavigableMap<Integer, FloorRequest> nextRequests = this.requests.tailMap(this.currentFloor, true);
 		for (Entry<Integer, FloorRequest> currentEntry : nextRequests.entrySet()) {
-			if (currentEntry.getValue().hasSameDirection(this.lastDirection.toString())) {
+			if (currentEntry.getValue().hasSameDirection(this.lastDirection)) {
 				nextFloor = currentEntry.getKey();
 				break;
 			}
@@ -38,7 +38,7 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 
 		NavigableMap<Integer, FloorRequest> nextRequests = this.requests.headMap(this.currentFloor, true).descendingMap();
 		for (Entry<Integer, FloorRequest> currentEntry : nextRequests.entrySet()) {
-			if (currentEntry.getValue().hasSameDirection(this.lastDirection.toString())) {
+			if (currentEntry.getValue().hasSameDirection(this.lastDirection)) {
 				nextFloor = currentEntry.getKey();
 				break;
 			}
@@ -57,14 +57,14 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 
 		switch (this.lastDirection) {
 
-		case UP:
+		case Direction.UP:
 			nextFloor = this.getNextUpperFloor();
 			if (nextFloor == null) {
 				nextFloor = this.getNextLowerFloor();
 			}
 			break;
 
-		case DOWN:
+		case Direction.DOWN:
 			nextFloor = this.getNextLowerFloor();
 			if (nextFloor == null) {
 				nextFloor = this.getNextUpperFloor();

@@ -19,14 +19,14 @@ public class LoveInAnElevator extends StateOfLoveAndTrustElevator {
 
 		switch (this.lastDirection) {
 
-		case UP:
+		case Direction.UP:
 			nextFloor = this.requests.ceilingKey(this.currentFloor);
 			if (nextFloor == null) {
 				nextFloor = this.requests.lowerKey(this.currentFloor);
 			}
 			break;
 
-		case DOWN:
+		case Direction.DOWN:
 			nextFloor = this.requests.floorKey(this.currentFloor);
 			if (nextFloor == null) {
 				nextFloor = this.requests.higherKey(this.currentFloor);
