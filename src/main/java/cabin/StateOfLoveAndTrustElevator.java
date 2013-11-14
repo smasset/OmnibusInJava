@@ -9,6 +9,10 @@ public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 
 	protected Integer currentFloor = super.minFloor;
 
+	protected Integer alertThreshold = null;
+
+	protected Integer panicThreshold = null;
+
 	protected abstract Integer getNextFloor();
 
 	public StateOfLoveAndTrustElevator() {
@@ -17,6 +21,18 @@ public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 
 	public StateOfLoveAndTrustElevator(int minFloor, int maxFloor) {
 		super(minFloor, maxFloor);
+	}
+
+	protected Mode getMode() {
+		Mode mode = Mode.NORMAL;
+
+		if ((this.panicThreshold != null) && (this.cabinCount >= this.panicThreshold)) {
+			mode = Mode.PANIC;
+		} else if ((this.alertThreshold != null) && (this.cabinCount >= this.alertThreshold)) {
+			mode = Mode.ALERT;
+		}
+
+		return mode;
 	}
 
 	protected synchronized Command getNextCommand() {
@@ -76,5 +92,8 @@ public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 		this.currentState = CabinState.STOPPED;
 		this.lastDirection = Direction.UP;
 		this.currentFloor = super.minFloor;
+
+		this.panicThreshold = cabinSize;
+		this.alertThreshold = cabinSize != null ? Double.valueOf(Math.ceil(0.8d * cabinSize)).intValue() : null;
 	}
 }
