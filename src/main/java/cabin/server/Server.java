@@ -12,7 +12,7 @@ import cabin.Elevator;
 
 public class Server {
 	private static final Logger requestLogger = Logger.getLogger("requests");
-	
+	private static final Logger statusLogger = Logger.getLogger("status");
 
 	public void addElevator(String context, final Elevator elevator) {
 		get(new Route(context + ":path") {
@@ -38,6 +38,8 @@ public class Server {
 			@Override
 			public Object handle(Request request, Response response) {
 				Object result = "";
+
+				statusLogger.info("status : " + elevator.status());
 
 				String uuid = UUID.randomUUID().toString();
 				String path = request.params(":path");
