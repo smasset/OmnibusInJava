@@ -3,6 +3,8 @@ package cabin;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NavigableMap;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
@@ -22,31 +24,53 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 		Mode mode = this.getMode();
 
 		NavigableMap<Integer, FloorRequest> nextRequests = this.requests.tailMap(this.currentFloor, true);
-		for (Entry<Integer, FloorRequest> currentEntry : nextRequests.entrySet()) {
-			switch (mode) {
 
-			case PANIC:
-				if (RequestType.OUT.equals(currentEntry.getValue().getType())) {
+		switch (mode) {
+
+		case ALERT:
+			Set<FloorRequest> values = new TreeSet<>(nextRequests.values());
+			for(FloorRequest currentRequest : values) {
+				if (RequestType.OUT.equals(currentRequest.getType())) {
 					floorFound = true;
 				}
-				break;
 
-			default:
-				if (currentEntry.getValue().hasSameDirection(this.lastDirection)) {
+				if (floorFound) {
+					nextFloor = currentRequest.getFloor();
 					break;
 				}
 			}
+			break;
 
-			if (floorFound) {
-				nextFloor = currentEntry.getKey();
-				break;
+		default:
+			for (Entry<Integer, FloorRequest> currentEntry : nextRequests.entrySet()) {
+				switch (mode) {
+
+				case PANIC:
+					if (RequestType.OUT.equals(currentEntry.getValue().getType())) {
+						floorFound = true;
+					}
+					break;
+
+				default:
+					if (currentEntry.getValue().hasSameDirection(this.lastDirection)) {
+						floorFound = true;
+					}
+					break;
+				}
+
+				if (floorFound) {
+					nextFloor = currentEntry.getKey();
+					break;
+				}
 			}
+			break;
 		}
 
 		if (nextFloor == null) {
 
 			switch (mode) {
 
+			case ALERT:
 			case PANIC:
 				break;
 
@@ -65,33 +89,53 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 		Mode mode = this.getMode();
 
 		NavigableMap<Integer, FloorRequest> nextRequests = this.requests.headMap(this.currentFloor, true).descendingMap();
-		for (Entry<Integer, FloorRequest> currentEntry : nextRequests.entrySet()) {
 
-			switch (mode) {
+		switch (mode) {
 
-			case PANIC:
-				if (RequestType.OUT.equals(currentEntry.getValue().getType())) {
+		case ALERT:
+			Set<FloorRequest> values = new TreeSet<>(nextRequests.values());
+			for(FloorRequest currentRequest : values) {
+				if (RequestType.OUT.equals(currentRequest.getType())) {
 					floorFound = true;
 				}
-				break;
 
-			default:
-				if (currentEntry.getValue().hasSameDirection(this.lastDirection)) {
-					floorFound = true;
+				if (floorFound) {
+					nextFloor = currentRequest.getFloor();
+					break;
 				}
-				break;
 			}
+			break;
 
-			if (floorFound) {
-				nextFloor = currentEntry.getKey();
-				break;
+		default:
+			for (Entry<Integer, FloorRequest> currentEntry : nextRequests.entrySet()) {
+				switch (mode) {
+
+				case PANIC:
+					if (RequestType.OUT.equals(currentEntry.getValue().getType())) {
+						floorFound = true;
+					}
+					break;
+
+				default:
+					if (currentEntry.getValue().hasSameDirection(this.lastDirection)) {
+						floorFound = true;
+					}
+					break;
+				}
+
+				if (floorFound) {
+					nextFloor = currentEntry.getKey();
+					break;
+				}
 			}
+			break;
 		}
 
 		if (nextFloor == null) {
 
-			switch (this.getMode()) {
+			switch (mode) {
 
+			case ALERT:
 			case PANIC:
 				break;
 
@@ -167,6 +211,12 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 				}
 
 				newRequest.setType(newType);
+			}
+
+			if (direction != null) {
+				newRequest.incrementRelativeCount();
+			} else {
+				newRequest.decrementRelativeCount();
 			}
 
 			this.requests.put(from, newRequest.incrementCount());

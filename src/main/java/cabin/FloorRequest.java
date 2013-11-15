@@ -1,9 +1,10 @@
 package cabin;
 
-public class FloorRequest {
+public class FloorRequest implements Comparable<FloorRequest>{
 	private Integer floor = null;
 	private RequestType type = null;
 	private Integer count = 0;
+	private Integer relativeCount = 0;
 
 	public FloorRequest(Integer floor) {
 		this(floor, RequestType.OUT);
@@ -38,8 +39,20 @@ public class FloorRequest {
 		this.count = count;
 	}
 
+	public Integer getRelativeCount() {
+		return relativeCount;
+	}
+
+	public void setRelativeCount(Integer relativeCount) {
+		this.relativeCount = relativeCount;
+	}
+
 	private void addCount(int increment) {
 		this.count += increment;
+	}
+
+	private void addRelativeCount(int increment) {
+		this.relativeCount += increment;
 	}
 
 	public FloorRequest incrementCount() {
@@ -47,8 +60,18 @@ public class FloorRequest {
 		return this;
 	}
 
+	public FloorRequest incrementRelativeCount() {
+		this.addRelativeCount(1);
+		return this;
+	}
+
 	public FloorRequest decrementCount() {
 		this.addCount(-1);
+		return this;
+	}
+
+	public FloorRequest decrementRelativeCount() {
+		this.addRelativeCount(-1);
 		return this;
 	}
 
@@ -79,7 +102,14 @@ public class FloorRequest {
 		string.append(this.type);
 		string.append("; count: ");
 		string.append(this.count);
+		string.append("; relativeCount: ");
+		string.append(this.relativeCount);
 
 		return string.toString();
+	}
+
+	@Override
+	public int compareTo(FloorRequest o) {
+		return this.relativeCount.compareTo(o.getRelativeCount());
 	}
 }
