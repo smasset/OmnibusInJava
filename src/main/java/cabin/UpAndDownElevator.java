@@ -1,7 +1,7 @@
 package cabin;
 
-import java.util.Map.Entry;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
@@ -19,10 +19,11 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 	private Integer getNextUpperFloor() {
 		Integer nextFloor = null;
 		boolean floorFound = false;
+		Mode mode = this.getMode();
 
 		NavigableMap<Integer, FloorRequest> nextRequests = this.requests.tailMap(this.currentFloor, true);
 		for (Entry<Integer, FloorRequest> currentEntry : nextRequests.entrySet()) {
-			switch (this.getMode()) {
+			switch (mode) {
 
 			case PANIC:
 				if (RequestType.OUT.equals(currentEntry.getValue().getType())) {
@@ -38,11 +39,21 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 
 			if (floorFound) {
 				nextFloor = currentEntry.getKey();
+				break;
 			}
 		}
 
 		if (nextFloor == null) {
-			nextFloor = this.requests.ceilingKey(this.currentFloor);
+
+			switch (mode) {
+
+			case PANIC:
+				break;
+
+			default:
+				nextFloor = this.requests.ceilingKey(this.currentFloor);
+				break;
+			}
 		}
 
 		return nextFloor;
@@ -51,11 +62,12 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 	private Integer getNextLowerFloor() {
 		Integer nextFloor = null;
 		boolean floorFound = false;
+		Mode mode = this.getMode();
 
 		NavigableMap<Integer, FloorRequest> nextRequests = this.requests.headMap(this.currentFloor, true).descendingMap();
 		for (Entry<Integer, FloorRequest> currentEntry : nextRequests.entrySet()) {
 
-			switch (this.getMode()) {
+			switch (mode) {
 
 			case PANIC:
 				if (RequestType.OUT.equals(currentEntry.getValue().getType())) {
@@ -77,7 +89,16 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 		}
 
 		if (nextFloor == null) {
-			nextFloor = this.requests.floorKey(this.currentFloor);
+
+			switch (this.getMode()) {
+
+			case PANIC:
+				break;
+
+			default:
+				nextFloor = this.requests.floorKey(this.currentFloor);
+				break;
+			}
 		}
 
 		return nextFloor;
