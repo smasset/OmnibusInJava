@@ -99,6 +99,7 @@ public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 		info.put("currentState", this.currentState.toString());
 		info.put("lastDirection", this.lastDirection);
 		info.put("currentFloor", this.currentFloor != null ? currentFloor.toString() : "");
+		info.put("mode", this.getMode().toString());
 		info.put("panicThreshold", this.panicThreshold != null ? panicThreshold.toString() : "");
 		info.put("alertThreshold", this.alertThreshold != null ? alertThreshold.toString() : "");
 
