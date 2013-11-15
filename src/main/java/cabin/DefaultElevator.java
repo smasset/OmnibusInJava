@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 import cabin.command.Command;
 
 public class DefaultElevator implements Elevator {
-	private static final Logger statusLogger = Logger.getLogger("status");
+	private static final Logger requestLogger = Logger.getLogger("requests");
 
 	protected int minFloor = Elevator.DEFAULT_MIN_FLOOR;
 	protected int maxFloor = Elevator.DEFAULT_MAX_FLOOR;
@@ -51,7 +51,7 @@ public class DefaultElevator implements Elevator {
 
 	@Override
 	public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause) {
-		statusLogger.info("Reset : " + cause + " ; status : " + this.status(false));
+		requestLogger.info("Reset : " + cause + " ; status : " + this.status(false));
 
 		if (minFloor != null) {
 			this.minFloor = minFloor;

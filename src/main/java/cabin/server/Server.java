@@ -12,7 +12,6 @@ import cabin.Elevator;
 
 public class Server {
 	private static final Logger requestLogger = Logger.getLogger("requests");
-	private static final Logger statusLogger = Logger.getLogger("status");
 
 	public void addElevator(String context, final Elevator elevator) {
 		get(new Route(context + ":path") {
@@ -40,7 +39,7 @@ public class Server {
 				Object result = "";
 
 				if (elevator.isDebug()) {
-					statusLogger.info("status : " + elevator.status(false));
+					requestLogger.info("status : " + elevator.status(false));
 				}
 
 				String uuid = UUID.randomUUID().toString();
