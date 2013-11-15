@@ -88,8 +88,10 @@ public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 		this.lastDirection = Direction.UP;
 		this.currentFloor = 0;
 
-		this.panicThreshold = cabinSize;
-		this.alertThreshold = cabinSize != null ? Double.valueOf(Math.ceil(0.8d * cabinSize)).intValue() : null;
+		if (cabinSize != null) {
+		    this.panicThreshold = new Integer(cabinSize);
+		    this.alertThreshold = Double.valueOf(Math.ceil(0.8d * cabinSize)).intValue();
+		}
 	}
 
 	@Override
