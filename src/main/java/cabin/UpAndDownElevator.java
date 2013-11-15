@@ -152,13 +152,17 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 		}
 	}
 
-	private void removeRequest() {
+	private void removeRequest(RequestType type) {
 		FloorRequest currentFloorRequest = this.requests.get(this.currentFloor);
 
 		if (currentFloorRequest != null) {
 			if (currentFloorRequest.getCount() == 1) {
 				this.requests.remove(this.currentFloor);
 			} else {
+				if (type != null) {
+					currentFloorRequest.setType(RequestType.UP_DOWN);
+				}
+
 				this.requests.put(this.currentFloor, currentFloorRequest.decrementCount());
 			}
 		}
@@ -167,13 +171,13 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 	@Override
 	public void userHasExited() {
 		super.userHasExited();
-		this.removeRequest();
+		this.removeRequest(RequestType.OUT);
 	}
 
 	@Override
 	public void userHasEntered() {
 		super.userHasEntered();
-		this.removeRequest();
+		this.removeRequest(null);
 	}
 
 	@Override
