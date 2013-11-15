@@ -8,8 +8,6 @@ import java.util.concurrent.ConcurrentSkipListMap;
 public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 	protected NavigableMap<Integer, FloorRequest> requests = new ConcurrentSkipListMap<Integer, FloorRequest>();
 
-	private boolean isPanicOddCommand = true;
-
 	public UpAndDownElevator() {
 		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR);
 	}
@@ -20,36 +18,31 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 
 	private Integer getNextUpperFloor() {
 		Integer nextFloor = null;
+		boolean floorFound = false;
 
-		switch (this.getMode()) {
+		NavigableMap<Integer, FloorRequest> nextRequests = this.requests.tailMap(this.currentFloor, true);
+		for (Entry<Integer, FloorRequest> currentEntry : nextRequests.entrySet()) {
+			switch (this.getMode()) {
 
-		case PANIC:
-			if (this.isPanicOddCommand) {
-				nextFloor = this.currentFloor;
-			} else {
-				if (this.currentFloor == this.maxFloor) {
-					nextFloor = this.currentFloor - 1;
-				} else {
-					nextFloor = this.currentFloor + 1;
+			case PANIC:
+				if (RequestType.OUT.equals(currentEntry.getValue().getType())) {
+					floorFound = true;
 				}
-			}
-			this.isPanicOddCommand = !this.isPanicOddCommand;
-			break;
+				break;
 
-		default:
-			isPanicOddCommand = true;
-			NavigableMap<Integer, FloorRequest> nextRequests = this.requests.tailMap(this.currentFloor, true);
-			for (Entry<Integer, FloorRequest> currentEntry : nextRequests.entrySet()) {
+			default:
 				if (currentEntry.getValue().hasSameDirection(this.lastDirection)) {
-					nextFloor = currentEntry.getKey();
 					break;
 				}
 			}
 
-			if (nextFloor == null) {
-				nextFloor = this.requests.ceilingKey(this.currentFloor);
+			if (floorFound) {
+				nextFloor = currentEntry.getKey();
 			}
-			break;
+		}
+
+		if (nextFloor == null) {
+			nextFloor = this.requests.ceilingKey(this.currentFloor);
 		}
 
 		return nextFloor;
@@ -57,36 +50,34 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 
 	private Integer getNextLowerFloor() {
 		Integer nextFloor = null;
+		boolean floorFound = false;
 
-		switch (this.getMode()) {
+		NavigableMap<Integer, FloorRequest> nextRequests = this.requests.headMap(this.currentFloor, true).descendingMap();
+		for (Entry<Integer, FloorRequest> currentEntry : nextRequests.entrySet()) {
 
-		case PANIC:
-			if (this.isPanicOddCommand) {
-				nextFloor = this.currentFloor;
-			} else {
-				if (this.currentFloor == this.minFloor) {
-					nextFloor = this.currentFloor + 1;
-				} else {
-					nextFloor = this.currentFloor - 1;
+			switch (this.getMode()) {
+
+			case PANIC:
+				if (RequestType.OUT.equals(currentEntry.getValue().getType())) {
+					floorFound = true;
 				}
-			}
-			this.isPanicOddCommand = !this.isPanicOddCommand;
-			break;
+				break;
 
-		default:
-			isPanicOddCommand = true;
-			NavigableMap<Integer, FloorRequest> nextRequests = this.requests.headMap(this.currentFloor, true).descendingMap();
-			for (Entry<Integer, FloorRequest> currentEntry : nextRequests.entrySet()) {
+			default:
 				if (currentEntry.getValue().hasSameDirection(this.lastDirection)) {
-					nextFloor = currentEntry.getKey();
-					break;
+					floorFound = true;
 				}
+				break;
 			}
 
-			if (nextFloor == null) {
-				nextFloor = this.requests.floorKey(this.currentFloor);
+			if (floorFound) {
+				nextFloor = currentEntry.getKey();
+				break;
 			}
-			break;
+		}
+
+		if (nextFloor == null) {
+			nextFloor = this.requests.floorKey(this.currentFloor);
 		}
 
 		return nextFloor;
