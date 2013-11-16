@@ -8,5 +8,7 @@ public enum QueryParams {
 	higherFloor,
 	cabinSize,
 	cause,
-	debug;
+	debug,
+	alertThreshold,
+	panicThreshold;
 }

@@ -6,5 +6,6 @@ public enum Method {
 
 	// Custom commands
 	debug,
-	status;
+	status,
+	threshold;
 }

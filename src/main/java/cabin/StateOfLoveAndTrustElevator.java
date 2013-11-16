@@ -107,4 +107,15 @@ public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 
 		return info;
 	}
+
+	@Override
+	public void thresholds(Integer alertThreshold, Integer panicThreshold) {
+		if (alertThreshold != null) {
+			this.alertThreshold = alertThreshold;
+		}
+
+		if (panicThreshold != null) {
+			this.panicThreshold = panicThreshold;
+		}
+	}
 }

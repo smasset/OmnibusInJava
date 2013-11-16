@@ -91,6 +91,14 @@ public class Server {
 				case status:
 					result = elevator.status(true);
 					break;
+				case threshold:
+					String alertThreshold = request.queryParams(QueryParams.alertThreshold.toString());
+					Integer iAlertThreshold = alertThreshold != null ? new Integer(alertThreshold) : null;
+
+					String panicThreshold = request.queryParams(QueryParams.panicThreshold.toString());
+					Integer iPanicThreshold = panicThreshold != null ? new Integer(panicThreshold) : null;
+
+					elevator.thresholds(iAlertThreshold, iPanicThreshold);
 				default:
 					break;
 				}

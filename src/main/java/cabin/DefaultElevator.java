@@ -108,4 +108,8 @@ public class DefaultElevator implements Elevator {
 		this.debug = debug;
 	}
 
+	@Override
+	public void thresholds(Integer alertThreshold, Integer panicThreshold) {
+	}
+
 }
