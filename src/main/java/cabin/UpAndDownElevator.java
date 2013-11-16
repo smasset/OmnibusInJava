@@ -232,6 +232,9 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 			} else {
 				if (type != null) {
 					currentFloorRequest.setType(RequestType.UP_DOWN);
+					currentFloorRequest.incrementRelativeCount();
+				} else {
+					currentFloorRequest.decrementRelativeCount();
 				}
 
 				this.requests.put(this.currentFloor, currentFloorRequest.decrementCount());
