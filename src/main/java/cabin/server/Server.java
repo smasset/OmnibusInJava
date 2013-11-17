@@ -49,56 +49,65 @@ public class Server {
 				case nextCommand:
 					result = elevator.nextCommand();
 					break;
+
 				case call:
-					String atFloor = request.queryParams(QueryParams.atFloor.toString());
-					String direction = request.queryParams(QueryParams.to.toString());
+					String atFloor = request.queryParams(QueryParams.atFloor);
+					String direction = request.queryParams(QueryParams.to);
 
 					if (atFloor != null) {
 						elevator.call(new Integer(atFloor), direction);
 					}
 					break;
+
 				case go:
-					String floorToGo = request.queryParams(QueryParams.floorToGo.toString());
+					String floorToGo = request.queryParams(QueryParams.floorToGo);
 
 					if (floorToGo != null) {
 						elevator.go(new Integer(floorToGo));
 					}
 					break;
+
 				case userHasEntered:
 					elevator.userHasEntered();
 					break;
+
 				case userHasExited:
 					elevator.userHasExited();
 					break;
+
 				case reset:
-					String minFloor = request.queryParams(QueryParams.lowerFloor.toString());
+					String minFloor = request.queryParams(QueryParams.lowerFloor);
 					Integer iMinFloor = minFloor != null ? new Integer(minFloor) : null;
 
-					String maxFloor = request.queryParams(QueryParams.higherFloor.toString());
+					String maxFloor = request.queryParams(QueryParams.higherFloor);
 					Integer iMaxFloor = maxFloor != null ? new Integer(maxFloor) : null;
 
-					String cabinSize = request.queryParams(QueryParams.cabinSize.toString());
+					String cabinSize = request.queryParams(QueryParams.cabinSize);
 					Integer iCabinSize = cabinSize != null ? new Integer(cabinSize) : null;
 
-					String cause = request.queryParams(QueryParams.cause.toString());
+					String cause = request.queryParams(QueryParams.cause);
 
 					elevator.reset(iMinFloor, iMaxFloor, iCabinSize, cause);
 					break;
+
 				case debug:
-					String debug = request.queryParams(QueryParams.debug.toString());
+					String debug = request.queryParams(QueryParams.debug);
 					elevator.setDebug(Boolean.valueOf(debug));
 					break;
+
 				case status:
 					result = elevator.status(true);
 					break;
+
 				case threshold:
-					String alertThreshold = request.queryParams(QueryParams.alertThreshold.toString());
+					String alertThreshold = request.queryParams(QueryParams.alertThreshold);
 					Integer iAlertThreshold = alertThreshold != null ? new Integer(alertThreshold) : null;
 
-					String panicThreshold = request.queryParams(QueryParams.panicThreshold.toString());
+					String panicThreshold = request.queryParams(QueryParams.panicThreshold);
 					Integer iPanicThreshold = panicThreshold != null ? new Integer(panicThreshold) : null;
 
 					elevator.thresholds(iAlertThreshold, iPanicThreshold);
+
 				default:
 					break;
 				}
