@@ -45,12 +45,12 @@ public class Server {
 				String uuid = UUID.randomUUID().toString();
 				String path = request.params(":path");
 
-				switch (Method.valueOf(path)) {
-				case nextCommand:
+				switch (path) {
+				case Method.nextCommand:
 					result = elevator.nextCommand();
 					break;
 
-				case call:
+				case Method.call:
 					String atFloor = request.queryParams(QueryParams.atFloor);
 					String direction = request.queryParams(QueryParams.to);
 
@@ -59,7 +59,7 @@ public class Server {
 					}
 					break;
 
-				case go:
+				case Method.go:
 					String floorToGo = request.queryParams(QueryParams.floorToGo);
 
 					if (floorToGo != null) {
@@ -67,15 +67,15 @@ public class Server {
 					}
 					break;
 
-				case userHasEntered:
+				case Method.userHasEntered:
 					elevator.userHasEntered();
 					break;
 
-				case userHasExited:
+				case Method.userHasExited:
 					elevator.userHasExited();
 					break;
 
-				case reset:
+				case Method.reset:
 					String minFloor = request.queryParams(QueryParams.lowerFloor);
 					Integer iMinFloor = minFloor != null ? new Integer(minFloor) : null;
 
@@ -90,16 +90,16 @@ public class Server {
 					elevator.reset(iMinFloor, iMaxFloor, iCabinSize, cause);
 					break;
 
-				case debug:
+				case Method.debug:
 					String debug = request.queryParams(QueryParams.debug);
 					elevator.setDebug(Boolean.valueOf(debug));
 					break;
 
-				case status:
+				case Method.status:
 					result = elevator.status(true);
 					break;
 
-				case threshold:
+				case Method.threshold:
 					String alertThreshold = request.queryParams(QueryParams.alertThreshold);
 					Integer iAlertThreshold = alertThreshold != null ? new Integer(alertThreshold) : null;
 
