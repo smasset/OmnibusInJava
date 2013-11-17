@@ -90,14 +90,14 @@ public class DefaultElevator implements Elevator {
 		StringBuilder sb = new StringBuilder();
 
 		for (Entry<String, String> currentInfo : this.getStatusInfo().entrySet()) {
-  		    sb.append(currentInfo.getKey());
-  		    sb.append(" : ");
-  		    sb.append(currentInfo.getValue());
-  		    if (pretty) {
-  		    	sb.append("\n");
-  		    } else {
-  		    	sb.append(" ; ");
-  		    }
+			sb.append(currentInfo.getKey());
+			sb.append(" : ");
+			sb.append(currentInfo.getValue());
+			if (pretty) {
+				sb.append("\n");
+			} else {
+				sb.append(" ; ");
+			}
 		}
 
 		return sb.toString();

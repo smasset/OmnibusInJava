@@ -55,7 +55,7 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 		}
 
 		FloorRequest currentRequest = null;
-		while((nextFloor == null) && (requestIterator.hasNext())) {
+		while ((nextFloor == null) && (requestIterator.hasNext())) {
 			currentRequest = requestIterator.next();
 
 			if (serveOnlyOutRequests) {

@@ -11,19 +11,19 @@ public interface Elevator {
 
 	public void call(Integer from, String direction);
 
-    public void go(Integer floor);
+	public void go(Integer floor);
 
-    public void userHasEntered();
+	public void userHasEntered();
 
-    public void userHasExited();
+	public void userHasExited();
 
-    public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause);
+	public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause);
 
-    public String status(boolean pretty);
+	public String status(boolean pretty);
 
-    public boolean isDebug();
+	public boolean isDebug();
 
-    public void setDebug(boolean debug);
+	public void setDebug(boolean debug);
 
-    public void thresholds(Integer alertThreshold, Integer panicThreshold);
+	public void thresholds(Integer alertThreshold, Integer panicThreshold);
 }

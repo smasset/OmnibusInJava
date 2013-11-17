@@ -1,7 +1,5 @@
 package cabin;
 
 public enum Mode {
-    NORMAL,
-    ALERT,
-    PANIC
+	NORMAL, ALERT, PANIC
 }

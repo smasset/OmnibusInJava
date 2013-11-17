@@ -5,7 +5,5 @@ public enum Method {
 	nextCommand, call, go, userHasEntered, userHasExited, reset,
 
 	// Custom commands
-	debug,
-	status,
-	threshold;
+	debug, status, threshold;
 }

@@ -1,6 +1,6 @@
 package cabin;
 
-public class FloorRequest implements Comparable<FloorRequest>{
+public class FloorRequest implements Comparable<FloorRequest> {
 	private Integer floor = null;
 	private RequestType type = null;
 	private Integer count = 0;

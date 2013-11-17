@@ -1,6 +1,5 @@
 package cabin;
 
 public enum CabinState {
-    STOPPED,
-    OPENED
+	STOPPED, OPENED
 }
