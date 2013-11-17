@@ -1,16 +1,17 @@
 package cabin;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 public class LoveInAnElevator extends StateOfLoveAndTrustElevator {
 	protected ConcurrentSkipListMap<Integer, Integer> requests = new ConcurrentSkipListMap<Integer, Integer>();
 
 	public LoveInAnElevator() {
-		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR);
+		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR, Elevator.DEFAULT_CABIN_SIZE);
 	}
 
-	public LoveInAnElevator(int minFloor, int maxFloor) {
-		super(minFloor, maxFloor);
+	public LoveInAnElevator(int minFloor, int maxFloor, Integer cabinSize) {
+		super(minFloor, maxFloor, cabinSize);
 	}
 
 	@Override
@@ -19,14 +20,14 @@ public class LoveInAnElevator extends StateOfLoveAndTrustElevator {
 
 		switch (this.lastDirection) {
 
-		case UP:
+		case Direction.UP:
 			nextFloor = this.requests.ceilingKey(this.currentFloor);
 			if (nextFloor == null) {
 				nextFloor = this.requests.lowerKey(this.currentFloor);
 			}
 			break;
 
-		case DOWN:
+		case Direction.DOWN:
 			nextFloor = this.requests.floorKey(this.currentFloor);
 			if (nextFloor == null) {
 				nextFloor = this.requests.higherKey(this.currentFloor);
@@ -58,8 +59,7 @@ public class LoveInAnElevator extends StateOfLoveAndTrustElevator {
 		this.go(from);
 	}
 
-	@Override
-	public void userHasExited() {
+	private void removeRequest() {
 		Integer currentFloorRequests = this.requests.get(this.currentFloor);
 
 		if (currentFloorRequests != null) {
@@ -72,18 +72,29 @@ public class LoveInAnElevator extends StateOfLoveAndTrustElevator {
 	}
 
 	@Override
-	public void userHasEntered() {
-		this.userHasExited();
+	public void userHasExited() {
+		super.userHasExited();
+		this.removeRequest();
 	}
 
 	@Override
-	public void reset(Integer minFloor, Integer maxFloor, String cause) {
-		super.reset(minFloor, maxFloor, cause);
+	public void userHasEntered() {
+		super.userHasEntered();
+		this.removeRequest();
+	}
+
+	@Override
+	public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause) {
+		super.reset(minFloor, maxFloor, cabinSize, cause);
 		this.requests.clear();
 	}
 
-	protected void print() {
-		super.print();
-		System.out.println("requests     : " + this.requests);
+	@Override
+	protected Map<String, String> getStatusInfo() {
+		Map<String, String> info = super.getStatusInfo();
+
+		info.put("requests", this.requests.toString());
+
+		return info;
 	}
 }

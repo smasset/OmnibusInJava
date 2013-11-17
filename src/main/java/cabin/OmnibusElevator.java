@@ -1,5 +1,7 @@
 package cabin;
 
+import java.util.Map;
+
 import cabin.command.Command;
 
 public class OmnibusElevator extends DefaultElevator {
@@ -9,11 +11,11 @@ public class OmnibusElevator extends DefaultElevator {
 	private int count = 0;
 
 	public OmnibusElevator() {
-		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR);
+		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR, Elevator.DEFAULT_CABIN_SIZE);
 	}
 
-	public OmnibusElevator(int minFloor, int maxFloor) {
-		super(minFloor, maxFloor);
+	public OmnibusElevator(int minFloor, int maxFloor, Integer cabinSize) {
+		super(minFloor, maxFloor, cabinSize);
 	}
 
 	@Override
@@ -39,16 +41,19 @@ public class OmnibusElevator extends DefaultElevator {
 	}
 
 	@Override
-	public void reset(Integer minFloor, Integer maxFloor, String cause) {
-		if (minFloor != null) {
-			this.minFloor = minFloor;
-		}
-
-		if (maxFloor != null) {
-			this.maxFloor = maxFloor;
-		}
+	public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause) {
+		super.reset(minFloor, maxFloor, cabinSize, cause);
 
 		this.commands = null;
 		this.count = 0;
+	}
+
+	@Override
+	protected Map<String, String> getStatusInfo() {
+		Map<String, String> info = super.getStatusInfo();
+
+		info.put("count", Integer.toString(this.count));
+
+		return info;
 	}
 }

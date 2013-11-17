@@ -1,33 +1,51 @@
 package cabin;
 
+import java.util.Map;
+
 import cabin.command.Command;
 
 public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 	protected CabinState currentState = CabinState.STOPPED;
 
-	protected CabinState lastDirection = CabinState.UP;
+	protected String lastDirection = Direction.UP;
 
-	protected Integer currentFloor = super.minFloor;
+	protected Integer currentFloor = 0;
 
 	protected abstract Integer getNextFloor();
 
 	public StateOfLoveAndTrustElevator() {
-		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR);
+		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR, Elevator.DEFAULT_CABIN_SIZE);
 	}
 
-	public StateOfLoveAndTrustElevator(int minFloor, int maxFloor) {
-		super(minFloor, maxFloor);
+	public StateOfLoveAndTrustElevator(int minFloor, int maxFloor, Integer cabinSize) {
+		super(minFloor, maxFloor, cabinSize);
+		this.setThresholds();
+	}
+
+	protected void setThresholds() {
+		if (this.cabinSize != null) {
+			this.panicThreshold = new Integer(this.cabinSize + 1);
+			this.alertThreshold = Double.valueOf(Math.ceil(0.8d * this.cabinSize)).intValue();
+		}
+	}
+
+	protected Mode getMode() {
+		Mode mode = Mode.NORMAL;
+
+		if ((this.panicThreshold != null) && (this.cabinCount >= this.panicThreshold)) {
+			mode = Mode.PANIC;
+		} else if ((this.alertThreshold != null) && (this.cabinCount >= this.alertThreshold)) {
+			mode = Mode.ALERT;
+		}
+
+		return mode;
 	}
 
 	protected synchronized Command getNextCommand() {
 		Command result = Command.NOTHING;
 
-		// this.print();
-
 		switch (this.currentState) {
 
-		case UP:
-		case DOWN:
 		case STOPPED:
 			Integer nextFloor = this.getNextFloor();
 			if (nextFloor != null) {
@@ -39,13 +57,11 @@ public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 				} else if (comparison > 0) {
 					this.currentFloor--;
 					result = Command.DOWN;
-					this.lastDirection = CabinState.DOWN;
-					this.currentState = CabinState.DOWN;
+					this.lastDirection = Direction.DOWN;
 				} else {
 					this.currentFloor++;
 					result = Command.UP;
-					this.lastDirection = CabinState.UP;
-					this.currentState = CabinState.UP;
+					this.lastDirection = Direction.UP;
 				}
 			}
 			break;
@@ -63,28 +79,30 @@ public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 		return result;
 	}
 
-	protected void print() {
-		System.out.println("currentState : " + this.currentState);
-		System.out.println("currentFloor : " + this.currentFloor);
-	}
-
 	@Override
 	public Command nextCommand() {
 		return this.getNextCommand();
 	}
 
 	@Override
-	public void reset(Integer minFloor, Integer maxFloor, String cause) {
-		if (minFloor != null) {
-			this.minFloor = minFloor;
-		}
-
-		if (maxFloor != null) {
-			this.maxFloor = maxFloor;
-		}
+	public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause) {
+		super.reset(minFloor, maxFloor, cabinSize, cause);
 
 		this.currentState = CabinState.STOPPED;
-		this.lastDirection = CabinState.UP;
-		this.currentFloor = super.minFloor;
+		this.lastDirection = Direction.UP;
+		this.currentFloor = 0;
+		this.setThresholds();
+	}
+
+	@Override
+	protected Map<String, String> getStatusInfo() {
+		Map<String, String> info = super.getStatusInfo();
+
+		info.put("currentState", this.currentState.toString());
+		info.put("lastDirection", this.lastDirection);
+		info.put("currentFloor", this.currentFloor != null ? currentFloor.toString() : "");
+		info.put("mode", this.getMode().toString());
+
+		return info;
 	}
 }

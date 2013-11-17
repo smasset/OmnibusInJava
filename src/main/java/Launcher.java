@@ -20,7 +20,7 @@ public class Launcher {
 		cabinServer.addElevator("/", new DefaultElevator());
 		cabinServer.addElevator("/omnibus/", new OmnibusElevator());
 		cabinServer.addElevator("/fifo/", new FifoElevator());
-		cabinServer.addElevator("/loveinanelevator/", new LoveInAnElevator(0, 19));
-		cabinServer.addElevator("/vengaboys/", new UpAndDownElevator(0, 19));
+		cabinServer.addElevator("/loveinanelevator/", new LoveInAnElevator(0, 19, 42));
+		cabinServer.addElevator("/vengaboys/", new UpAndDownElevator(-3, 25, 42));
 	}
 }

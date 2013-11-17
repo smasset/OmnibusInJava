@@ -1,16 +1,17 @@
 package cabin;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class FifoElevator extends StateOfLoveAndTrustElevator {
 	private ConcurrentLinkedQueue<Integer> requests = new ConcurrentLinkedQueue<>();
 
 	public FifoElevator() {
-		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR);
+		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR, Elevator.DEFAULT_CABIN_SIZE);
 	}
 
-	public FifoElevator(int minFloor, int maxFloor) {
-		super(minFloor, maxFloor);
+	public FifoElevator(int minFloor, int maxFloor, Integer cabinSize) {
+		super(minFloor, maxFloor, cabinSize);
 	}
 
 	@Override
@@ -38,6 +39,8 @@ public class FifoElevator extends StateOfLoveAndTrustElevator {
 
 	@Override
 	public void userHasExited() {
+		super.userHasExited();
+
 		if (this.currentFloor.equals(this.requests.peek())) {
 			this.requests.poll();
 		}
@@ -45,19 +48,25 @@ public class FifoElevator extends StateOfLoveAndTrustElevator {
 
 	@Override
 	public void userHasEntered() {
+		super.userHasEntered();
+
 		if (this.currentFloor.equals(this.requests.peek())) {
 			this.requests.poll();
 		}
 	}
 
 	@Override
-	public void reset(Integer minFloor, Integer maxFloor, String cause) {
-		super.reset(minFloor, maxFloor, cause);
+	public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause) {
+		super.reset(minFloor, maxFloor, cabinSize, cause);
 		this.requests.clear();
 	}
 
-	protected void print() {
-		super.print();
-		System.out.println("requests     : " + this.requests);
+	@Override
+	protected Map<String, String> getStatusInfo() {
+		Map<String, String> info = super.getStatusInfo();
+
+		info.put("requests", this.requests.toString());
+
+		return info;
 	}
 }
