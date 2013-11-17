@@ -19,7 +19,26 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 
 	private Integer getNextFloor(String direction) {
 		Integer nextFloor = null;
-		Mode mode = this.getMode();
+
+		boolean sortRequests = false;
+		boolean serveOnlyOutRequests = false;
+		boolean serveOnlySameRequests = false;
+		boolean returnDefaultFloor = false;
+
+		switch (this.getMode()) {
+		case PANIC:
+			sortRequests = true;
+
+		case ALERT:
+			serveOnlyOutRequests = true;
+			break;
+
+		case NORMAL:
+		default:
+			serveOnlySameRequests = true;
+			returnDefaultFloor = true;
+			break;
+		}
 
 		NavigableMap<Integer, FloorRequest> nextRequests = null;
 		if (Direction.UP.equals(direction)) {
@@ -29,55 +48,34 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 		}
 
 		Iterator<FloorRequest> requestIterator = null;
-		switch (mode) {
-
-		case PANIC:
+		if (sortRequests) {
 			requestIterator = new TreeSet<>(nextRequests.values()).iterator();
-			break;
-
-		case NORMAL:
-		case ALERT:
-		default:
+		} else {
 			requestIterator = nextRequests.values().iterator();
-			break;
 		}
 
 		FloorRequest currentRequest = null;
 		while((nextFloor == null) && (requestIterator.hasNext())) {
 			currentRequest = requestIterator.next();
-			switch (mode) {
 
-			case ALERT:
-			case PANIC:
+			if (serveOnlyOutRequests) {
 				if (RequestType.OUT.equals(currentRequest.getType())) {
 					nextFloor = currentRequest.getFloor();
 				}
-				break;
-
-			case NORMAL:
-			default:
+			} else if (serveOnlySameRequests) {
 				if (currentRequest.hasSameDirection(direction)) {
 					nextFloor = currentRequest.getFloor();
 				}
-				break;
+			} else {
+				nextFloor = currentRequest.getFloor();
 			}
 		}
 
-		if (nextFloor == null) {
-			switch (mode) {
-
-			case ALERT:
-			case PANIC:
-				break;
-
-			case NORMAL:
-			default:
-				if (Direction.UP.equals(direction)) {
-					nextFloor = this.requests.ceilingKey(this.currentFloor);
-				} else {
-					nextFloor = this.requests.floorKey(this.currentFloor);
-				}
-				break;
+		if (returnDefaultFloor && (nextFloor == null)) {
+			if (Direction.UP.equals(direction)) {
+				nextFloor = this.requests.ceilingKey(this.currentFloor);
+			} else {
+				nextFloor = this.requests.floorKey(this.currentFloor);
 			}
 		}
 
