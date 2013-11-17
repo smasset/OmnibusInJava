@@ -14,11 +14,11 @@ public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 	protected abstract Integer getNextFloor();
 
 	public StateOfLoveAndTrustElevator() {
-		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR);
+		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR, Elevator.DEFAULT_CABIN_SIZE);
 	}
 
-	public StateOfLoveAndTrustElevator(int minFloor, int maxFloor) {
-		super(minFloor, maxFloor);
+	public StateOfLoveAndTrustElevator(int minFloor, int maxFloor, Integer cabinSize) {
+		super(minFloor, maxFloor, cabinSize);
 	}
 
 	protected Mode getMode() {

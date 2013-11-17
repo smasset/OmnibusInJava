@@ -5,6 +5,7 @@ import cabin.command.Command;
 public interface Elevator {
 	public static final int DEFAULT_MIN_FLOOR = 0;
 	public static final int DEFAULT_MAX_FLOOR = 5;
+	public static final Integer DEFAULT_CABIN_SIZE = null;
 
 	public Command nextCommand();
 

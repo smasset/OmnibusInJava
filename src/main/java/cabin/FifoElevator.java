@@ -7,11 +7,11 @@ public class FifoElevator extends StateOfLoveAndTrustElevator {
 	private ConcurrentLinkedQueue<Integer> requests = new ConcurrentLinkedQueue<>();
 
 	public FifoElevator() {
-		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR);
+		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR, Elevator.DEFAULT_CABIN_SIZE);
 	}
 
-	public FifoElevator(int minFloor, int maxFloor) {
-		super(minFloor, maxFloor);
+	public FifoElevator(int minFloor, int maxFloor, Integer cabinSize) {
+		super(minFloor, maxFloor, cabinSize);
 	}
 
 	@Override

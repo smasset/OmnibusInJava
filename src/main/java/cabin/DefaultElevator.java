@@ -20,12 +20,13 @@ public class DefaultElevator implements Elevator {
 	protected Integer panicThreshold = null;
 
 	public DefaultElevator() {
-		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR);
+		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR, Elevator.DEFAULT_CABIN_SIZE);
 	}
 
-	public DefaultElevator(int minFloor, int maxFloor) {
+	public DefaultElevator(int minFloor, int maxFloor, Integer cabinSize) {
 		this.minFloor = minFloor;
 		this.maxFloor = maxFloor;
+		this.cabinSize = cabinSize;
 	}
 
 	@Override

@@ -11,11 +11,11 @@ public class OmnibusElevator extends DefaultElevator {
 	private int count = 0;
 
 	public OmnibusElevator() {
-		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR);
+		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR, Elevator.DEFAULT_CABIN_SIZE);
 	}
 
-	public OmnibusElevator(int minFloor, int maxFloor) {
-		super(minFloor, maxFloor);
+	public OmnibusElevator(int minFloor, int maxFloor, Integer cabinSize) {
+		super(minFloor, maxFloor, cabinSize);
 	}
 
 	@Override

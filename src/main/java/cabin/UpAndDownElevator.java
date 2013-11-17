@@ -10,11 +10,11 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 	protected NavigableMap<Integer, FloorRequest> requests = new ConcurrentSkipListMap<Integer, FloorRequest>();
 
 	public UpAndDownElevator() {
-		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR);
+		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR, Elevator.DEFAULT_CABIN_SIZE);
 	}
 
-	public UpAndDownElevator(int minFloor, int maxFloor) {
-		super(minFloor, maxFloor);
+	public UpAndDownElevator(int minFloor, int maxFloor, Integer cabinSize) {
+		super(minFloor, maxFloor, cabinSize);
 	}
 
 	private Integer getNextFloor(String direction) {

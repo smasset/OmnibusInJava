@@ -7,11 +7,11 @@ public class LoveInAnElevator extends StateOfLoveAndTrustElevator {
 	protected ConcurrentSkipListMap<Integer, Integer> requests = new ConcurrentSkipListMap<Integer, Integer>();
 
 	public LoveInAnElevator() {
-		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR);
+		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR, Elevator.DEFAULT_CABIN_SIZE);
 	}
 
-	public LoveInAnElevator(int minFloor, int maxFloor) {
-		super(minFloor, maxFloor);
+	public LoveInAnElevator(int minFloor, int maxFloor, Integer cabinSize) {
+		super(minFloor, maxFloor, cabinSize);
 	}
 
 	@Override
