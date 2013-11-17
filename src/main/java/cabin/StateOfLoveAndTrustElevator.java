@@ -11,10 +11,6 @@ public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 
 	protected Integer currentFloor = 0;
 
-	protected Integer alertThreshold = null;
-
-	protected Integer panicThreshold = null;
-
 	protected abstract Integer getNextFloor();
 
 	public StateOfLoveAndTrustElevator() {
@@ -102,20 +98,7 @@ public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 		info.put("lastDirection", this.lastDirection);
 		info.put("currentFloor", this.currentFloor != null ? currentFloor.toString() : "");
 		info.put("mode", this.getMode().toString());
-		info.put("panicThreshold", this.panicThreshold != null ? panicThreshold.toString() : "");
-		info.put("alertThreshold", this.alertThreshold != null ? alertThreshold.toString() : "");
 
 		return info;
-	}
-
-	@Override
-	public void thresholds(Integer alertThreshold, Integer panicThreshold) {
-		if (alertThreshold != null) {
-			this.alertThreshold = alertThreshold;
-		}
-
-		if (panicThreshold != null) {
-			this.panicThreshold = panicThreshold;
-		}
 	}
 }

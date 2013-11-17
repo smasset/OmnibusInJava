@@ -16,6 +16,8 @@ public class DefaultElevator implements Elevator {
 	protected Integer cabinSize = null;
 	protected int cabinCount = 0;
 	protected boolean debug = false;
+	protected Integer alertThreshold = null;
+	protected Integer panicThreshold = null;
 
 	public DefaultElevator() {
 		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR);
@@ -76,6 +78,8 @@ public class DefaultElevator implements Elevator {
 		info.put("cabinSize", this.cabinSize != null ? cabinSize.toString() : "");
 		info.put("cabinCount", Integer.toString(this.cabinCount));
 		info.put("debug", Boolean.toString(this.debug));
+		info.put("panicThreshold", this.panicThreshold != null ? panicThreshold.toString() : "");
+		info.put("alertThreshold", this.alertThreshold != null ? alertThreshold.toString() : "");
 
 		return info;
 	}
@@ -110,6 +114,13 @@ public class DefaultElevator implements Elevator {
 
 	@Override
 	public void thresholds(Integer alertThreshold, Integer panicThreshold) {
+		if (alertThreshold != null) {
+			this.alertThreshold = alertThreshold;
+		}
+
+		if (panicThreshold != null) {
+			this.panicThreshold = panicThreshold;
+		}
 	}
 
 }
