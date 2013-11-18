@@ -111,67 +111,51 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 
 	@Override
 	public void go(Integer floor) {
-		this.call(floor, null);
+		// Remove current floor request
+		String direction = null;
+
+		int compareTo = this.currentFloor.compareTo(floor);
+		if (compareTo > 0) {
+			direction = Direction.DOWN;
+		} else if (compareTo < 0) {
+			direction = Direction.UP;
+		}
+
+		this.removeRequest(direction);
+
+		// Add new request
+		if ((floor >= this.minFloor) && (floor <= this.maxFloor)) {
+
+			FloorRequest newRequest = this.requests.get(floor);
+			if (newRequest == null) {
+				newRequest = new FloorRequest(floor);
+			}
+
+			this.requests.put(floor, newRequest.incrementCount(null));
+		}
 	}
 
 	@Override
 	public void call(Integer from, String direction) {
 		if ((from >= this.minFloor) && (from <= this.maxFloor)) {
-			RequestType newType = direction == null ? RequestType.OUT : null;
 
 			FloorRequest newRequest = this.requests.get(from);
 			if (newRequest == null) {
-				if (direction != null) {
-					newType = RequestType.valueOf(direction);
-				}
-
-				newRequest = new FloorRequest(from, newType);
-			} else {
-				if (direction != null) {
-					newType = newRequest.getType();
-
-					switch (newRequest.getType()) {
-					case UP:
-						if (Direction.DOWN.equals(direction)) {
-							newType = RequestType.UP_DOWN;
-						}
-					case DOWN:
-						if (Direction.UP.equals(direction)) {
-							newType = RequestType.UP_DOWN;
-						}
-					default:
-						break;
-					}
-				}
-
-				newRequest.setType(newType);
+				newRequest = new FloorRequest(from);
 			}
 
-			if (direction != null) {
-				newRequest.incrementRelativeCount();
-			} else {
-				newRequest.decrementRelativeCount();
-			}
-
-			this.requests.put(from, newRequest.incrementCount());
+			this.requests.put(from, newRequest.incrementCount(direction));
 		}
 	}
 
-	private void removeRequest(RequestType type) {
+	private void removeRequest(String direction) {
 		FloorRequest currentFloorRequest = this.requests.get(this.currentFloor);
 
 		if (currentFloorRequest != null) {
 			if (currentFloorRequest.getCount() == 1) {
 				this.requests.remove(this.currentFloor);
 			} else {
-				if (type != null) {
-					currentFloorRequest.setType(RequestType.UP_DOWN);
-					currentFloorRequest.incrementRelativeCount();
-				} else {
-					currentFloorRequest.decrementRelativeCount();
-				}
-
-				this.requests.put(this.currentFloor, currentFloorRequest.decrementCount());
+				this.requests.put(this.currentFloor, currentFloorRequest.decrementCount(direction));
 			}
 		}
 	}
@@ -179,13 +163,12 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 	@Override
 	public void userHasExited() {
 		super.userHasExited();
-		this.removeRequest(RequestType.OUT);
+		this.removeRequest(null);
 	}
 
 	@Override
 	public void userHasEntered() {
 		super.userHasEntered();
-		this.removeRequest(null);
 	}
 
 	@Override
