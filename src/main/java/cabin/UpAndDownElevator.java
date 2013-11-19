@@ -3,6 +3,7 @@ package cabin;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NavigableMap;
+import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentSkipListMap;
 
@@ -42,7 +43,9 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 
 		Iterator<FloorRequest> requestIterator = null;
 		if (sortRequests) {
-			requestIterator = new TreeSet<>(this.requests.values()).iterator();
+			SortedSet<FloorRequest> requestSet = new TreeSet<>(new FloorRequestRelativeCountProximityComparator(this.currentFloor));
+			requestSet.addAll(this.requests.values());
+			requestIterator = requestSet.iterator();
 		} else {
 			NavigableMap<Integer, FloorRequest> nextRequests = null;
 			if (Direction.UP.equals(direction)) {
