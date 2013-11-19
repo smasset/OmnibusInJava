@@ -40,17 +40,17 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 			break;
 		}
 
-		NavigableMap<Integer, FloorRequest> nextRequests = null;
-		if (Direction.UP.equals(direction)) {
-			nextRequests = this.requests.tailMap(this.currentFloor, true);
-		} else {
-			nextRequests = this.requests.headMap(this.currentFloor, true).descendingMap();
-		}
-
 		Iterator<FloorRequest> requestIterator = null;
 		if (sortRequests) {
-			requestIterator = new TreeSet<>(nextRequests.values()).iterator();
+			requestIterator = new TreeSet<>(this.requests.values()).iterator();
 		} else {
+			NavigableMap<Integer, FloorRequest> nextRequests = null;
+			if (Direction.UP.equals(direction)) {
+				nextRequests = this.requests.tailMap(this.currentFloor, true);
+			} else {
+				nextRequests = this.requests.headMap(this.currentFloor, true).descendingMap();
+			}
+
 			requestIterator = nextRequests.values().iterator();
 		}
 
