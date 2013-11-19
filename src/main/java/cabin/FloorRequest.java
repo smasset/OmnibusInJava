@@ -2,17 +2,13 @@ package cabin;
 
 public class FloorRequest implements Comparable<FloorRequest> {
 	private Integer floor = null;
-	private RequestType type = null;
-	private Integer count = 0;
-	private Integer relativeCount = 0;
+
+	private Integer outCount = 0;
+	private Integer upCount = 0;
+	private Integer downCount = 0;
 
 	public FloorRequest(Integer floor) {
-		this(floor, RequestType.OUT);
-	}
-
-	public FloorRequest(Integer floor, RequestType type) {
 		this.floor = floor;
-		this.type = type;
 	}
 
 	public Integer getFloor() {
@@ -24,54 +20,55 @@ public class FloorRequest implements Comparable<FloorRequest> {
 	}
 
 	public RequestType getType() {
+		RequestType type = null;
+
+		if (this.outCount > 0) {
+			type = RequestType.OUT;
+		} else if (this.upCount > 0) {
+			type = this.downCount > 0 ? RequestType.UP_DOWN : RequestType.UP;
+		} else if (this.downCount > 0) {
+			type = this.upCount > 0 ? RequestType.UP_DOWN : RequestType.DOWN;
+		}
+
 		return type;
 	}
 
-	public void setType(RequestType type) {
-		this.type = type;
-	}
-
 	public Integer getCount() {
-		return count;
-	}
-
-	public void setCount(Integer count) {
-		this.count = count;
+		return this.upCount + this.downCount + this.outCount;
 	}
 
 	public Integer getRelativeCount() {
-		return relativeCount;
+		return this.upCount + this.downCount - this.outCount;
 	}
 
-	public void setRelativeCount(Integer relativeCount) {
-		this.relativeCount = relativeCount;
+	private void addCount(String direction, int increment) {
+		if (direction != null) {
+
+			switch (direction) {
+			case Direction.UP:
+				this.upCount += increment;
+				break;
+
+			case Direction.DOWN:
+				this.downCount += increment;
+				break;
+
+			default:
+				break;
+			}
+
+		} else {
+			this.outCount += increment;
+		}
 	}
 
-	private void addCount(int increment) {
-		this.count += increment;
-	}
-
-	private void addRelativeCount(int increment) {
-		this.relativeCount += increment;
-	}
-
-	public FloorRequest incrementCount() {
-		this.addCount(1);
+	public FloorRequest incrementCount(String direction) {
+		this.addCount(direction, 1);
 		return this;
 	}
 
-	public FloorRequest incrementRelativeCount() {
-		this.addRelativeCount(1);
-		return this;
-	}
-
-	public FloorRequest decrementCount() {
-		this.addCount(-1);
-		return this;
-	}
-
-	public FloorRequest decrementRelativeCount() {
-		this.addRelativeCount(-1);
+	public FloorRequest decrementCount(String direction) {
+		this.addCount(direction, -1);
 		return this;
 	}
 
@@ -80,10 +77,10 @@ public class FloorRequest implements Comparable<FloorRequest> {
 
 		switch (direction) {
 		case Direction.UP:
-			hasSameDirection = !(this.type.equals(RequestType.DOWN));
+			hasSameDirection = !(this.getType().equals(RequestType.DOWN));
 			break;
 		case Direction.DOWN:
-			hasSameDirection = !(this.type.equals(RequestType.UP));
+			hasSameDirection = !(this.getType().equals(RequestType.UP));
 			break;
 		default:
 			break;
@@ -99,17 +96,23 @@ public class FloorRequest implements Comparable<FloorRequest> {
 		string.append("floor: ");
 		string.append(this.floor);
 		string.append("; type: ");
-		string.append(this.type);
+		string.append(this.getType());
 		string.append("; count: ");
-		string.append(this.count);
+		string.append(this.getCount());
+		string.append("; outCount: ");
+		string.append(this.outCount);
+		string.append("; upCount: ");
+		string.append(this.upCount);
+		string.append("; downCount: ");
+		string.append(this.downCount);
 		string.append("; relativeCount: ");
-		string.append(this.relativeCount);
+		string.append(this.getRelativeCount());
 
 		return string.toString();
 	}
 
 	@Override
 	public int compareTo(FloorRequest o) {
-		return this.relativeCount.compareTo(o.getRelativeCount());
+		return this.getRelativeCount().compareTo(o.getRelativeCount());
 	}
 }
