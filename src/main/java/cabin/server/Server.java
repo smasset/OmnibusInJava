@@ -16,7 +16,7 @@ public class Server {
 	public void addElevator(String context, final Elevator elevator) {
 		get(new Route(context + ":path") {
 
-			private String getRequestString(String uuid, Request request, Object response) {
+			private String getRequestString(String uuid, Request request, Object response, Long time) {
 				StringBuilder requestString = new StringBuilder();
 				String forwardedForIp = request.headers("X-Forwarded-For");
 
@@ -31,12 +31,15 @@ public class Server {
 				}
 				requestString.append(" ¤ ");
 				requestString.append(response);
+				requestString.append(" ¤ ");
+				requestString.append(time);
 
 				return requestString.toString();
 			}
 
 			@Override
 			public Object handle(Request request, Response response) {
+				long start = System.currentTimeMillis();
 				Object result = "";
 
 				if (elevator.isDebug()) {
@@ -113,7 +116,7 @@ public class Server {
 					break;
 				}
 
-				requestLogger.info(this.getRequestString(uuid, request, result));
+				requestLogger.info(this.getRequestString(uuid, request, result, Long.valueOf(System.currentTimeMillis() - start)));
 
 				return result;
 			}
