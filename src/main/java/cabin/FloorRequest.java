@@ -43,6 +43,10 @@ public class FloorRequest {
 		return currentTick - this.latestBirthDate;
 	}
 
+	public Integer getOutCount() {
+		return this.outCount;
+	}
+
 	public Integer getCount() {
 		return this.upCount + this.downCount + this.outCount;
 	}

@@ -16,9 +16,9 @@ public class FloorRequestRelativeCountProximityComparator implements Comparator<
 	@Override
 	public int compare(FloorRequest o1, FloorRequest o2) {
 		return new CompareToBuilder()
+				.append(o1.getOutCount(), o2.getOutCount())
 				.append(o1.getRelativeCount(), o2.getRelativeCount())
-				.append(o1.getAbsoluteDistance(this.currentFloor),
-						o2.getAbsoluteDistance(this.currentFloor))
+				.append(o1.getAbsoluteDistance(this.currentFloor), o2.getAbsoluteDistance(this.currentFloor))
 				.toComparison();
 	}
 
