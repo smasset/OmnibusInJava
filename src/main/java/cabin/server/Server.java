@@ -18,10 +18,11 @@ public class Server {
 
 			private String getRequestString(String uuid, Request request, Object response) {
 				StringBuilder requestString = new StringBuilder();
+				String forwardedForIp = request.headers("X-Forwarded-For");
 
 				requestString.append(uuid);
 				requestString.append(" ¤ ");
-				requestString.append(request.ip());
+				requestString.append(forwardedForIp != null ? forwardedForIp : request.ip());
 				requestString.append(" ¤ ");
 				requestString.append(request.pathInfo());
 				if (request.queryString() != null) {
