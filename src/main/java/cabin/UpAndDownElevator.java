@@ -43,7 +43,7 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 
 		Iterator<FloorRequest> requestIterator = null;
 		if (sortRequests) {
-			SortedSet<FloorRequest> requestSet = new TreeSet<>(new FloorRequestRelativeCountProximityComparator(this.currentFloor));
+			SortedSet<FloorRequest> requestSet = new TreeSet<>(new FloorRequestRelativeCountProximityComparator(this.currentFloor, this.currentTick));
 			requestSet.addAll(this.requests.values());
 			requestIterator = requestSet.iterator();
 		} else {
@@ -134,6 +134,7 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 				newRequest = new FloorRequest(floor);
 			}
 
+			newRequest.setLatestBirthDate(this.currentTick);
 			this.requests.put(floor, newRequest.incrementCount(null));
 		}
 	}
@@ -147,6 +148,7 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 				newRequest = new FloorRequest(from);
 			}
 
+			newRequest.setLatestBirthDate(this.currentTick);
 			this.requests.put(from, newRequest.incrementCount(direction));
 		}
 	}

@@ -1,11 +1,13 @@
 package cabin;
 
-public class FloorRequest implements Comparable<FloorRequest> {
+public class FloorRequest {
 	private Integer floor = null;
 
 	private Integer outCount = 0;
 	private Integer upCount = 0;
 	private Integer downCount = 0;
+
+	private Long latestBirthDate = null;
 
 	public FloorRequest(Integer floor) {
 		this.floor = floor;
@@ -17,6 +19,10 @@ public class FloorRequest implements Comparable<FloorRequest> {
 
 	public void setFloor(Integer floor) {
 		this.floor = floor;
+	}
+
+	public void setLatestBirthDate(Long latestBirthDate) {
+		this.latestBirthDate = latestBirthDate;
 	}
 
 	public RequestType getType() {
@@ -31,6 +37,10 @@ public class FloorRequest implements Comparable<FloorRequest> {
 		}
 
 		return type;
+	}
+
+	public Long getAge(Long currentTick) {
+		return currentTick - this.latestBirthDate;
 	}
 
 	public Integer getCount() {
@@ -89,6 +99,14 @@ public class FloorRequest implements Comparable<FloorRequest> {
 		return hasSameDirection;
 	}
 
+	public Integer getRelativeDistance(Integer currentFloor) {
+		return this.floor - currentFloor;
+	}
+
+	public Integer getAbsoluteDistance(Integer currentFloor) {
+		return Math.abs(this.getRelativeDistance(currentFloor));
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder string = new StringBuilder();
@@ -107,12 +125,9 @@ public class FloorRequest implements Comparable<FloorRequest> {
 		string.append(this.downCount);
 		string.append("; relativeCount: ");
 		string.append(this.getRelativeCount());
+		string.append("; latestBirthDate: ");
+		string.append(this.latestBirthDate);
 
 		return string.toString();
-	}
-
-	@Override
-	public int compareTo(FloorRequest o) {
-		return this.getRelativeCount().compareTo(o.getRelativeCount());
 	}
 }
