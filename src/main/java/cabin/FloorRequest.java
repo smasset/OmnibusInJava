@@ -1,6 +1,6 @@
 package cabin;
 
-public class FloorRequest implements Comparable<FloorRequest> {
+public class FloorRequest {
 	private Integer floor = null;
 
 	private Integer outCount = 0;
@@ -89,6 +89,14 @@ public class FloorRequest implements Comparable<FloorRequest> {
 		return hasSameDirection;
 	}
 
+	public Integer getRelativeDistance(Integer currentFloor) {
+		return this.floor - currentFloor;
+	}
+
+	public Integer getAbsoluteDistance(Integer currentFloor) {
+		return Math.abs(this.getRelativeDistance(currentFloor));
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder string = new StringBuilder();
@@ -109,10 +117,5 @@ public class FloorRequest implements Comparable<FloorRequest> {
 		string.append(this.getRelativeCount());
 
 		return string.toString();
-	}
-
-	@Override
-	public int compareTo(FloorRequest o) {
-		return this.getRelativeCount().compareTo(o.getRelativeCount());
 	}
 }
