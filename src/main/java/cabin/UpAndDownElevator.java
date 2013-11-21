@@ -1,5 +1,6 @@
 package cabin;
 
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NavigableMap;
@@ -21,29 +22,36 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 	private Integer getNextFloor(String direction) {
 		Integer nextFloor = null;
 
-		boolean sortRequests = false;
-		boolean serveOnlyOutRequests = false;
+		Comparator<FloorRequest> comparator = null;
+		boolean serveOnlyOutRequests = true;
 		boolean serveOnlySameRequests = false;
 		boolean returnDefaultFloor = false;
 
 		switch (this.getMode()) {
-		case PANIC:
-			sortRequests = true;
-
-		case ALERT:
-			serveOnlyOutRequests = true;
-			break;
 
 		case NORMAL:
+			serveOnlyOutRequests = false;
+			serveOnlySameRequests = true;
+			returnDefaultFloor = true;
+
+		case ALERT:
+			comparator = new FloorRequestAgeDistanceComparator(this.currentFloor, this.currentTick);
+			break;
+
+		case PANIC:
+			comparator = new FloorRequestRelativeCountProximityComparator(this.currentFloor, this.currentTick);
+			break;
+
 		default:
+			serveOnlyOutRequests = false;
 			serveOnlySameRequests = true;
 			returnDefaultFloor = true;
 			break;
 		}
 
 		Iterator<FloorRequest> requestIterator = null;
-		if (sortRequests) {
-			SortedSet<FloorRequest> requestSet = new TreeSet<>(new ClosestOutComparator(this.getMode(), this.currentFloor, this.currentTick));
+		if (comparator != null) {
+			SortedSet<FloorRequest> requestSet = new TreeSet<>(comparator);
 			requestSet.addAll(this.requests.values());
 			requestIterator = requestSet.iterator();
 		} else {
