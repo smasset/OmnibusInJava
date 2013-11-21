@@ -93,7 +93,7 @@ public class LoveInAnElevator extends StateOfLoveAndTrustElevator {
 	protected Map<String, String> getStatusInfo() {
 		Map<String, String> info = super.getStatusInfo();
 
-		info.put("requests", this.requests.toString());
+		info.put("requests", this.requests.descendingMap().toString());
 
 		return info;
 	}
