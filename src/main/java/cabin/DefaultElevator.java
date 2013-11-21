@@ -18,6 +18,7 @@ public class DefaultElevator implements Elevator {
 	protected boolean debug = false;
 	protected Integer alertThreshold = null;
 	protected Integer panicThreshold = null;
+	protected Long currentTick = Long.MIN_VALUE;
 
 	public DefaultElevator() {
 		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR, Elevator.DEFAULT_CABIN_SIZE);
@@ -31,6 +32,7 @@ public class DefaultElevator implements Elevator {
 
 	@Override
 	public Command nextCommand() {
+		this.currentTick++;
 		return Command.NOTHING;
 	}
 
@@ -68,6 +70,7 @@ public class DefaultElevator implements Elevator {
 			this.cabinSize = cabinSize;
 		}
 
+		this.currentTick = Long.MIN_VALUE;
 		this.cabinCount = 0;
 	}
 
@@ -81,6 +84,7 @@ public class DefaultElevator implements Elevator {
 		info.put("debug", Boolean.toString(this.debug));
 		info.put("panicThreshold", this.panicThreshold != null ? panicThreshold.toString() : "");
 		info.put("alertThreshold", this.alertThreshold != null ? alertThreshold.toString() : "");
+		info.put("currentTick", Long.toString(this.currentTick));
 
 		return info;
 	}

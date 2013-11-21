@@ -6,9 +6,11 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 
 public class FloorRequestRelativeCountProximityComparator implements Comparator<FloorRequest> {
 	private Integer currentFloor = null;
+	private Long currentTick = null;
 
-	public FloorRequestRelativeCountProximityComparator(Integer currentFloor) {
+	public FloorRequestRelativeCountProximityComparator(Integer currentFloor, Long currentTick) {
 		this.currentFloor = currentFloor;
+		this.currentTick = currentTick;
 	}
 
 	@Override

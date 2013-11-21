@@ -7,6 +7,8 @@ public class FloorRequest {
 	private Integer upCount = 0;
 	private Integer downCount = 0;
 
+	private Long latestBirthDate = null;
+
 	public FloorRequest(Integer floor) {
 		this.floor = floor;
 	}
@@ -17,6 +19,10 @@ public class FloorRequest {
 
 	public void setFloor(Integer floor) {
 		this.floor = floor;
+	}
+
+	public void setLatestBirthDate(Long latestBirthDate) {
+		this.latestBirthDate = latestBirthDate;
 	}
 
 	public RequestType getType() {
@@ -31,6 +37,10 @@ public class FloorRequest {
 		}
 
 		return type;
+	}
+
+	public Long getAge(Long currentTick) {
+		return currentTick - this.latestBirthDate;
 	}
 
 	public Integer getCount() {
@@ -115,6 +125,8 @@ public class FloorRequest {
 		string.append(this.downCount);
 		string.append("; relativeCount: ");
 		string.append(this.getRelativeCount());
+		string.append("; latestBirthDate: ");
+		string.append(this.latestBirthDate);
 
 		return string.toString();
 	}

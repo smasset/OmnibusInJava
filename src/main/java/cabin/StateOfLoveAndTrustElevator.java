@@ -81,6 +81,7 @@ public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 
 	@Override
 	public Command nextCommand() {
+		super.nextCommand();
 		return this.getNextCommand();
 	}
 
