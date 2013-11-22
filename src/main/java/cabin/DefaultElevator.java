@@ -18,6 +18,7 @@ public class DefaultElevator implements Elevator {
 	protected boolean debug = false;
 	protected Integer alertThreshold = null;
 	protected Integer panicThreshold = null;
+	protected Integer lookBehind = null;
 	protected Long currentTick = Long.MIN_VALUE;
 
 	public DefaultElevator() {
@@ -85,6 +86,7 @@ public class DefaultElevator implements Elevator {
 		info.put("panicThreshold", this.panicThreshold != null ? panicThreshold.toString() : "");
 		info.put("alertThreshold", this.alertThreshold != null ? alertThreshold.toString() : "");
 		info.put("currentTick", Long.toString(this.currentTick));
+		info.put("lookBehind", this.lookBehind != null ? this.lookBehind.toString() : "");
 
 		return info;
 	}
@@ -118,13 +120,17 @@ public class DefaultElevator implements Elevator {
 	}
 
 	@Override
-	public void thresholds(Integer alertThreshold, Integer panicThreshold) {
+	public void thresholds(Integer alertThreshold, Integer panicThreshold, Integer lookBehind) {
 		if (alertThreshold != null) {
 			this.alertThreshold = alertThreshold;
 		}
 
 		if (panicThreshold != null) {
 			this.panicThreshold = panicThreshold;
+		}
+
+		if (lookBehind != null) {
+			this.lookBehind = lookBehind;
 		}
 	}
 
