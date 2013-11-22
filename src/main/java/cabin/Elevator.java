@@ -25,5 +25,5 @@ public interface Elevator {
 
 	public void setDebug(boolean debug);
 
-	public void thresholds(Integer alertThreshold, Integer panicThreshold);
+	public void thresholds(Integer alertThreshold, Integer panicThreshold, Integer lookBehind);
 }

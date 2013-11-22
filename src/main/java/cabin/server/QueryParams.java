@@ -21,4 +21,5 @@ public class QueryParams {
 	// threshold request
 	public static final String alertThreshold = "alertThreshold";
 	public static final String panicThreshold = "panicThreshold";
+	public static final String lookBehind = "lookBehind";
 }
