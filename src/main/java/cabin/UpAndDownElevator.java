@@ -43,7 +43,7 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 
 		Iterator<FloorRequest> requestIterator = null;
 		if (sortRequests) {
-			SortedSet<FloorRequest> requestSet = new TreeSet<>(new FloorRequestRelativeCountProximityComparator(this.currentFloor, this.currentTick));
+			SortedSet<FloorRequest> requestSet = new TreeSet<>(new ClosestOutComparator(this.getMode(), this.currentFloor, this.currentTick));
 			requestSet.addAll(this.requests.values());
 			requestIterator = requestSet.iterator();
 		} else {
