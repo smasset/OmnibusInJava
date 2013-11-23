@@ -4,6 +4,7 @@ import cabin.FifoElevator;
 import cabin.LoveInAnElevator;
 import cabin.OmnibusElevator;
 import cabin.UpAndDownElevator;
+import cabin.YoungAndRestlessElevator;
 import cabin.server.Server;
 
 public class Launcher {
@@ -22,5 +23,6 @@ public class Launcher {
 		cabinServer.addElevator("/fifo/", new FifoElevator());
 		cabinServer.addElevator("/loveinanelevator/", new LoveInAnElevator(0, 19, 42, 2));
 		cabinServer.addElevator("/vengaboys/", new UpAndDownElevator(-13, 27, 60, 2));
+		cabinServer.addElevator("/youngandrestless/", new YoungAndRestlessElevator(-13, 27, 60, 2));
 	}
 }

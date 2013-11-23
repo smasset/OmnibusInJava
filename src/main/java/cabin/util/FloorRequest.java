@@ -41,7 +41,13 @@ public class FloorRequest {
 	}
 
 	public Long getAge(Long currentTick) {
-		return currentTick - this.latestBirthDate;
+		Long age = this.latestBirthDate;
+
+		if (currentTick != null) {
+			age = currentTick - this.latestBirthDate;
+		}
+
+		return age;
 	}
 
 	public Integer getOutCount() {
@@ -105,7 +111,13 @@ public class FloorRequest {
 	}
 
 	public Integer getRelativeDistance(Integer currentFloor) {
-		return this.floor - currentFloor;
+		Integer distance = this.floor;
+
+		if (currentFloor != null) {
+			distance = this.floor - currentFloor;
+		}
+
+		return distance;
 	}
 
 	public Integer getAbsoluteDistance(Integer currentFloor) {
@@ -114,6 +126,10 @@ public class FloorRequest {
 
 	@Override
 	public String toString() {
+		return this.toString(null, null);
+	}
+
+	public String toString(Long currentTick, Integer currentFloor) {
 		StringBuilder string = new StringBuilder();
 
 		string.append("floor: ");
@@ -130,8 +146,10 @@ public class FloorRequest {
 		string.append(this.downCount);
 		string.append("; relativeCount: ");
 		string.append(this.getRelativeCount());
-		string.append("; latestBirthDate: ");
-		string.append(this.latestBirthDate);
+		string.append("; age: ");
+		string.append(this.getAge(currentTick));
+		string.append("; distance: ");
+		string.append(this.getAbsoluteDistance(currentFloor));
 
 		return string.toString();
 	}
