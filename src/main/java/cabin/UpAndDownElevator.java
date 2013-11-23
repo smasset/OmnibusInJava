@@ -7,6 +7,11 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentSkipListMap;
 
+import cabin.comparator.ClosestOutComparator;
+import cabin.util.Direction;
+import cabin.util.FloorRequest;
+import cabin.util.RequestType;
+
 public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 	protected NavigableMap<Integer, FloorRequest> requests = new ConcurrentSkipListMap<Integer, FloorRequest>();
 

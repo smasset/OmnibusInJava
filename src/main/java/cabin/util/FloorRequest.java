@@ -1,4 +1,5 @@
-package cabin;
+package cabin.util;
+
 
 public class FloorRequest {
 	private Integer floor = null;

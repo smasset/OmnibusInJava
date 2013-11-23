@@ -2,7 +2,7 @@ package cabin;
 
 import java.util.Map;
 
-import cabin.command.Command;
+import cabin.util.Command;
 
 public class OmnibusElevator extends DefaultElevator {
 

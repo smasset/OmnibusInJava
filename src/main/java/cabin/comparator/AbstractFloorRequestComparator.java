@@ -1,8 +1,11 @@
-package cabin;
+package cabin.comparator;
 
 import java.util.Comparator;
 
 import org.apache.commons.lang3.builder.CompareToBuilder;
+
+import cabin.util.FloorRequest;
+import cabin.util.Mode;
 
 public abstract class AbstractFloorRequestComparator implements Comparator<FloorRequest> {
 	protected Mode mode = null;
