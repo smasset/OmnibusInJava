@@ -13,8 +13,6 @@ public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 
 	protected abstract Integer getNextFloor();
 
-	protected boolean ignoreDirectionChange = false;
-
 	public StateOfLoveAndTrustElevator() {
 		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR, Elevator.DEFAULT_CABIN_SIZE);
 	}
@@ -59,22 +57,17 @@ public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 				} else if (comparison > 0) {
 					this.currentFloor--;
 					result = Command.DOWN;
-					if (!ignoreDirectionChange) {
-						this.lastDirection = Direction.DOWN;
-					}
+					this.lastDirection = Direction.DOWN;
 				} else {
 					this.currentFloor++;
 					result = Command.UP;
-					if (!ignoreDirectionChange) {
-						this.lastDirection = Direction.UP;
-					}
+					this.lastDirection = Direction.UP;
 				}
 			}
 			break;
 
 		case OPENED:
 			result = Command.CLOSE;
-			this.ignoreDirectionChange = false;
 			this.currentState = CabinState.STOPPED;
 			break;
 

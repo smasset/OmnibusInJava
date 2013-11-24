@@ -110,10 +110,7 @@ public class Server {
 					String panicThreshold = request.queryParams(QueryParams.panicThreshold);
 					Integer iPanicThreshold = panicThreshold != null ? new Integer(panicThreshold) : null;
 
-					String lookBehind = request.queryParams(QueryParams.lookBehind);
-					Integer iLookBehind = lookBehind != null ? new Integer(lookBehind) : null;
-
-					elevator.thresholds(iAlertThreshold, iPanicThreshold, iLookBehind);
+					elevator.thresholds(iAlertThreshold, iPanicThreshold);
 
 				default:
 					break;

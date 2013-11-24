@@ -16,7 +16,6 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 
 	public UpAndDownElevator(int minFloor, int maxFloor, Integer cabinSize) {
 		super(minFloor, maxFloor, cabinSize);
-		this.lookBehind = 2;
 	}
 
 	private Integer getNextFloor(String direction) {
@@ -50,17 +49,9 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 		} else {
 			NavigableMap<Integer, FloorRequest> nextRequests = null;
 			if (Direction.UP.equals(direction)) {
-				Integer startPosition = this.currentFloor;
-				if (this.lookBehind != null) {
-					startPosition -= this.lookBehind;
-				}
-				nextRequests = this.requests.tailMap(startPosition, true);
+				nextRequests = this.requests.tailMap(this.currentFloor, true);
 			} else {
-				Integer startPosition = this.currentFloor;
-				if (this.lookBehind != null) {
-					startPosition += this.lookBehind;
-				}
-				nextRequests = this.requests.headMap(startPosition, true).descendingMap();
+				nextRequests = this.requests.headMap(this.currentFloor, true).descendingMap();
 			}
 
 			requestIterator = nextRequests.values().iterator();
@@ -104,10 +95,6 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 			nextFloor = this.getNextFloor(Direction.UP);
 			if (nextFloor == null) {
 				nextFloor = this.getNextFloor(Direction.DOWN);
-			} else {
-				if (nextFloor.compareTo(this.currentFloor) < 0) {
-					this.ignoreDirectionChange = true;
-				}
 			}
 			break;
 
@@ -115,10 +102,6 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 			nextFloor = this.getNextFloor(Direction.DOWN);
 			if (nextFloor == null) {
 				nextFloor = this.getNextFloor(Direction.UP);
-			} else {
-				if (nextFloor.compareTo(this.currentFloor) > 0) {
-					this.ignoreDirectionChange = true;
-				}
 			}
 			break;
 
