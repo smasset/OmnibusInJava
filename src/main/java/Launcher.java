@@ -21,8 +21,8 @@ public class Launcher {
 		cabinServer.addElevator("/", new DefaultElevator());
 		cabinServer.addElevator("/omnibus/", new OmnibusElevator());
 		cabinServer.addElevator("/fifo/", new FifoElevator());
-		cabinServer.addElevator("/loveinanelevator/", new LoveInAnElevator(0, 19, 42, 2));
-		cabinServer.addElevator("/vengaboys/", new UpAndDownElevator(-13, 27, 60, 2));
-		cabinServer.addElevator("/youngandrestless/", new YoungAndRestlessElevator(-13, 27, 60, 2));
+		cabinServer.addElevator("/loveinanelevator/", new LoveInAnElevator(-5, 35, 30, 2));
+		cabinServer.addElevator("/vengaboys/", new UpAndDownElevator(-5, 35, 30, 2));
+		cabinServer.addElevator("/youngandrestless/", new YoungAndRestlessElevator(-5, 35, 30, 2));
 	}
 }
