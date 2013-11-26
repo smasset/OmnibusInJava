@@ -3,7 +3,7 @@ package cabin.server;
 public class Method {
 
 	// Mandatory commands
-	public static final String nextCommand = "nextCommand";
+	public static final String nextCommands = "nextCommands";
 	public static final String call = "call";
 	public static final String go = "go";
 	public static final String userHasEntered = "userHasEntered";

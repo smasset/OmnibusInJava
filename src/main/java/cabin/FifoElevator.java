@@ -7,11 +7,11 @@ public class FifoElevator extends StateOfLoveAndTrustElevator {
 	private ConcurrentLinkedQueue<Integer> requests = new ConcurrentLinkedQueue<>();
 
 	public FifoElevator() {
-		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR, Elevator.DEFAULT_CABIN_SIZE);
+		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR, Elevator.DEFAULT_CABIN_SIZE, Elevator.DEFAULT_CABIN_COUNT);
 	}
 
-	public FifoElevator(int minFloor, int maxFloor, Integer cabinSize) {
-		super(minFloor, maxFloor, cabinSize);
+	public FifoElevator(int minFloor, int maxFloor, Integer cabinSize, Integer cabinCount) {
+		super(minFloor, maxFloor, cabinSize, cabinCount);
 	}
 
 	@Override
@@ -20,7 +20,7 @@ public class FifoElevator extends StateOfLoveAndTrustElevator {
 	}
 
 	@Override
-	public void go(Integer floor) {
+	public void go(Integer floor, Integer cabin) {
 		if ((floor >= this.minFloor) && (floor <= this.maxFloor)) {
 			if (!this.requests.contains(floor)) {
 				this.requests.add(floor);
@@ -38,8 +38,8 @@ public class FifoElevator extends StateOfLoveAndTrustElevator {
 	}
 
 	@Override
-	public void userHasExited() {
-		super.userHasExited();
+	public void userHasExited(Integer cabin) {
+		super.userHasExited(cabin);
 
 		if (this.currentFloor.equals(this.requests.peek())) {
 			this.requests.poll();
@@ -47,8 +47,8 @@ public class FifoElevator extends StateOfLoveAndTrustElevator {
 	}
 
 	@Override
-	public void userHasEntered() {
-		super.userHasEntered();
+	public void userHasEntered(Integer cabin) {
+		super.userHasEntered(cabin);
 
 		if (this.currentFloor.equals(this.requests.peek())) {
 			this.requests.poll();
@@ -56,8 +56,8 @@ public class FifoElevator extends StateOfLoveAndTrustElevator {
 	}
 
 	@Override
-	public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause) {
-		super.reset(minFloor, maxFloor, cabinSize, cause);
+	public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause, Integer cabincount) {
+		super.reset(minFloor, maxFloor, cabinSize, cause, cabincount);
 		this.requests.clear();
 	}
 
