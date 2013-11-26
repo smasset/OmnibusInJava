@@ -1,4 +1,4 @@
-package cabin;
+package cabin.util;
 
 public final class Direction {
 	public static final String UP = "UP";

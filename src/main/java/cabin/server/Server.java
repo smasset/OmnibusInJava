@@ -9,7 +9,7 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 import cabin.Elevator;
-import cabin.command.Command;
+import cabin.util.Command;
 
 public class Server {
 	private static final Logger requestLogger = Logger.getLogger("requests");

@@ -1,8 +1,10 @@
-package cabin;
+package cabin.comparator;
 
 import java.util.Comparator;
 
 import org.apache.commons.lang3.builder.CompareToBuilder;
+
+import cabin.util.FloorRequest;
 
 public class FloorRequestRelativeCountProximityComparator implements Comparator<FloorRequest> {
 	private Integer currentFloor = null;

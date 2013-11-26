@@ -5,7 +5,7 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 
-import cabin.command.Command;
+import cabin.util.Command;
 
 public class DefaultElevator implements Elevator {
 	private static final Logger requestLogger = Logger.getLogger("requests");
