@@ -35,9 +35,9 @@ public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 	protected Mode getMode() {
 		Mode mode = Mode.NORMAL;
 
-		if ((this.panicThreshold != null) && (this.cabinCount >= this.panicThreshold)) {
+		if ((this.panicThreshold != null) && (this.cabinPopulation >= this.panicThreshold)) {
 			mode = Mode.PANIC;
-		} else if ((this.alertThreshold != null) && (this.cabinCount >= this.alertThreshold)) {
+		} else if ((this.alertThreshold != null) && (this.cabinPopulation >= this.alertThreshold)) {
 			mode = Mode.ALERT;
 		}
 
