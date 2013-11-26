@@ -14,11 +14,11 @@ public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 	protected abstract Integer getNextFloor();
 
 	public StateOfLoveAndTrustElevator() {
-		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR, Elevator.DEFAULT_CABIN_SIZE);
+		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR, Elevator.DEFAULT_CABIN_SIZE, Elevator.DEFAULT_CABIN_COUNT);
 	}
 
-	public StateOfLoveAndTrustElevator(int minFloor, int maxFloor, Integer cabinSize) {
-		super(minFloor, maxFloor, cabinSize);
+	public StateOfLoveAndTrustElevator(int minFloor, int maxFloor, Integer cabinSize, Integer cabinCount) {
+		super(minFloor, maxFloor, cabinSize, cabinCount);
 		this.setThresholds();
 	}
 
@@ -80,14 +80,17 @@ public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 	}
 
 	@Override
-	public Command nextCommand() {
-		super.nextCommand();
-		return this.getNextCommand();
+	public Command[] nextCommands() {
+		Command[] commands = super.nextCommands();
+
+		commands[0] = this.getNextCommand();
+
+		return commands;
 	}
 
 	@Override
-	public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause) {
-		super.reset(minFloor, maxFloor, cabinSize, cause);
+	public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause, Integer cabinCount) {
+		super.reset(minFloor, maxFloor, cabinSize, cause, cabinCount);
 
 		this.currentState = CabinState.STOPPED;
 		this.lastDirection = Direction.UP;

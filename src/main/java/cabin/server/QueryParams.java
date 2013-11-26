@@ -8,11 +8,13 @@ public class QueryParams {
 
 	// go request
 	public static final String floorToGo = "floorToGo";
+	public static final String cabin = "cabin";
 
 	// reset request
 	public static final String lowerFloor = "lowerFloor";
 	public static final String higherFloor = "higherFloor";
 	public static final String cabinSize = "cabinSize";
+	public static final String cabinCount = "cabinCount";
 	public static final String cause = "cause";
 
 	// debug request

@@ -11,11 +11,11 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 	protected NavigableMap<Integer, FloorRequest> requests = new ConcurrentSkipListMap<Integer, FloorRequest>();
 
 	public UpAndDownElevator() {
-		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR, Elevator.DEFAULT_CABIN_SIZE);
+		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR, Elevator.DEFAULT_CABIN_SIZE, Elevator.DEFAULT_CABIN_COUNT);
 	}
 
-	public UpAndDownElevator(int minFloor, int maxFloor, Integer cabinSize) {
-		super(minFloor, maxFloor, cabinSize);
+	public UpAndDownElevator(int minFloor, int maxFloor, Integer cabinSize, Integer cabinCount) {
+		super(minFloor, maxFloor, cabinSize, cabinCount);
 	}
 
 	private Integer getNextFloor(String direction) {
@@ -113,7 +113,7 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 	}
 
 	@Override
-	public void go(Integer floor) {
+	public void go(Integer floor, Integer cabin) {
 		// Remove current floor request
 		String direction = null;
 
@@ -166,19 +166,19 @@ public class UpAndDownElevator extends StateOfLoveAndTrustElevator {
 	}
 
 	@Override
-	public void userHasExited() {
-		super.userHasExited();
+	public void userHasExited(Integer cabin) {
+		super.userHasExited(cabin);
 		this.removeRequest(null);
 	}
 
 	@Override
-	public void userHasEntered() {
-		super.userHasEntered();
+	public void userHasEntered(Integer cabin) {
+		super.userHasEntered(cabin);
 	}
 
 	@Override
-	public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause) {
-		super.reset(minFloor, maxFloor, cabinSize, cause);
+	public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause, Integer cabinCount) {
+		super.reset(minFloor, maxFloor, cabinSize, cause, cabinCount);
 		this.requests.clear();
 	}
 

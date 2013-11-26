@@ -9,6 +9,7 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 import cabin.Elevator;
+import cabin.command.Command;
 
 public class Server {
 	private static final Logger requestLogger = Logger.getLogger("requests");
@@ -50,8 +51,18 @@ public class Server {
 				String path = request.params(":path");
 
 				switch (path) {
-				case Method.nextCommand:
-					result = elevator.nextCommand();
+				case Method.nextCommands:
+					Command[] commands = elevator.nextCommands();
+					if (commands != null) {
+						StringBuilder builder = new StringBuilder();
+
+						for (int commandIndex = 0 ; commandIndex < commands.length ; ++commandIndex) {
+							builder.append(commands[commandIndex]);
+							builder.append("\n");
+						}
+
+						result = builder.toString();
+					}
 					break;
 
 				case Method.call:
@@ -66,17 +77,26 @@ public class Server {
 				case Method.go:
 					String floorToGo = request.queryParams(QueryParams.floorToGo);
 
+					String cabin = request.queryParams(QueryParams.cabin);
+					Integer iCabin = cabin != null ? new Integer(cabin) : null;
+
 					if (floorToGo != null) {
-						elevator.go(new Integer(floorToGo));
+						elevator.go(new Integer(floorToGo), iCabin);
 					}
 					break;
 
 				case Method.userHasEntered:
-					elevator.userHasEntered();
+					String cabinEntered = request.queryParams(QueryParams.cabin);
+					Integer iCabinEntered = cabinEntered != null ? new Integer(cabinEntered) : null;
+
+					elevator.userHasEntered(iCabinEntered);
 					break;
 
 				case Method.userHasExited:
-					elevator.userHasExited();
+					String cabinExited = request.queryParams(QueryParams.cabin);
+					Integer iCabinExited = cabinExited != null ? new Integer(cabinExited) : null;
+
+					elevator.userHasExited(iCabinExited);
 					break;
 
 				case Method.reset:
@@ -91,7 +111,10 @@ public class Server {
 
 					String cause = request.queryParams(QueryParams.cause);
 
-					elevator.reset(iMinFloor, iMaxFloor, iCabinSize, cause);
+					String cabinCount = request.queryParams(QueryParams.cabinCount);
+					Integer iCabinCount = cabinCount != null ? new Integer(cabinCount) : null;
+
+					elevator.reset(iMinFloor, iMaxFloor, iCabinSize, cause, iCabinCount);
 					break;
 
 				case Method.debug:
