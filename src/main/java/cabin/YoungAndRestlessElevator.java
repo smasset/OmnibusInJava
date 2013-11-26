@@ -32,7 +32,7 @@ public class YoungAndRestlessElevator extends StateOfLoveAndTrustElevator {
 
 		SortedSet<FloorRequest> requestSet = new TreeSet<>(new YoungAndRestlessComparator(this.getMode(), this.currentFloor));
 		requestSet.addAll(requests.values());
-		boolean serveOnlyOutRequests = this.cabinSize <= this.cabinCount;
+		boolean serveOnlyOutRequests = this.cabinSize <= this.cabinPopulation;
 
 		FloorRequest currentRequest = null;
 		Iterator<FloorRequest> requestIterator = requestSet.iterator();
