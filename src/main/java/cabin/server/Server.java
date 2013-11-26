@@ -57,8 +57,10 @@ public class Server {
 						StringBuilder builder = new StringBuilder();
 
 						for (int commandIndex = 0 ; commandIndex < commands.length ; ++commandIndex) {
+							if (commandIndex > 0) {
+								builder.append("\n");
+							}
 							builder.append(commands[commandIndex]);
-							builder.append("\n");
 						}
 
 						result = builder.toString();
