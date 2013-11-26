@@ -1,107 +1,83 @@
 package cabin;
 
-import java.util.Map;
-
 import cabin.util.CabinState;
 import cabin.util.Command;
-import cabin.util.Direction;
-import cabin.util.FloorRequest;
-import cabin.util.Mode;
 
 public class DefaultCabin implements Cabin {
 	protected Integer id = null;
 	protected Integer size = null;
-	protected Integer population = null;
-	protected CabinState state = null;
-	protected String lastDirection = null;
 	protected Integer startFloor = null;
+
 	protected Integer currentFloor = null;
-	protected Integer alertThreshold = null;
-	protected Integer panicThreshold = null;
-	protected Map<Integer, FloorRequest> requests = null;
+	protected Integer population = null;
+	protected Integer nextFloor = null;
+	protected CabinState state = null;
 
 	public DefaultCabin(Integer id) {
-		this(id, null, 0, Direction.UP);
+		this(id, null, 0);
 	}
 
-	public DefaultCabin(Integer id, Integer size, Integer startFloor, String lastDirection) {
+	public DefaultCabin(Integer id, Integer size, Integer startFloor) {
 		this.id = id;
-		this.reset(size, startFloor, lastDirection);
+		this.size = size;
+		this.startFloor = startFloor;
+		this.reset();
 	}
 
-	public void reset(Integer size, Integer startFloor, String lastDirection) {
-	}
-
-	public void setRequests(Map<Integer, FloorRequest> requests) {
-		this.requests = requests;
+	private void reset() {
+		this.currentFloor = startFloor;
+		this.population = 0;
+		this.nextFloor = null;
+		this.state = CabinState.STOPPED;
 	}
 
 	@Override
 	public Command nextCommand() {
-		return Command.NOTHING;
-	}
+		Command nextCommand = Command.NOTHING;
 
-	@Override
-	public void call(Integer from, String direction) {
-	}
+		switch (this.state) {
 
-	@Override
-	public void go(Integer floor) {
-	}
+		case STOPPED:
+			if ((this.nextFloor != null) && (this.currentFloor != null)) {
+				int comparison = Integer.compare(this.currentFloor, nextFloor);
 
-	@Override
-	public void userHasEntered() {
-	}
+				if (comparison == 0) {
+					nextCommand = Command.OPEN;
+					this.state = CabinState.OPENED;
+				} else if (comparison > 0) {
+					this.currentFloor--;
+					nextCommand = Command.DOWN;
+				} else {
+					this.currentFloor++;
+					nextCommand = Command.UP;
+				}
+			}
+			break;
 
-	@Override
-	public void userHasExited() {
-	}
+		case OPENED:
+			nextCommand = Command.CLOSE;
+			this.state = CabinState.STOPPED;
+			break;
 
-	@Override
-	public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause) {
-		if (cabinSize != null) {
-			this.size = cabinSize;
+		default:
+			break;
 		}
 
-		this.startFloor = 0;
-		this.lastDirection = Direction.UP;
+		return nextCommand;
 	}
 
 	@Override
-	public Mode getMode() {
-		Mode mode = Mode.NORMAL;
-
-		if ((this.panicThreshold != null) && (this.population >= this.panicThreshold)) {
-			mode = Mode.PANIC;
-		} else if ((this.alertThreshold != null) && (this.population >= this.alertThreshold)) {
-			mode = Mode.ALERT;
-		}
-
-		return mode;
+	public void setNextFloor(Integer nextFloor) {
+		this.nextFloor = nextFloor;
 	}
 
 	@Override
-	public String status(boolean pretty) {
-		return "";
+	public Integer getCurrentFloor() {
+		return this.currentFloor;
 	}
 
 	@Override
-	public boolean isDebug() {
-		return false;
-	}
-
-	@Override
-	public void setDebug(boolean debug) {
-	}
-
-	@Override
-	public void thresholds(Integer alertThreshold, Integer panicThreshold) {
-		if (alertThreshold != null) {
-			this.alertThreshold = alertThreshold;
-		}
-
-		if (panicThreshold != null) {
-			this.panicThreshold = panicThreshold;
-		}
+	public Integer getPopulation() {
+		return this.population;
 	}
 }
