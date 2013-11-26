@@ -11,15 +11,15 @@ public class OmnibusElevator extends DefaultElevator {
 	private int count = 0;
 
 	public OmnibusElevator() {
-		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR, Elevator.DEFAULT_CABIN_SIZE);
+		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR, Elevator.DEFAULT_CABIN_SIZE, Elevator.DEFAULT_CABIN_COUNT);
 	}
 
-	public OmnibusElevator(int minFloor, int maxFloor, Integer cabinSize) {
-		super(minFloor, maxFloor, cabinSize);
+	public OmnibusElevator(int minFloor, int maxFloor, Integer cabinSize, Integer cabinCount) {
+		super(minFloor, maxFloor, cabinSize, cabinCount);
 	}
 
 	@Override
-	public Command nextCommand() {
+	public Command[] nextCommands() {
 		if (this.commands == null) {
 			int floorRange = this.maxFloor - this.minFloor;
 			this.commands = new Command[floorRange == 0 ? 2 : 6 * floorRange];
@@ -37,12 +37,15 @@ public class OmnibusElevator extends DefaultElevator {
 			}
 		}
 
-		return commands[(count++) % commands.length];
+		Command[] nextCommands = super.nextCommands();
+		nextCommands[0] = commands[(count++) % commands.length];
+
+		return nextCommands;
 	}
 
 	@Override
-	public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause) {
-		super.reset(minFloor, maxFloor, cabinSize, cause);
+	public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause, Integer cabincount) {
+		super.reset(minFloor, maxFloor, cabinSize, cause, cabincount);
 
 		this.commands = null;
 		this.count = 0;

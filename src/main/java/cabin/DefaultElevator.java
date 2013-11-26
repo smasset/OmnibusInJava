@@ -12,28 +12,36 @@ public class DefaultElevator implements Elevator {
 
 	protected int minFloor = Elevator.DEFAULT_MIN_FLOOR;
 	protected int maxFloor = Elevator.DEFAULT_MAX_FLOOR;
+	protected Integer cabinCount = Elevator.DEFAULT_CABIN_COUNT;
 
 	protected Integer cabinSize = null;
-	protected int cabinCount = 0;
+	protected int cabinPopulation = 0;
 	protected boolean debug = false;
 	protected Integer alertThreshold = null;
 	protected Integer panicThreshold = null;
 	protected Long currentTick = Long.MIN_VALUE;
 
 	public DefaultElevator() {
-		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR, Elevator.DEFAULT_CABIN_SIZE);
+		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR, Elevator.DEFAULT_CABIN_SIZE, Elevator.DEFAULT_CABIN_COUNT);
 	}
 
-	public DefaultElevator(int minFloor, int maxFloor, Integer cabinSize) {
+	public DefaultElevator(int minFloor, int maxFloor, Integer cabinSize, Integer cabinCount) {
 		this.minFloor = minFloor;
 		this.maxFloor = maxFloor;
 		this.cabinSize = cabinSize;
+		this.cabinCount = cabinCount;
 	}
 
 	@Override
-	public Command nextCommand() {
+	public Command[] nextCommands() {
 		this.currentTick++;
-		return Command.NOTHING;
+
+		Command[] commands = new Command[this.cabinCount];
+		for (int commandIndex = 0 ; commandIndex < commands.length ; ++commandIndex) {
+			commands[commandIndex] = Command.NOTHING;
+		}
+
+		return commands;
 	}
 
 	@Override
@@ -41,21 +49,21 @@ public class DefaultElevator implements Elevator {
 	}
 
 	@Override
-	public void go(Integer floor) {
+	public void go(Integer floor, Integer cabin) {
 	}
 
 	@Override
-	public void userHasEntered() {
-		this.cabinCount++;
+	public void userHasEntered(Integer cabin) {
+		this.cabinPopulation++;
 	}
 
 	@Override
-	public void userHasExited() {
-		this.cabinCount--;
+	public void userHasExited(Integer cabin) {
+		this.cabinPopulation--;
 	}
 
 	@Override
-	public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause) {
+	public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause, Integer cabinCount) {
 		requestLogger.info("Reset : " + cause + " ; status : " + this.status(false));
 
 		if (minFloor != null) {
@@ -70,8 +78,12 @@ public class DefaultElevator implements Elevator {
 			this.cabinSize = cabinSize;
 		}
 
+		if (cabinCount != null) {
+			this.cabinCount = cabinCount;
+		}
+
 		this.currentTick = Long.MIN_VALUE;
-		this.cabinCount = 0;
+		this.cabinPopulation = 0;
 	}
 
 	protected Map<String, String> getStatusInfo() {
@@ -80,7 +92,7 @@ public class DefaultElevator implements Elevator {
 		info.put("minFloor", Integer.toString(this.minFloor));
 		info.put("maxFloor", Integer.toString(this.maxFloor));
 		info.put("cabinSize", this.cabinSize != null ? cabinSize.toString() : "");
-		info.put("cabinCount", Integer.toString(this.cabinCount));
+		info.put("cabinPopulation", Integer.toString(this.cabinPopulation));
 		info.put("debug", Boolean.toString(this.debug));
 		info.put("panicThreshold", this.panicThreshold != null ? panicThreshold.toString() : "");
 		info.put("alertThreshold", this.alertThreshold != null ? alertThreshold.toString() : "");
