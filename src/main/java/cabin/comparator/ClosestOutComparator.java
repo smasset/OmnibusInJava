@@ -1,4 +1,8 @@
-package cabin;
+package cabin.comparator;
+
+import cabin.util.FloorRequest;
+import cabin.util.Mode;
+import cabin.util.RequestType;
 
 public class ClosestOutComparator extends AbstractFloorRequestComparator {
 

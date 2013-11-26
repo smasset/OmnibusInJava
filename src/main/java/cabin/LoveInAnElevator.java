@@ -3,6 +3,8 @@ package cabin;
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 
+import cabin.util.Direction;
+
 public class LoveInAnElevator extends StateOfLoveAndTrustElevator {
 	protected ConcurrentSkipListMap<Integer, Integer> requests = new ConcurrentSkipListMap<Integer, Integer>();
 

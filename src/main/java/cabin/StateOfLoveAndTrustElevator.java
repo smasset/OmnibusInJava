@@ -2,7 +2,10 @@ package cabin;
 
 import java.util.Map;
 
-import cabin.command.Command;
+import cabin.util.CabinState;
+import cabin.util.Command;
+import cabin.util.Direction;
+import cabin.util.Mode;
 
 public abstract class StateOfLoveAndTrustElevator extends DefaultElevator {
 	protected CabinState currentState = CabinState.STOPPED;

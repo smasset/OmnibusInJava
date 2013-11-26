@@ -1,6 +1,6 @@
 package cabin;
 
-import cabin.command.Command;
+import cabin.util.Command;
 
 public interface Elevator {
 	public static final int DEFAULT_MIN_FLOOR = 0;
