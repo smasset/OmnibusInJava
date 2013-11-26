@@ -97,6 +97,7 @@ public class DefaultElevator implements Elevator {
 		info.put("panicThreshold", this.panicThreshold != null ? panicThreshold.toString() : "");
 		info.put("alertThreshold", this.alertThreshold != null ? alertThreshold.toString() : "");
 		info.put("currentTick", Long.toString(this.currentTick));
+		info.put("cabinCount", this.cabinCount != null ? cabinCount.toString() : "");
 
 		return info;
 	}
