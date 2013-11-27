@@ -104,4 +104,9 @@ public class DefaultCabin implements Cabin {
 	public Mode getMode() {
 		return Mode.NORMAL;
 	}
+
+	@Override
+	public Integer getId() {
+		return this.id;
+	}
 }

@@ -1,8 +1,13 @@
 package cabin;
 
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 
+import cabin.comparator.MultiCabinYoungAndRestlessComparator;
 import cabin.util.Direction;
 import cabin.util.FloorRequest;
 
@@ -21,41 +26,94 @@ public class MultiCabinYoungAndRestlessElevator extends MultiCabinElevator {
 		this.ageLimit = 10;
 	}
 
+	private Integer getNextFloor(Integer cabinId, Map<Integer, FloorRequest> requests) {
+		Integer nextFloor = null;
+
+		Cabin currentCabin = this.cabins.get(cabinId);
+		if (currentCabin != null) {
+			MultiCabinYoungAndRestlessComparator comparator = new MultiCabinYoungAndRestlessComparator(currentCabin);
+
+			SortedSet<FloorRequest> requestSet = new TreeSet<>(comparator);
+			requestSet.addAll(requests.values());
+			boolean serveOnlyOutRequests = this.cabinSize <= currentCabin.getPopulation();
+
+			FloorRequest currentRequest = null;
+			Iterator<FloorRequest> requestIterator = requestSet.iterator();
+			while ((nextFloor == null) && (requestIterator.hasNext())) {
+				currentRequest = requestIterator.next();
+
+				if (serveOnlyOutRequests) {
+					if (currentRequest.getOutCount(cabinId) != null) {
+						nextFloor = currentRequest.getFloor();
+					}
+				} else {
+					nextFloor = currentRequest.getFloor();
+				}
+			}
+		}
+
+		return nextFloor;
+	}
+
 	@Override
 	public Integer getNextFloor(Integer cabinId) {
 		Integer nextFloor = null;
 
 		Cabin currentCabin = this.cabins.get(cabinId);
 		if (currentCabin != null) {
-			Integer currentFloor = currentCabin.getCurrentFloor();
+			nextFloor = this.getNextFloor(cabinId, this.youngRequests);
+
+			if (nextFloor == null) {
+				nextFloor = this.getNextFloor(cabinId, this.oldRequests);
+			}
+
+			if (this.ageLimit != null) {
+				Entry<Integer, FloorRequest> currentEntry = null;
+				for (Iterator<Entry<Integer, FloorRequest>> moveToOldIterator = this.youngRequests.entrySet().iterator(); moveToOldIterator.hasNext();) {
+					currentEntry = moveToOldIterator.next();
+
+					// Remove old requests from youngRequests
+					if (currentEntry.getValue().getAge(this.currentTick) > this.ageLimit) {
+						// Don't remove next floor as we are serving it
+						if (!currentEntry.getKey().equals(nextFloor)) {
+							moveToOldIterator.remove();
+						}
+					}
+				}
+			}
 		}
 
 		return nextFloor;
 	}
 
-	private boolean removeRequest(Integer floor, Map<Integer, FloorRequest> requests, String direction) {
+	private boolean removeRequest(Integer cabinId, Map<Integer, FloorRequest> requests, String direction) {
 		boolean removed = false;
-		FloorRequest currentFloorRequest = requests.get(floor);
 
-		if (currentFloorRequest != null) {
-			removed = true;
+		Cabin cabin = this.cabins.get(cabinId);
+		if (cabin != null) {
 
-			if (currentFloorRequest.getCount() == 1) {
-				requests.remove(floor);
-			} else {
-				requests.put(floor, currentFloorRequest.decrementCount(direction));
+			FloorRequest currentFloorRequest = requests.get(cabin.getCurrentFloor());
+
+			if (currentFloorRequest != null) {
+				removed = true;
+
+				if (currentFloorRequest.getCount() == 1) {
+					requests.remove(currentFloorRequest.getFloor());
+				} else {
+					requests.put(currentFloorRequest.getFloor(), currentFloorRequest.decrementCount(cabinId, direction));
+				}
 			}
 		}
 
 		return removed;
 	}
 
-	private void removeRequest(Integer floor, String direction) {
-		this.removeRequest(floor, this.youngRequests, direction);
-		this.removeRequest(floor, this.oldRequests, direction);
+	private void removeRequest(Integer cabinId, String direction) {
+		this.removeRequest(cabinId, this.youngRequests, direction);
+		this.removeRequest(cabinId, this.oldRequests, direction);
 	}
 
-	private boolean addRequest(Map<Integer, FloorRequest> requests, FloorRequest defaultRequest, Integer floor, String direction) {
+	private boolean addRequest(Map<Integer, FloorRequest> requests, FloorRequest defaultRequest, Integer floor, Integer cabinId, String direction) {
 		boolean added = false;
 
 		if ((floor >= this.minFloor) && (floor <= this.maxFloor)) {
@@ -71,17 +129,42 @@ public class MultiCabinYoungAndRestlessElevator extends MultiCabinElevator {
 			}
 
 			newRequest.setLatestBirthDate(this.currentTick);
-			requests.put(floor, newRequest.incrementCount(direction));
+			requests.put(floor, newRequest.incrementCount(cabinId, direction));
 		}
 
 		return added;
 	}
 
-	private void addRequest(Integer currentFloor, Integer floor, String direction) {
-		if (Math.abs(floor - currentFloor) <= this.ageLimit) {
-			this.addRequest(this.youngRequests, this.oldRequests.get(floor), floor, direction);
+	private void addRequest(Integer cabinId, Integer floor, String direction) {
+		Integer shortestDistance = null;
+
+		if (cabinId == null) {
+			// Request from outside any cabin : compute closest cabin distance
+			Integer currentDistance = null;
+			for (Cabin currentCabin : this.cabins.values()) {
+				currentDistance = Math.abs(floor - currentCabin.getCurrentFloor());
+				if ((shortestDistance == null) || (currentDistance.compareTo(shortestDistance) < 0)) {
+					shortestDistance = currentDistance;
+				}
+			}
+
+		} else {
+			// User just got in a cabin get the distance from its current floor
+			// to destination
+			Cabin cabin = this.cabins.get(cabinId);
+			if (cabin != null) {
+				shortestDistance = Math.abs(floor - cabin.getCurrentFloor());
+			}
 		}
-		this.addRequest(this.oldRequests, null, floor, direction);
+
+		// Only add it to young requests if it's close enough
+		boolean isCloseEnough = shortestDistance <= this.ageLimit;
+		if (isCloseEnough) {
+			this.addRequest(this.youngRequests, this.oldRequests.get(floor), floor, cabinId, direction);
+		}
+
+		// Always add it to old requests
+		this.addRequest(this.oldRequests, null, floor, cabinId, direction);
 	}
 
 	@Override
@@ -101,14 +184,13 @@ public class MultiCabinYoungAndRestlessElevator extends MultiCabinElevator {
 				direction = Direction.UP;
 			}
 
-			this.removeRequest(currentFloor, direction);
-			this.addRequest(currentFloor, floor, null);
+			this.removeRequest(cabin, direction);
+			this.addRequest(cabin, floor, null);
 		}
 	}
 
 	@Override
 	public void call(Integer from, String direction) {
-		// TODO handle null cabin
 		this.addRequest(null, from, direction);
 	}
 

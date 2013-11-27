@@ -11,6 +11,7 @@ public interface Cabin {
 	public Command nextCommand();
 	public void setNextFloor(Integer nextFloor);
 
+	public Integer getId();
 	public Integer getCurrentFloor();
 	public Integer getPopulation();
 	public Mode getMode();
