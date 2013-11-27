@@ -2,6 +2,7 @@ package cabin;
 
 import cabin.util.CabinState;
 import cabin.util.Command;
+import cabin.util.Mode;
 
 public class DefaultCabin implements Cabin {
 	protected Integer id = null;
@@ -14,21 +15,17 @@ public class DefaultCabin implements Cabin {
 	protected CabinState state = null;
 
 	public DefaultCabin(Integer id) {
-		this(id, null, 0);
+		this(id, Cabin.DEFAULT_CABIN_SIZE, Cabin.DEFAULT_START_FLOOR);
 	}
 
 	public DefaultCabin(Integer id, Integer size, Integer startFloor) {
 		this.id = id;
-		this.size = size;
 		this.startFloor = startFloor;
-		this.reset();
+		this.reset(size);
 	}
 
-	private void reset() {
-		this.currentFloor = startFloor;
-		this.population = 0;
-		this.nextFloor = null;
-		this.state = CabinState.STOPPED;
+	private void addPopulsation(Integer increment) {
+		this.population += increment;
 	}
 
 	@Override
@@ -79,5 +76,32 @@ public class DefaultCabin implements Cabin {
 	@Override
 	public Integer getPopulation() {
 		return this.population;
+	}
+
+	@Override
+	public void getIn(){
+		this.addPopulsation(1);
+	}
+
+	@Override
+	public void getOut(){
+		this.addPopulsation(-1);
+	}
+
+	@Override
+	public void reset(Integer size) {
+		if (size != null) {
+			this.size = size;
+		}
+
+		this.currentFloor = startFloor;
+		this.population = 0;
+		this.nextFloor = null;
+		this.state = CabinState.STOPPED;
+	}
+
+	@Override
+	public Mode getMode() {
+		return Mode.NORMAL;
 	}
 }

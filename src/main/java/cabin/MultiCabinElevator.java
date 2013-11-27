@@ -7,12 +7,21 @@ import java.util.TreeMap;
 import cabin.util.Command;
 
 public class MultiCabinElevator implements Elevator {
-	private final SortedMap<Integer, Cabin> cabins = new TreeMap<>();
+	protected final SortedMap<Integer, Cabin> cabins = new TreeMap<>();
+	protected Integer minFloor = null;
+	protected Integer maxFloor = null;
+	protected Integer cabinSize = null;
 
 	public MultiCabinElevator(Integer cabinCount) {
-		for (int cabinIndex = 0; cabinIndex < cabinCount; ++cabinIndex) {
-			this.cabins.put(cabinIndex, new DefaultCabin(cabinIndex));
-		}
+		this(null, null, null, cabinCount);
+	}
+
+	public MultiCabinElevator(Integer minFloor, Integer maxFloor, Integer cabinSize, Integer cabinCount) {
+		this.reset(minFloor, maxFloor, cabinSize, null, cabinCount);
+	}
+
+	public Integer getNextFloor(Integer cabinId) {
+		return null;
 	}
 
 	@Override
@@ -20,7 +29,7 @@ public class MultiCabinElevator implements Elevator {
 		Command[] commands = new Command[cabins.size()];
 
 		for(Entry<Integer, Cabin> currentCabin : cabins.entrySet()) {
-			//TODO set destinations for each cabin
+			currentCabin.getValue().setNextFloor(this.getNextFloor(currentCabin.getKey()));
 			commands[currentCabin.getKey()] = currentCabin.getValue().nextCommand();
 		}
 
@@ -29,56 +38,66 @@ public class MultiCabinElevator implements Elevator {
 
 	@Override
 	public void call(Integer from, String direction) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void go(Integer floor, Integer cabin) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void userHasEntered(Integer cabin) {
-		// TODO Auto-generated method stub
+		Cabin inCabin = this.cabins.get(cabin);
 
+		if (inCabin != null) {
+			inCabin.getIn();
+		}
 	}
 
 	@Override
 	public void userHasExited(Integer cabin) {
-		// TODO Auto-generated method stub
+		Cabin outCabin = this.cabins.get(cabin);
 
+		if (outCabin != null) {
+			outCabin.getOut();
+		}
 	}
 
 	@Override
 	public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause, Integer cabinCount) {
-		// TODO Auto-generated method stub
+		if (minFloor != null) {
+			this.minFloor = minFloor;
+		}
 
+		if (maxFloor != null) {
+			this.maxFloor = maxFloor;
+		}
+
+		if (cabinSize != null) {
+			this.cabinSize = cabinSize;
+		}
+
+		this.cabins.clear();
+		for (int cabinIndex = 0; cabinIndex < cabinCount; ++cabinIndex) {
+			this.cabins.put(cabinIndex, new DefaultCabin(cabinIndex, this.cabinSize, Cabin.DEFAULT_START_FLOOR));
+		}
 	}
 
 	@Override
 	public String status(boolean pretty) {
-		// TODO Auto-generated method stub
-		return null;
+		return "";
 	}
 
 	@Override
 	public boolean isDebug() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void setDebug(boolean debug) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void thresholds(Integer alertThreshold, Integer panicThreshold) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

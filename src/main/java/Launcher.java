@@ -2,6 +2,8 @@ import spark.Spark;
 import cabin.DefaultElevator;
 import cabin.FifoElevator;
 import cabin.LoveInAnElevator;
+import cabin.MultiCabinElevator;
+import cabin.MultiCabinOmnibusElevator;
 import cabin.OmnibusElevator;
 import cabin.UpAndDownElevator;
 import cabin.YoungAndRestlessElevator;
@@ -24,5 +26,7 @@ public class Launcher {
 		cabinServer.addElevator("/loveinanelevator/", new LoveInAnElevator(-5, 35, 30, 2));
 		cabinServer.addElevator("/vengaboys/", new UpAndDownElevator(-5, 35, 30, 2));
 		cabinServer.addElevator("/youngandrestless/", new YoungAndRestlessElevator(-5, 35, 30, 2));
+		cabinServer.addElevator("/multicabin/", new MultiCabinElevator(1));
+		cabinServer.addElevator("/multiomnibus/", new MultiCabinOmnibusElevator(0, 19, null, 1));
 	}
 }
