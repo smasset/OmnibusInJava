@@ -11,6 +11,7 @@ public class MultiCabinElevator implements Elevator {
 	protected Integer minFloor = null;
 	protected Integer maxFloor = null;
 	protected Integer cabinSize = null;
+	protected Long currentTick = Long.MIN_VALUE;
 
 	public MultiCabinElevator(Integer cabinCount) {
 		this(null, null, null, cabinCount);
@@ -26,6 +27,7 @@ public class MultiCabinElevator implements Elevator {
 
 	@Override
 	public Command[] nextCommands() {
+		this.currentTick++;
 		Command[] commands = new Command[cabins.size()];
 
 		for(Entry<Integer, Cabin> currentCabin : cabins.entrySet()) {
@@ -76,6 +78,7 @@ public class MultiCabinElevator implements Elevator {
 			this.cabinSize = cabinSize;
 		}
 
+		this.currentTick = Long.MIN_VALUE;
 		this.cabins.clear();
 		for (int cabinIndex = 0; cabinIndex < cabinCount; ++cabinIndex) {
 			this.cabins.put(cabinIndex, new DefaultCabin(cabinIndex, this.cabinSize, Cabin.DEFAULT_START_FLOOR));
