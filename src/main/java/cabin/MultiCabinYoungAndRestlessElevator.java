@@ -47,7 +47,7 @@ public class MultiCabinYoungAndRestlessElevator extends MultiCabinElevator {
 					currentRequest = requestIterator.next();
 
 					if (serveOnlyOutRequests) {
-						if (currentRequest.getOutCount(cabinId) != null) {
+						if (currentRequest.getOutCount(cabinId) != 0) {
 							nextFloor = currentRequest.getFloor();
 						}
 					} else {
@@ -69,7 +69,7 @@ public class MultiCabinYoungAndRestlessElevator extends MultiCabinElevator {
 			nextFloor = this.getNextFloor(cabinId, this.youngRequests, false);
 
 			if (nextFloor == null) {
-				nextFloor = this.getNextFloor(cabinId, this.oldRequests, true);
+				nextFloor = this.getNextFloor(cabinId, this.oldRequests, false);
 			}
 
 			if (this.ageLimit != null) {

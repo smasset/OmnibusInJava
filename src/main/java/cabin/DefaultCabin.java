@@ -156,6 +156,7 @@ public class DefaultCabin implements Cabin {
 		info.put("state", this.state);
 		info.put("alertThreshold", this.alertThreshold);
 		info.put("panicThreshold", this.panicThreshold);
+		info.put("mode", this.getMode());
 
 		for (Entry<String, Object> currentInfo : info.entrySet()) {
 			sb.append(currentInfo.getKey());
