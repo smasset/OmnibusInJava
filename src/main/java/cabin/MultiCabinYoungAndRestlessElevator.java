@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import cabin.comparator.MultiCabinYoungAndRestlessComparator;
 import cabin.util.Direction;
 import cabin.util.FloorRequest;
+import cabin.util.Mode;
 
 public class MultiCabinYoungAndRestlessElevator extends MultiCabinElevator {
 
@@ -39,7 +40,7 @@ public class MultiCabinYoungAndRestlessElevator extends MultiCabinElevator {
 
 				SortedSet<FloorRequest> requestSet = new TreeSet<>(comparator);
 				requestSet.addAll(requests.values());
-				boolean serveOnlyOutRequests = forceOut || this.cabinSize <= currentCabin.getPopulation();
+				boolean serveOnlyOutRequests = forceOut || (!Mode.NORMAL.equals(currentCabin.getMode()));
 
 				FloorRequest currentRequest = null;
 				Iterator<FloorRequest> requestIterator = requestSet.iterator();
