@@ -3,6 +3,7 @@ import cabin.DefaultElevator;
 import cabin.FifoElevator;
 import cabin.LoveInAnElevator;
 import cabin.MultiCabinElevator;
+import cabin.MultiCabinUpAndDownElevator;
 import cabin.MultiCabinYoungAndRestlessElevator;
 import cabin.OmnibusElevator;
 import cabin.UpAndDownElevator;
@@ -25,7 +26,7 @@ public class Launcher {
 		cabinServer.addElevator("/loveinanelevator/", new LoveInAnElevator(-5, 35, 30, 2));
 		cabinServer.addElevator("/vengaboys/", new UpAndDownElevator(-5, 35, 30, 2));
 		//cabinServer.addElevator("/youngandrestless/", new YoungAndRestlessElevator(-5, 35, 30, 2));
-		cabinServer.addElevator("/youngandrestless/", new MultiCabinYoungAndRestlessElevator(-5, 35, 30, 2));
+		cabinServer.addElevator("/youngandrestless/", new MultiCabinUpAndDownElevator(-5, 35, 30, 2));
 		cabinServer.addElevator("/multicabin/", new MultiCabinElevator(1));
 		cabinServer.addElevator("/multiomnibus/", new MultiCabinYoungAndRestlessElevator(0, 19, null, 1));
 	}

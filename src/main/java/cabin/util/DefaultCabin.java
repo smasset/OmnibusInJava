@@ -15,6 +15,7 @@ public class DefaultCabin implements Cabin {
 	protected CabinState state = null;
 	protected Integer alertThreshold = null;
 	protected Integer panicThreshold = null;
+	protected String lastDirection = null;
 
 	public DefaultCabin(Integer id) {
 		this(id, Cabin.DEFAULT_CABIN_SIZE, Cabin.DEFAULT_START_FLOOR);
@@ -50,10 +51,12 @@ public class DefaultCabin implements Cabin {
 					this.state = CabinState.OPENED;
 				} else if (comparison > 0) {
 					this.currentFloor--;
+					this.lastDirection = Direction.DOWN;
 					nextCommand = Command.DOWN;
 				} else {
 					this.currentFloor++;
 					nextCommand = Command.UP;
+					this.lastDirection = Direction.UP;
 				}
 			}
 			break;
@@ -128,6 +131,11 @@ public class DefaultCabin implements Cabin {
 	}
 
 	@Override
+	public String getLastDirection() {
+		return this.lastDirection;
+	}
+
+	@Override
 	public void reset(Integer size) {
 		if (size != null) {
 			this.size = size;
@@ -138,6 +146,7 @@ public class DefaultCabin implements Cabin {
 		this.population = 0;
 		this.nextFloor = null;
 		this.state = CabinState.STOPPED;
+		this.lastDirection = Direction.UP;
 	}
 
 	public String toString(boolean pretty) {
@@ -154,6 +163,7 @@ public class DefaultCabin implements Cabin {
 		info.put("alertThreshold", this.alertThreshold);
 		info.put("panicThreshold", this.panicThreshold);
 		info.put("mode", this.getMode());
+		info.put("lastDirection", this.lastDirection);
 
 		for (Entry<String, Object> currentInfo : info.entrySet()) {
 			sb.append(currentInfo.getKey());
