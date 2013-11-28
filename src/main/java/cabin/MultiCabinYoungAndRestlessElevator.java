@@ -1,5 +1,6 @@
 package cabin;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -13,6 +14,7 @@ import cabin.util.Cabin;
 import cabin.util.Direction;
 import cabin.util.FloorRequest;
 import cabin.util.Mode;
+import cabin.util.Test;
 
 public class MultiCabinYoungAndRestlessElevator extends MultiCabinElevator {
 
@@ -60,6 +62,52 @@ public class MultiCabinYoungAndRestlessElevator extends MultiCabinElevator {
 		}
 
 		return nextFloor;
+	}
+
+	public Integer[] getNextFloors() {
+		Integer[] results = null;
+
+		Map<Integer, Test> tests = new HashMap<>(this.cabins.size());
+		
+
+		Cabin currentCabin = null;
+		TreeSet<FloorRequest> currentYoungRequests = null;
+		TreeSet<FloorRequest> currentOldRequests = null;
+		for (int cabinIndex =0 ; cabinIndex < this.cabins.size() ; ++cabinIndex) {
+			currentCabin = this.cabins.get(cabinIndex);
+
+			// Save sorted young requests for each cabin
+			currentYoungRequests = new TreeSet<>(new MultiCabinYoungAndRestlessComparator(currentCabin));
+			currentYoungRequests.addAll(this.youngRequests.values());
+
+			// Save sorted old requests for each cabin
+			currentOldRequests = new TreeSet<>(new MultiCabinYoungAndRestlessComparator(currentCabin));
+			currentOldRequests.addAll(this.oldRequests.values());
+
+			tests.put(cabinIndex, new Test(currentCabin, currentYoungRequests, currentOldRequests));
+		}
+
+//		boolean serveOnlyOutRequests = false;
+		boolean done = false;
+
+		Map<Integer, FloorRequest> currentRequests = new HashMap<>(this.cabins.size());
+		while (!done) {
+			Iterator<FloorRequest> currentIterator = null;
+			for(Entry<Integer, Test> currentTest : tests.entrySet()) {
+				currentIterator = currentTest.getValue().getYoungRequests().iterator();
+				currentRequests.put(currentTest.getKey(), currentIterator.hasNext() ? currentIterator.next() : null);
+			}
+
+//			if (serveOnlyOutRequests) {
+//				if (currentRequest.getOutCount(cabinId) != 0) {
+//					nextFloor = currentRequest.getFloor();
+//				}
+//			} else {
+//				nextFloor = currentRequest.getFloor();
+//			}
+		}
+
+		return results;
 	}
 
 	@Override
