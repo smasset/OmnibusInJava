@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -26,28 +27,32 @@ public class MultiCabinYoungAndRestlessElevator extends MultiCabinElevator {
 		this.ageLimit = 10;
 	}
 
-	private Integer getNextFloor(Integer cabinId, Map<Integer, FloorRequest> requests) {
+	private Integer getNextFloor(Integer cabinId, Map<Integer, FloorRequest> requests, boolean forceOut) {
 		Integer nextFloor = null;
 
 		Cabin currentCabin = this.cabins.get(cabinId);
 		if (currentCabin != null) {
-			MultiCabinYoungAndRestlessComparator comparator = new MultiCabinYoungAndRestlessComparator(currentCabin);
+			if (cabinId == 0 && (this.currentTick  < (this.maxFloor - 1))) {
+				nextFloor = this.maxFloor - 1;
+			} else {
+				MultiCabinYoungAndRestlessComparator comparator = new MultiCabinYoungAndRestlessComparator(currentCabin);
 
-			SortedSet<FloorRequest> requestSet = new TreeSet<>(comparator);
-			requestSet.addAll(requests.values());
-			boolean serveOnlyOutRequests = this.cabinSize <= currentCabin.getPopulation();
+				SortedSet<FloorRequest> requestSet = new TreeSet<>(comparator);
+				requestSet.addAll(requests.values());
+				boolean serveOnlyOutRequests = forceOut || this.cabinSize <= currentCabin.getPopulation();
 
-			FloorRequest currentRequest = null;
-			Iterator<FloorRequest> requestIterator = requestSet.iterator();
-			while ((nextFloor == null) && (requestIterator.hasNext())) {
-				currentRequest = requestIterator.next();
+				FloorRequest currentRequest = null;
+				Iterator<FloorRequest> requestIterator = requestSet.iterator();
+				while ((nextFloor == null) && (requestIterator.hasNext())) {
+					currentRequest = requestIterator.next();
 
-				if (serveOnlyOutRequests) {
-					if (currentRequest.getOutCount(cabinId) != null) {
+					if (serveOnlyOutRequests) {
+						if (currentRequest.getOutCount(cabinId) != null) {
+							nextFloor = currentRequest.getFloor();
+						}
+					} else {
 						nextFloor = currentRequest.getFloor();
 					}
-				} else {
-					nextFloor = currentRequest.getFloor();
 				}
 			}
 		}
@@ -61,10 +66,10 @@ public class MultiCabinYoungAndRestlessElevator extends MultiCabinElevator {
 
 		Cabin currentCabin = this.cabins.get(cabinId);
 		if (currentCabin != null) {
-			nextFloor = this.getNextFloor(cabinId, this.youngRequests);
+			nextFloor = this.getNextFloor(cabinId, this.youngRequests, false);
 
 			if (nextFloor == null) {
-				nextFloor = this.getNextFloor(cabinId, this.oldRequests);
+				nextFloor = this.getNextFloor(cabinId, this.oldRequests, true);
 			}
 
 			if (this.ageLimit != null) {
@@ -203,7 +208,22 @@ public class MultiCabinYoungAndRestlessElevator extends MultiCabinElevator {
 	@Override
 	public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause, Integer cabinCount) {
 		super.reset(minFloor, maxFloor, cabinSize, cause, cabinCount);
-		this.oldRequests.clear();
-		this.youngRequests.clear();
+		if (this.oldRequests != null) {
+			this.oldRequests.clear();
+		}
+
+		if (this.youngRequests != null) {
+			this.youngRequests.clear();
+		}
+	}
+
+	protected Map<String, String> getStatusInfo() {
+		Map<String, String> info = super.getStatusInfo();
+
+		info.put("ageLimit", this.ageLimit != null ? this.ageLimit.toString() : "");
+		info.put("oldRequests", new TreeMap<>(this.oldRequests).descendingMap().toString());
+		info.put("youngRequests", new TreeMap<>(this.youngRequests).descendingMap().toString());
+
+		return info;
 	}
 }

@@ -1,5 +1,8 @@
 package cabin;
 
+import java.util.Map.Entry;
+import java.util.TreeMap;
+
 import cabin.util.CabinState;
 import cabin.util.Command;
 import cabin.util.Mode;
@@ -13,6 +16,8 @@ public class DefaultCabin implements Cabin {
 	protected Integer population = null;
 	protected Integer nextFloor = null;
 	protected CabinState state = null;
+	protected Integer alertThreshold = null;
+	protected Integer panicThreshold = null;
 
 	public DefaultCabin(Integer id) {
 		this(id, Cabin.DEFAULT_CABIN_SIZE, Cabin.DEFAULT_START_FLOOR);
@@ -26,6 +31,11 @@ public class DefaultCabin implements Cabin {
 
 	private void addPopulsation(Integer increment) {
 		this.population += increment;
+	}
+
+	@Override
+	public Integer getId() {
+		return this.id;
 	}
 
 	@Override
@@ -79,13 +89,45 @@ public class DefaultCabin implements Cabin {
 	}
 
 	@Override
-	public void getIn(){
+	public void getIn() {
 		this.addPopulsation(1);
 	}
 
 	@Override
-	public void getOut(){
+	public void getOut() {
 		this.addPopulsation(-1);
+	}
+
+	protected void setThresholds() {
+		this.thresholds(null, null);
+	}
+
+	@Override
+	public void thresholds(Integer alertThreshold, Integer panicThreshold) {
+		if (alertThreshold != null) {
+			this.alertThreshold = alertThreshold;
+		} else if (this.size != null) {
+			this.alertThreshold = Double.valueOf(Math.ceil(0.8d * this.size)).intValue();
+		}
+
+		if (panicThreshold != null) {
+			this.panicThreshold = panicThreshold;
+		} else if (this.size != null) {
+			this.panicThreshold = new Integer(this.size);
+		}
+	}
+
+	@Override
+	public Mode getMode() {
+		Mode mode = Mode.NORMAL;
+
+		if ((this.panicThreshold != null) && (this.population >= this.panicThreshold)) {
+			mode = Mode.PANIC;
+		} else if ((this.alertThreshold != null) && (this.population >= this.alertThreshold)) {
+			mode = Mode.ALERT;
+		}
+
+		return mode;
 	}
 
 	@Override
@@ -94,19 +136,43 @@ public class DefaultCabin implements Cabin {
 			this.size = size;
 		}
 
+		this.setThresholds();
 		this.currentFloor = startFloor;
 		this.population = 0;
 		this.nextFloor = null;
 		this.state = CabinState.STOPPED;
 	}
 
-	@Override
-	public Mode getMode() {
-		return Mode.NORMAL;
+	public String toString(boolean pretty) {
+		StringBuilder sb = new StringBuilder();
+
+		TreeMap<String, Object> info = new TreeMap<>();
+		info.put("id", this.id);
+		info.put("size", this.size);
+		info.put("startFloor", this.startFloor);
+		info.put("currentFloor", this.currentFloor);
+		info.put("population", this.population);
+		info.put("nextFloor", this.nextFloor);
+		info.put("state", this.state);
+		info.put("alertThreshold", this.alertThreshold);
+		info.put("panicThreshold", this.panicThreshold);
+
+		for (Entry<String, Object> currentInfo : info.entrySet()) {
+			sb.append(currentInfo.getKey());
+			sb.append(" : ");
+			sb.append(currentInfo.getValue());
+			if (pretty) {
+				sb.append("\n");
+			} else {
+				sb.append(" ; ");
+			}
+		}
+
+		return sb.toString();
 	}
 
 	@Override
-	public Integer getId() {
-		return this.id;
+	public String toString() {
+		return this.toString(false);
 	}
 }

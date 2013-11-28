@@ -19,5 +19,6 @@ public interface Cabin {
 	public void getIn();
 	public void getOut();
 	public void reset(Integer size);
+	public void thresholds(Integer alertThreshold, Integer panicThreshold);
 
 }

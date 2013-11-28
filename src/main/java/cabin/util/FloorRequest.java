@@ -175,8 +175,8 @@ public class FloorRequest {
 		string.append(this.getType());
 		string.append("; count: ");
 		string.append(this.getCount());
-		string.append("; outCount: ");
-		string.append(this.getOutCount());
+		string.append("; outCounts: ");
+		string.append(this.outCounts);
 		string.append("; upCount: ");
 		string.append(this.upCount);
 		string.append("; downCount: ");
