@@ -6,7 +6,9 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.logging.Logger;
 
+import cabin.util.Cabin;
 import cabin.util.Command;
+import cabin.util.DefaultCabin;
 
 public class MultiCabinElevator implements Elevator {
 	private static final Logger requestLogger = Logger.getLogger("requests");

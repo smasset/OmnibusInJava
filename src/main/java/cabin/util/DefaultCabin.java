@@ -1,11 +1,8 @@
-package cabin;
+package cabin.util;
 
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import cabin.util.CabinState;
-import cabin.util.Command;
-import cabin.util.Mode;
 
 public class DefaultCabin implements Cabin {
 	protected Integer id = null;

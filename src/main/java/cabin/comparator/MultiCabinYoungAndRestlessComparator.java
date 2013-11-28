@@ -1,6 +1,6 @@
 package cabin.comparator;
 
-import cabin.Cabin;
+import cabin.util.Cabin;
 import cabin.util.FloorRequest;
 import cabin.util.RequestType;
 

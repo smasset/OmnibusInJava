@@ -1,5 +1,7 @@
 package cabin;
 
+import cabin.util.Cabin;
+
 public class MultiCabinOmnibusElevator extends MultiCabinElevator {
 	private int count = 0;
 	private boolean up = true;

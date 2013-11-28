@@ -1,7 +1,5 @@
-package cabin;
+package cabin.util;
 
-import cabin.util.Command;
-import cabin.util.Mode;
 
 public interface Cabin {
 	public static final Integer DEFAULT_CABIN_COUNT = 1;

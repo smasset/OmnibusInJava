@@ -9,6 +9,7 @@ import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 import cabin.comparator.MultiCabinYoungAndRestlessComparator;
+import cabin.util.Cabin;
 import cabin.util.Direction;
 import cabin.util.FloorRequest;
 import cabin.util.Mode;
