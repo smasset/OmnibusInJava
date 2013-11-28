@@ -29,9 +29,13 @@ public class FloorRequest {
 	}
 
 	public RequestType getType() {
+		return this.getType(null);
+	}
+
+	public RequestType getType(Integer cabinId) {
 		RequestType type = null;
 
-		if (this.getOutCount() > 0) {
+		if (this.getOutCount(cabinId) > 0) {
 			type = RequestType.OUT;
 		} else if (this.upCount > 0) {
 			type = this.downCount > 0 ? RequestType.UP_DOWN : RequestType.UP;
