@@ -223,8 +223,8 @@ public class MultiCabinYoungAndRestlessElevator extends MultiCabinElevator {
 		Map<String, String> info = super.getStatusInfo();
 
 		info.put("ageLimit", this.ageLimit != null ? this.ageLimit.toString() : "");
-		info.put("oldRequests", new TreeMap<>(this.oldRequests).descendingMap().toString());
-		info.put("youngRequests", new TreeMap<>(this.youngRequests).descendingMap().toString());
+		info.put("oldRequests", this.oldRequests != null ? new TreeMap<>(this.oldRequests).descendingMap().toString() : "");
+		info.put("youngRequests", this.youngRequests != null ? new TreeMap<>(this.youngRequests).descendingMap().toString() : "");
 
 		return info;
 	}
