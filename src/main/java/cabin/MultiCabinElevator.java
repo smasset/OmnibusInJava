@@ -12,7 +12,7 @@ import cabin.util.Command;
 import cabin.util.DefaultCabin;
 
 public class MultiCabinElevator implements Elevator {
-	private static final Logger requestLogger = Logger.getLogger(MultiCabinElevator.class);
+	private static final Logger logger = Logger.getLogger(MultiCabinElevator.class);
 
 	protected final SortedMap<Integer, Cabin> cabins = new TreeMap<>();
 	protected Integer minFloor = null;
@@ -96,9 +96,7 @@ public class MultiCabinElevator implements Elevator {
 
 	@Override
 	public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause, Integer cabinCount) {
-		if (cause != null) {
-			requestLogger.info("Reset : " + cause + " ; status : " + this.status(false));
-		}
+		logger.info("Reset : " + cause + " ; status : " + this.status(false));
 
 		if (minFloor != null) {
 			this.minFloor = minFloor;
