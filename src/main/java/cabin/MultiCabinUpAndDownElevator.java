@@ -90,7 +90,7 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 						nextFloor = currentRequest.getFloor();
 					}
 				} else if (serveOnlySameRequests) {
-					if (currentRequest.hasSameDirection(direction)) {
+					if (currentRequest.hasSameDirection(cabinId, direction)) {
 						nextFloor = currentRequest.getFloor();
 					}
 				} else {
@@ -114,29 +114,35 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 	public Integer getNextFloor(Integer cabinId) {
 		Integer nextFloor = null;
 
-		Cabin cabin = this.cabins.get(cabinId);
-		if (cabin != null) {
+		if ((cabinId == 0) && (this.currentTick < Math.abs(this.minFloor))) {
+			nextFloor = this.minFloor;
+		} else if ((cabinId == 1) && ((this.currentTick < Math.abs(this.maxFloor)))) {
+			nextFloor = this.maxFloor;
+		} else {
+			Cabin cabin = this.cabins.get(cabinId);
+			if (cabin != null) {
 
-			switch (cabin.getLastDirection()) {
+				switch (cabin.getLastDirection()) {
 
-			case Direction.UP:
-				nextFloor = this.getNextFloor(cabinId, Direction.UP);
-				if (nextFloor == null) {
-					nextFloor = this.getNextFloor(cabinId, Direction.DOWN);
-				}
-				break;
-
-			case Direction.DOWN:
-				nextFloor = this.getNextFloor(cabinId, Direction.DOWN);
-				if (nextFloor == null) {
+				case Direction.UP:
 					nextFloor = this.getNextFloor(cabinId, Direction.UP);
+					if (nextFloor == null) {
+						nextFloor = this.getNextFloor(cabinId, Direction.DOWN);
+					}
+					break;
+
+				case Direction.DOWN:
+					nextFloor = this.getNextFloor(cabinId, Direction.DOWN);
+					if (nextFloor == null) {
+						nextFloor = this.getNextFloor(cabinId, Direction.UP);
+					}
+					break;
+
+				default:
+					break;
 				}
-				break;
 
-			default:
-				break;
 			}
-
 		}
 
 		return nextFloor;
@@ -200,7 +206,9 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 	@Override
 	public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause, Integer cabinCount) {
 		super.reset(minFloor, maxFloor, cabinSize, cause, cabinCount);
-		this.requests.clear();
+		if (this.requests != null) {
+		    this.requests.clear();
+		}
 	}
 
 	@Override

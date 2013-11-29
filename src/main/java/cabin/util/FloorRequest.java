@@ -134,7 +134,7 @@ public class FloorRequest {
 		return this;
 	}
 
-	public boolean hasSameDirection(String direction) {
+	public boolean hasSameDirection(Integer cabinId, String direction) {
 		boolean hasSameDirection = true;
 
 		switch (direction) {
@@ -148,7 +148,15 @@ public class FloorRequest {
 			break;
 		}
 
+		if (cabinId != null) {
+			hasSameDirection |= (this.getOutCount(cabinId) != 0);
+		}
+
 		return hasSameDirection;
+	}
+
+	public boolean hasSameDirection(String direction) {
+		return this.hasSameDirection(null, direction);
 	}
 
 	public Integer getRelativeDistance(Integer currentFloor) {
