@@ -70,7 +70,7 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 			case NORMAL:
 			default:
 				serveOnlySameRequests = true;
-				returnDefaultFloor = true;
+				returnDefaultFloor = false;
 				break;
 			}
 
