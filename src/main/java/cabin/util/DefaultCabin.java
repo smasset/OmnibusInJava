@@ -3,6 +3,8 @@ package cabin.util;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import org.apache.commons.lang3.ObjectUtils;
+
 public class DefaultCabin implements Cabin {
 	protected Integer id = null;
 	protected Integer size = null;
@@ -104,7 +106,7 @@ public class DefaultCabin implements Cabin {
 
 	@Override
 	public void setNextFloor(Integer nextFloor) {
-		if (nextFloor.equals(this.currentFloor)) {
+		if (ObjectUtils.equals(nextFloor, this.currentFloor)) {
 			this.sameFloorCount++;
 		} else {
 			this.sameFloorCount=0;
