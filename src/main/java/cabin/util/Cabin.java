@@ -20,5 +20,6 @@ public interface Cabin {
 	public void reset(Integer size);
 	public void thresholds(Integer alertThreshold, Integer panicThreshold);
 	public String getLastDirection();
+	public void setLastDirection(String lastDirection);
 
 }

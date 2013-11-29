@@ -140,6 +140,9 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 					nextFloor = this.getNextFloor(cabinId, Direction.UP);
 					if (nextFloor == null) {
 						nextFloor = this.getNextFloor(cabinId, Direction.DOWN);
+						if (nextFloor !=null) {
+							cabin.setLastDirection(Direction.DOWN);
+						}
 					}
 					break;
 
@@ -147,6 +150,9 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 					nextFloor = this.getNextFloor(cabinId, Direction.DOWN);
 					if (nextFloor == null) {
 						nextFloor = this.getNextFloor(cabinId, Direction.UP);
+						if (nextFloor !=null) {
+							cabin.setLastDirection(Direction.UP);
+						}
 					}
 					break;
 

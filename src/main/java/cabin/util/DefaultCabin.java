@@ -159,6 +159,11 @@ public class DefaultCabin implements Cabin {
 	}
 
 	@Override
+	public void setLastDirection(String lastDirection) {
+		this.lastDirection = lastDirection;
+	}
+
+	@Override
 	public void reset(Integer size) {
 		if (size != null) {
 			this.size = size;
