@@ -3,7 +3,6 @@ package cabin.util;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-
 public class DefaultCabin implements Cabin {
 	protected Integer id = null;
 	protected Integer size = null;
@@ -15,6 +14,8 @@ public class DefaultCabin implements Cabin {
 	protected CabinState state = null;
 	protected Integer alertThreshold = null;
 	protected Integer panicThreshold = null;
+	protected String lastDirection = null;
+	protected boolean selectOpenDirection = false;
 
 	public DefaultCabin(Integer id) {
 		this(id, Cabin.DEFAULT_CABIN_SIZE, Cabin.DEFAULT_START_FLOOR);
@@ -46,14 +47,34 @@ public class DefaultCabin implements Cabin {
 				int comparison = Integer.compare(this.currentFloor, nextFloor);
 
 				if (comparison == 0) {
-					nextCommand = Command.OPEN;
+					if (selectOpenDirection) {
+						switch (this.lastDirection) {
+
+						case Direction.UP:
+							nextCommand = Command.OPEN_UP;
+							break;
+
+						case Direction.DOWN:
+							nextCommand = Command.OPEN_DOWN;
+							break;
+
+						default:
+							nextCommand = Command.OPEN;
+							break;
+						}
+					} else {
+						nextCommand = Command.OPEN;
+					}
+
 					this.state = CabinState.OPENED;
 				} else if (comparison > 0) {
 					this.currentFloor--;
 					nextCommand = Command.DOWN;
+					this.lastDirection = Direction.DOWN;
 				} else {
 					this.currentFloor++;
 					nextCommand = Command.UP;
+					this.lastDirection = Direction.UP;
 				}
 			}
 			break;
@@ -68,6 +89,11 @@ public class DefaultCabin implements Cabin {
 		}
 
 		return nextCommand;
+	}
+
+	@Override
+	public Integer getStartFloor() {
+		return this.startFloor;
 	}
 
 	@Override
@@ -128,6 +154,11 @@ public class DefaultCabin implements Cabin {
 	}
 
 	@Override
+	public String getLastDirection() {
+		return this.lastDirection;
+	}
+
+	@Override
 	public void reset(Integer size) {
 		if (size != null) {
 			this.size = size;
@@ -154,6 +185,7 @@ public class DefaultCabin implements Cabin {
 		info.put("alertThreshold", this.alertThreshold);
 		info.put("panicThreshold", this.panicThreshold);
 		info.put("mode", this.getMode());
+		info.put("lastDirection", this.lastDirection);
 
 		for (Entry<String, Object> currentInfo : info.entrySet()) {
 			sb.append(currentInfo.getKey());

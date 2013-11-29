@@ -10,6 +10,7 @@ public interface Cabin {
 	public void setNextFloor(Integer nextFloor);
 
 	public Integer getId();
+	public Integer getStartFloor();
 	public Integer getCurrentFloor();
 	public Integer getPopulation();
 	public Mode getMode();
@@ -18,5 +19,6 @@ public interface Cabin {
 	public void getOut();
 	public void reset(Integer size);
 	public void thresholds(Integer alertThreshold, Integer panicThreshold);
+	public String getLastDirection();
 
 }

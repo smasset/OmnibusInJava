@@ -1,5 +1,5 @@
 package cabin.util;
 
 public enum Command {
-	UP, DOWN, OPEN, CLOSE, NOTHING
+	UP, DOWN, OPEN, OPEN_UP, OPEN_DOWN, CLOSE, NOTHING
 }

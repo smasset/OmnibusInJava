@@ -49,7 +49,7 @@ public class MultiCabinYoungAndRestlessElevator extends MultiCabinElevator {
 					currentRequest = requestIterator.next();
 
 					if (serveOnlyOutRequests) {
-						if (currentRequest.getOutCount(cabinId) != 0) {
+						if (currentRequest.getOutCount(cabinId) > 0) {
 							nextFloor = currentRequest.getFloor();
 						}
 					} else {

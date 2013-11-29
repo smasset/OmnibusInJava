@@ -4,14 +4,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.logging.Logger;
+
+import org.apache.log4j.Logger;
 
 import cabin.util.Cabin;
 import cabin.util.Command;
 import cabin.util.DefaultCabin;
 
 public class MultiCabinElevator implements Elevator {
-	private static final Logger requestLogger = Logger.getLogger("requests");
+	private static final Logger requestLogger = Logger.getLogger(MultiCabinElevator.class);
 
 	protected final SortedMap<Integer, Cabin> cabins = new TreeMap<>();
 	protected Integer minFloor = null;
@@ -35,13 +36,28 @@ public class MultiCabinElevator implements Elevator {
 
 	@Override
 	public Command[] nextCommands() {
-		this.currentTick++;
 		Command[] commands = new Command[cabins.size()];
 
+		Integer cabinId = null;
+		Cabin cabin = null;
+		Integer nextFloor = null;
+		Command command = null;
 		for (Entry<Integer, Cabin> currentCabin : cabins.entrySet()) {
-			currentCabin.getValue().setNextFloor(this.getNextFloor(currentCabin.getKey()));
-			commands[currentCabin.getKey()] = currentCabin.getValue().nextCommand();
+			cabinId = currentCabin.getKey();
+			cabin = currentCabin.getValue();
+
+			nextFloor = this.getNextFloor(cabinId);
+			cabin.setNextFloor(nextFloor);
+			command = cabin.nextCommand();
+
+			if ((this.minFloor.equals(nextFloor)) && (Command.OPEN_DOWN.equals(command))) {
+				command = Command.OPEN_UP;
+			} else if ((this.maxFloor.equals(nextFloor)) && (Command.OPEN_UP.equals(command))) {
+				command = Command.OPEN_DOWN;
+			}
+			commands[currentCabin.getKey()] = command;
 		}
+		this.currentTick++;
 
 		return commands;
 	}
@@ -72,6 +88,12 @@ public class MultiCabinElevator implements Elevator {
 		}
 	}
 
+	protected void initCabins(Integer cabinCount) {
+		for (int cabinIndex = 0; cabinIndex < cabinCount; ++cabinIndex) {
+			this.cabins.put(cabinIndex, new DefaultCabin(cabinIndex, this.cabinSize, Cabin.DEFAULT_START_FLOOR));
+		}
+	}
+
 	@Override
 	public void reset(Integer minFloor, Integer maxFloor, Integer cabinSize, String cause, Integer cabinCount) {
 		if (cause != null) {
@@ -95,10 +117,7 @@ public class MultiCabinElevator implements Elevator {
 		if (this.cabins != null) {
 			this.cabins.clear();
 		}
-
-		for (int cabinIndex = 0; cabinIndex < cabinCount; ++cabinIndex) {
-			this.cabins.put(cabinIndex, new DefaultCabin(cabinIndex, this.cabinSize, Cabin.DEFAULT_START_FLOOR));
-		}
+		this.initCabins(cabinCount);
 	}
 
 	@Override

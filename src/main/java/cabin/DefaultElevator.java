@@ -3,12 +3,13 @@ package cabin;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-import java.util.logging.Logger;
+
+import org.apache.log4j.Logger;
 
 import cabin.util.Command;
 
 public class DefaultElevator implements Elevator {
-	private static final Logger requestLogger = Logger.getLogger("requests");
+	private static final Logger requestLogger = Logger.getLogger(DefaultElevator.class);
 
 	protected int minFloor = Elevator.DEFAULT_MIN_FLOOR;
 	protected int maxFloor = Elevator.DEFAULT_MAX_FLOOR;

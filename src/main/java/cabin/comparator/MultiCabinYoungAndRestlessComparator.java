@@ -22,7 +22,7 @@ public class MultiCabinYoungAndRestlessComparator extends AbstractFloorRequestCo
 		case NORMAL:
 			if (!RequestType.OUT.equals(request.getType())) {
 				penalty = 5d;
-			} else if (request.getOutCount(this.cabinId) == 0){
+			} else if (request.getOutCount(this.cabinId) <= 0){
 				penalty = 100d;
 			}
 			break;
@@ -30,7 +30,7 @@ public class MultiCabinYoungAndRestlessComparator extends AbstractFloorRequestCo
 		default:
 			if (!RequestType.OUT.equals(request.getType())) {
 				penalty = 100d;
-			} else if (request.getOutCount(this.cabinId) == 0){
+			} else if (request.getOutCount(this.cabinId) <= 0){
 				penalty = 100d;
 			}
 			break;

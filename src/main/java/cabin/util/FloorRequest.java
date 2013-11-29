@@ -67,10 +67,12 @@ public class FloorRequest {
 			count = this.outCounts.get(cabinId);
 		} else {
 			count = 0;
-			for (Integer currentCount : this.outCounts.values()) {
+			if (this.outCounts != null) {
+				for (Integer currentCount : this.outCounts.values()) {
 
-				if (currentCount != null) {
-					count += currentCount;
+					if (currentCount != null) {
+						count += currentCount;
+					}
 				}
 			}
 		}
@@ -111,7 +113,11 @@ public class FloorRequest {
 					newCount += currentCount; 
 				}
 
-				this.outCounts.put(cabinId,  newCount);
+				if (newCount > 0) {
+					this.outCounts.put(cabinId, newCount);
+				} else {
+					this.outCounts.remove(cabinId);
+				}
 			}
 		}
 	}
@@ -135,14 +141,18 @@ public class FloorRequest {
 	}
 
 	public boolean hasSameDirection(String direction) {
+		return this.hasSameDirection(null, direction);
+	}
+
+	public boolean hasSameDirection(Integer cabinId, String direction) {
 		boolean hasSameDirection = true;
 
 		switch (direction) {
 		case Direction.UP:
-			hasSameDirection = !(this.getType().equals(RequestType.DOWN));
+			hasSameDirection = !(this.getType(cabinId).equals(RequestType.DOWN));
 			break;
 		case Direction.DOWN:
-			hasSameDirection = !(this.getType().equals(RequestType.UP));
+			hasSameDirection = !(this.getType(cabinId).equals(RequestType.UP));
 			break;
 		default:
 			break;
