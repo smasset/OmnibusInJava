@@ -145,14 +145,16 @@ public class FloorRequest {
 	}
 
 	public boolean hasSameDirection(Integer cabinId, String direction) {
-		boolean hasSameDirection = true;
+		boolean hasSameDirection = false;
+
+		RequestType type = this.getType(cabinId);
 
 		switch (direction) {
 		case Direction.UP:
-			hasSameDirection = !(this.getType(cabinId).equals(RequestType.DOWN));
+			hasSameDirection = !(type == null || type.equals(RequestType.DOWN));
 			break;
 		case Direction.DOWN:
-			hasSameDirection = !(this.getType(cabinId).equals(RequestType.UP));
+			hasSameDirection = !(type == null || type.equals(RequestType.UP));
 			break;
 		default:
 			break;
