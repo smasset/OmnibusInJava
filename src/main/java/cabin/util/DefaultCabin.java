@@ -16,6 +16,7 @@ public class DefaultCabin implements Cabin {
 	protected Integer panicThreshold = null;
 	protected String lastDirection = null;
 	protected boolean selectOpenDirection = false;
+	protected Integer sameFloorCount = null;
 
 	public DefaultCabin(Integer id) {
 		this(id, Cabin.DEFAULT_CABIN_SIZE, Cabin.DEFAULT_START_FLOOR);
@@ -47,6 +48,11 @@ public class DefaultCabin implements Cabin {
 				int comparison = Integer.compare(this.currentFloor, nextFloor);
 
 				if (comparison == 0) {
+					if (this.sameFloorCount > 2) {
+						this.lastDirection = Direction.UP.equals(this.lastDirection) ? Direction.DOWN : Direction.UP;
+						this.sameFloorCount = 0;
+					}
+
 					if (selectOpenDirection) {
 						switch (this.lastDirection) {
 
@@ -98,6 +104,12 @@ public class DefaultCabin implements Cabin {
 
 	@Override
 	public void setNextFloor(Integer nextFloor) {
+		if (nextFloor.equals(this.currentFloor)) {
+			this.sameFloorCount++;
+		} else {
+			this.sameFloorCount=0;
+		}
+
 		this.nextFloor = nextFloor;
 	}
 
@@ -174,6 +186,7 @@ public class DefaultCabin implements Cabin {
 		this.population = 0;
 		this.nextFloor = null;
 		this.state = CabinState.STOPPED;
+		this.sameFloorCount = 0;
 	}
 
 	public String toString(boolean pretty) {

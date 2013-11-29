@@ -113,13 +113,9 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 			}
 
 			if (returnDefaultFloor && (nextFloor == null)) {
-				nextFloor = defaultFloor;
-
-//				if (Direction.UP.equals(direction)) {
-//					nextFloor = this.requests.higherKey(cabin.getCurrentFloor());
-//				} else {
-//					nextFloor = this.requests.lowerKey(cabin.getCurrentFloor());
-//				}
+				if (currentRequest != null) {
+					nextFloor = currentRequest.getFloor();
+				}
 			}
 		}
 
