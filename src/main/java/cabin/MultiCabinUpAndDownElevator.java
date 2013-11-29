@@ -130,7 +130,7 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 			if (this.currentTick < halfwayTick) {
 				nextFloor = halfwayFloor;
 			} else if ((cabinId == 0) && (this.currentTick == halfwayTick)) {
-				cabin.setLastDirection(Direction.DOWN); 
+				nextFloor = halfwayFloor - 1;
 			} else {
 				switch (cabin.getLastDirection()) {
 
