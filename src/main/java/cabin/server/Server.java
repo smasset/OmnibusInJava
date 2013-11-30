@@ -2,7 +2,6 @@ package cabin.server;
 
 import static spark.Spark.get;
 
-import java.util.UUID;
 import java.util.logging.Logger;
 
 import spark.Request;
@@ -17,12 +16,10 @@ public class Server {
 	public void addElevator(String context, final Elevator elevator) {
 		get(new Route(context + ":path") {
 
-			private String getRequestString(String uuid, Request request, Object response, Long time) {
+			private String getRequestString(Request request, Object response, Long time) {
 				StringBuilder requestString = new StringBuilder();
 				String forwardedForIp = request.headers("X-Forwarded-For");
 
-				requestString.append(uuid);
-				requestString.append(" ¤ ");
 				requestString.append(forwardedForIp != null ? forwardedForIp : request.ip());
 				requestString.append(" ¤ ");
 				requestString.append(request.pathInfo());
@@ -47,7 +44,6 @@ public class Server {
 					requestLogger.info("status : " + elevator.status(false));
 				}
 
-				String uuid = UUID.randomUUID().toString();
 				String path = request.params(":path");
 
 				switch (path) {
@@ -139,7 +135,7 @@ public class Server {
 					break;
 				}
 
-				requestLogger.info(this.getRequestString(uuid, request, result, Long.valueOf(System.currentTimeMillis() - start)));
+				requestLogger.info(this.getRequestString(request, result, Long.valueOf(System.currentTimeMillis() - start)));
 
 				return result;
 			}
