@@ -1,10 +1,5 @@
+package cabin;
 import spark.Spark;
-import cabin.DefaultElevator;
-import cabin.FifoElevator;
-import cabin.LoveInAnElevator;
-import cabin.OmnibusElevator;
-import cabin.UpAndDownElevator;
-import cabin.YoungAndRestlessElevator;
 import cabin.server.Server;
 
 public class Launcher {
