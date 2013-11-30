@@ -2,7 +2,7 @@ package cabin.server;
 
 import static spark.Spark.get;
 
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 import spark.Request;
 import spark.Response;
@@ -11,7 +11,7 @@ import cabin.Elevator;
 import cabin.util.Command;
 
 public class Server {
-	private static final Logger requestLogger = Logger.getLogger("requests");
+	private static final Logger logger = Logger.getLogger(Server.class);
 
 	public void addElevator(String context, final Elevator elevator) {
 		get(new Route(context + ":path") {
@@ -41,7 +41,7 @@ public class Server {
 				Object result = "";
 
 				if (elevator.isDebug()) {
-					requestLogger.info("status : " + elevator.status(false));
+					logger.info("status : " + elevator.status(false));
 				}
 
 				String path = request.params(":path");
@@ -135,7 +135,7 @@ public class Server {
 					break;
 				}
 
-				requestLogger.info(this.getRequestString(request, result, Long.valueOf(System.currentTimeMillis() - start)));
+				logger.info(this.getRequestString(request, result, Long.valueOf(System.currentTimeMillis() - start)));
 
 				return result;
 			}
