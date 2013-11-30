@@ -26,6 +26,7 @@ public class Launcher implements UncaughtExceptionHandler {
 		cabinServer.addElevator("/loveinanelevator/", new LoveInAnElevator(-5, 35, 30, 2));
 		cabinServer.addElevator("/vengaboys/", new UpAndDownElevator(-5, 35, 30, 2));
 		cabinServer.addElevator("/youngandrestless/", new YoungAndRestlessElevator(-5, 35, 30, 2));
+		cabinServer.addElevator("/multi-cabin/", new MultiCabinElevator(-5, 35, 30, 2));
 	}
 
 	@Override
