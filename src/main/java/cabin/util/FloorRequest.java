@@ -1,10 +1,12 @@
 package cabin.util;
 
+import java.util.HashMap;
+import java.util.Map;
 
 public class FloorRequest {
 	private Integer floor = null;
 
-	private Integer outCount = 0;
+	private Map<Integer, Integer> outCounts = new HashMap<>();
 	private Integer upCount = 0;
 	private Integer downCount = 0;
 
@@ -27,9 +29,13 @@ public class FloorRequest {
 	}
 
 	public RequestType getType() {
+		return this.getType(null);
+	}
+
+	public RequestType getType(Integer cabinId) {
 		RequestType type = null;
 
-		if (this.outCount > 0) {
+		if (this.getOutCount(cabinId) > 0) {
 			type = RequestType.OUT;
 		} else if (this.upCount > 0) {
 			type = this.downCount > 0 ? RequestType.UP_DOWN : RequestType.UP;
@@ -51,18 +57,38 @@ public class FloorRequest {
 	}
 
 	public Integer getOutCount() {
-		return this.outCount;
+		return this.getOutCount(null);
+	}
+
+	public Integer getOutCount(Integer cabinId) {
+		Integer count = null;
+
+		if (cabinId != null) {
+			count = this.outCounts.get(cabinId);
+		} else {
+			count = 0;
+			if (this.outCounts != null) {
+				for (Integer currentCount : this.outCounts.values()) {
+
+					if (currentCount != null) {
+						count += currentCount;
+					}
+				}
+			}
+		}
+
+		return count != null ? count : 0;
 	}
 
 	public Integer getCount() {
-		return this.upCount + this.downCount + this.outCount;
+		return this.upCount + this.downCount + this.getOutCount();
 	}
 
 	public Integer getRelativeCount() {
-		return this.upCount + this.downCount - this.outCount;
+		return this.upCount + this.downCount - this.getOutCount();
 	}
 
-	private void addCount(String direction, int increment) {
+	private void addCount(Integer cabinId, String direction, int increment) {
 		if (direction != null) {
 
 			switch (direction) {
@@ -79,29 +105,56 @@ public class FloorRequest {
 			}
 
 		} else {
-			this.outCount += increment;
+			if (cabinId != null) {
+				Integer newCount = increment;
+
+				Integer currentCount = this.outCounts.get(cabinId);
+				if (currentCount != null) {
+					newCount += currentCount; 
+				}
+
+				if (newCount > 0) {
+					this.outCounts.put(cabinId, newCount);
+				} else {
+					this.outCounts.remove(cabinId);
+				}
+			}
 		}
 	}
 
 	public FloorRequest incrementCount(String direction) {
-		this.addCount(direction, 1);
+		return this.incrementCount(0, direction);
+	}
+
+	public FloorRequest incrementCount(Integer cabinId, String direction) {
+		this.addCount(cabinId, direction, 1);
 		return this;
 	}
 
 	public FloorRequest decrementCount(String direction) {
-		this.addCount(direction, -1);
+		return this.decrementCount(0, direction);
+	}
+
+	public FloorRequest decrementCount(Integer cabinId, String direction) {
+		this.addCount(cabinId, direction, -1);
 		return this;
 	}
 
 	public boolean hasSameDirection(String direction) {
-		boolean hasSameDirection = true;
+		return this.hasSameDirection(null, direction);
+	}
+
+	public boolean hasSameDirection(Integer cabinId, String direction) {
+		boolean hasSameDirection = false;
+
+		RequestType type = this.getType(cabinId);
 
 		switch (direction) {
 		case Direction.UP:
-			hasSameDirection = !(this.getType().equals(RequestType.DOWN));
+			hasSameDirection = !(type == null || type.equals(RequestType.DOWN));
 			break;
 		case Direction.DOWN:
-			hasSameDirection = !(this.getType().equals(RequestType.UP));
+			hasSameDirection = !(type == null || type.equals(RequestType.UP));
 			break;
 		default:
 			break;
@@ -138,8 +191,8 @@ public class FloorRequest {
 		string.append(this.getType());
 		string.append("; count: ");
 		string.append(this.getCount());
-		string.append("; outCount: ");
-		string.append(this.outCount);
+		string.append("; outCounts: ");
+		string.append(this.outCounts);
 		string.append("; upCount: ");
 		string.append(this.upCount);
 		string.append("; downCount: ");
