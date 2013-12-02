@@ -90,6 +90,7 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 				requestIterator = nextRequests.values().iterator();
 			}
 
+			Integer defaultFloor = null;
 			FloorRequest currentRequest = null;
 			while ((nextFloor == null) && (requestIterator.hasNext())) {
 				currentRequest = requestIterator.next();
@@ -105,12 +106,14 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 				} else {
 					nextFloor = currentRequest.getFloor();
 				}
+
+				if (returnDefaultFloor && (currentRequest.getCount(cabinId) > 0)) {
+					defaultFloor = currentRequest.getFloor();
+				}
 			}
 
 			if (returnDefaultFloor && (nextFloor == null)) {
-				if ((currentRequest != null) && (currentRequest.getOutCount(cabinId) <= 0)) {
-					nextFloor = currentRequest.getFloor();
-				}
+				nextFloor = defaultFloor;
 			}
 		}
 

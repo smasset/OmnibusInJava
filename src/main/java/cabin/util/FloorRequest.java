@@ -81,11 +81,19 @@ public class FloorRequest {
 	}
 
 	public Integer getCount() {
-		return this.upCount + this.downCount + this.getOutCount();
+		return this.getCount(null);
+	}
+
+	public Integer getCount(Integer cabinId) {
+		return this.upCount + this.downCount + this.getOutCount(cabinId);
 	}
 
 	public Integer getRelativeCount() {
-		return this.upCount + this.downCount - this.getOutCount();
+		return this.getRelativeCount(null);
+	}
+
+	public Integer getRelativeCount(Integer cabinId) {
+		return this.upCount + this.downCount - this.getOutCount(cabinId);
 	}
 
 	private void addCount(Integer cabinId, String direction, int increment) {
