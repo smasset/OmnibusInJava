@@ -21,5 +21,6 @@ public interface Cabin {
 	public void thresholds(Integer alertThreshold, Integer panicThreshold);
 	public String getLastDirection();
 	public void setLastDirection(String lastDirection);
+	public void setOpenAllDoors(boolean openAllDoors);
 
 }
