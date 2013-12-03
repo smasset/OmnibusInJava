@@ -58,6 +58,7 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 			boolean serveOnlyOutRequests = false;
 			boolean serveOnlySameRequests = false;
 			boolean returnDefaultFloor = false;
+			int requestDepth = 0;
 
 			switch (cabin.getMode()) {
 			case PANIC:
@@ -78,6 +79,8 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 			if (sortRequests) {
 				SortedSet<FloorRequest> requestSet = new TreeSet<>(new ClosestOutComparator(cabin, this.currentTick));
 				requestSet.addAll(this.requests.values());
+
+				requestDepth = requestSet.size();
 				requestIterator = requestSet.iterator();
 			} else {
 				NavigableMap<Integer, FloorRequest> nextRequests = null;
@@ -87,9 +90,11 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 					nextRequests = this.requests.headMap(cabin.getCurrentFloor(), true).descendingMap();
 				}
 
+				requestDepth = nextRequests != null ? nextRequests.size() : 0;
 				requestIterator = nextRequests.values().iterator();
 			}
 
+			Integer defaultFloor = null;
 			FloorRequest currentRequest = null;
 			while ((nextFloor == null) && (requestIterator.hasNext())) {
 				currentRequest = requestIterator.next();
@@ -105,13 +110,17 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 				} else {
 					nextFloor = currentRequest.getFloor();
 				}
+
+				if (returnDefaultFloor && (currentRequest.getCount(cabinId) > 0)) {
+					defaultFloor = currentRequest.getFloor();
+				}
 			}
 
 			if (returnDefaultFloor && (nextFloor == null)) {
-				if ((currentRequest != null) && (currentRequest.getOutCount(cabinId) <= 0)) {
-					nextFloor = currentRequest.getFloor();
-				}
+				nextFloor = defaultFloor;
 			}
+
+			cabin.setOpenAllDoors(requestDepth <= 3);
 		}
 
 		return nextFloor;

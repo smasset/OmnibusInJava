@@ -18,6 +18,7 @@ public class DefaultCabin implements Cabin {
 	protected Integer panicThreshold = null;
 	protected String lastDirection = null;
 	protected boolean selectOpenDirection = false;
+	protected boolean openAllDoors = false;
 	protected Integer sameFloorCount = null;
 
 	public DefaultCabin(Integer id) {
@@ -55,7 +56,7 @@ public class DefaultCabin implements Cabin {
 						this.sameFloorCount = 0;
 					}
 
-					if (selectOpenDirection) {
+					if (this.selectOpenDirection && !this.openAllDoors) {
 						switch (this.lastDirection) {
 
 						case Direction.UP:
@@ -168,6 +169,11 @@ public class DefaultCabin implements Cabin {
 	}
 
 	@Override
+	public void setOpenAllDoors(boolean openAllDoors) {
+		this.openAllDoors = openAllDoors;
+	}
+
+	@Override
 	public String getLastDirection() {
 		return this.lastDirection;
 	}
@@ -206,6 +212,9 @@ public class DefaultCabin implements Cabin {
 		info.put("panicThreshold", this.panicThreshold);
 		info.put("mode", this.getMode());
 		info.put("lastDirection", this.lastDirection);
+		info.put("selectOpenDirection", this.selectOpenDirection);
+		info.put("openAllDoors", this.openAllDoors);
+		info.put("sameFloorCount", this.sameFloorCount);
 
 		for (Entry<String, Object> currentInfo : info.entrySet()) {
 			sb.append(currentInfo.getKey());
