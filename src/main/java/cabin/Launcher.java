@@ -23,14 +23,14 @@ public class Launcher implements UncaughtExceptionHandler {
 		cabinServer.addElevator("/", new DefaultElevator());
 		cabinServer.addElevator("/omnibus/", new OmnibusElevator());
 		cabinServer.addElevator("/fifo/", new FifoElevator());
-		cabinServer.addElevator("/loveinanelevator/", new LoveInAnElevator(-5, 35, 30, 2));
-		cabinServer.addElevator("/vengaboys/", new UpAndDownElevator(-5, 35, 30, 2));
-//		cabinServer.addElevator("/youngandrestless/", new YoungAndRestlessElevator(-5, 35, 30, 2));
-		cabinServer.addElevator("/youngandrestless/", new MultiCabinUpAndDownElevator(-5, 35, 30, 2));
-		cabinServer.addElevator("/multi-cabin/", new MultiCabinElevator(-5, 35, 30, 2));
-		cabinServer.addElevator("/multi-omnibus/", new MultiCabinOmnibusElevator(-5, 35, 30, 2));
-		cabinServer.addElevator("/multi-vengaboys/", new MultiCabinUpAndDownElevator(-5, 35, 30, 2));
-		cabinServer.addElevator("/multi-youngandrestless/", new MultiCabinYoungAndRestlessElevator(-5, 35, 30, 2));
+		cabinServer.addElevator("/loveinanelevator/", new LoveInAnElevator(-5, 48, 30, 8));
+		cabinServer.addElevator("/vengaboys/", new UpAndDownElevator(-5, 48, 30, 8));
+//		cabinServer.addElevator("/youngandrestless/", new YoungAndRestlessElevator(-5, 48, 30, 8));
+		cabinServer.addElevator("/youngandrestless/", new MultiCabinUpAndDownElevator(-5, 48, 30, 8));
+		cabinServer.addElevator("/multi-cabin/", new MultiCabinElevator(-5, 48, 30, 8));
+		cabinServer.addElevator("/multi-omnibus/", new MultiCabinOmnibusElevator(-5, 48, 30, 8));
+		cabinServer.addElevator("/multi-vengaboys/", new MultiCabinUpAndDownElevator(-5, 48, 30, 8));
+		cabinServer.addElevator("/multi-youngandrestless/", new MultiCabinYoungAndRestlessElevator(-5, 48, 30, 8));
 	}
 
 	@Override
