@@ -53,6 +53,29 @@ public class DefaultCabin implements Cabin {
 
 		switch (this.state) {
 
+		case INIT:
+			if (this.initFloor == null) {
+				this.state = CabinState.STOPPED;
+				this.lastDirection = Direction.UP;
+			} else {
+				if (this.currentFloor != null) {
+					int comparison = Integer.compare(this.currentFloor, this.initFloor);
+
+					if (comparison == 0) {
+						this.state = CabinState.STOPPED;
+					} else if (comparison > 0) {
+						this.currentFloor--;
+						nextCommand = Command.DOWN;
+						this.lastDirection = Direction.UP;
+					} else {
+						this.currentFloor++;
+						nextCommand = Command.UP;
+						this.lastDirection = Direction.DOWN;
+					}
+				}
+			}
+			break;
+
 		case STOPPED:
 			if ((this.nextFloor != null) && (this.currentFloor != null)) {
 				int comparison = Integer.compare(this.currentFloor, nextFloor);
@@ -200,8 +223,9 @@ public class DefaultCabin implements Cabin {
 		this.currentFloor = startFloor;
 		this.population = 0;
 		this.nextFloor = null;
-		this.state = CabinState.STOPPED;
+		this.state = CabinState.INIT;
 		this.sameFloorCount = 0;
+		this.lastDirection = Direction.UP;
 	}
 
 	protected Map<String, String> getStatusInfo() {
