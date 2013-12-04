@@ -7,7 +7,11 @@ public class SelectiveCabin extends DefaultCabin {
 	}
 
 	public SelectiveCabin(Integer id, Integer size, Integer startFloor) {
-		super(id, size, startFloor);
+		this(id, size, startFloor, null);
+	}
+
+	public SelectiveCabin(Integer id, Integer size, Integer startFloor, Integer initFloor) {
+		super(id, size, startFloor, initFloor);
 		this.selectOpenDirection = true;
 	}
 }

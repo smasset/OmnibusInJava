@@ -10,6 +10,7 @@ public class DefaultCabin implements Cabin {
 	protected Integer id = null;
 	protected Integer size = null;
 	protected Integer startFloor = null;
+	protected Integer initFloor = null;
 
 	protected Integer currentFloor = null;
 	protected Integer population = null;
@@ -27,8 +28,13 @@ public class DefaultCabin implements Cabin {
 	}
 
 	public DefaultCabin(Integer id, Integer size, Integer startFloor) {
+		this(id, size, startFloor, null);
+	}
+
+	public DefaultCabin(Integer id, Integer size, Integer startFloor, Integer initFloor) {
 		this.id = id;
 		this.startFloor = startFloor;
+		this.initFloor = initFloor;
 		this.reset(size);
 	}
 
@@ -204,6 +210,7 @@ public class DefaultCabin implements Cabin {
 		info.put("id", this.id != null ? this.id.toString() : "");
 		info.put("size", this.size != null ? this.size.toString() : "");
 		info.put("startFloor", this.startFloor != null ? this.startFloor.toString() : "");
+		info.put("initFloor", this.initFloor != null ? this.initFloor.toString() : "");
 		info.put("currentFloor", this.currentFloor != null ? this.currentFloor.toString() : "");
 		info.put("population", this.population != null ? this.population.toString() : "");
 		info.put("nextFloor", this.nextFloor != null ? this.nextFloor.toString() : "");
