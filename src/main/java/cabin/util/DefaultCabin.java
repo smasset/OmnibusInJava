@@ -1,5 +1,6 @@
 package cabin.util;
 
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
@@ -197,26 +198,32 @@ public class DefaultCabin implements Cabin {
 		this.sameFloorCount = 0;
 	}
 
+	protected Map<String, String> getStatusInfo() {
+		TreeMap<String, String> info = new TreeMap<>();
+
+		info.put("id", this.id != null ? this.id.toString() : "");
+		info.put("size", this.size != null ? this.size.toString() : "");
+		info.put("startFloor", this.startFloor != null ? this.startFloor.toString() : "");
+		info.put("currentFloor", this.currentFloor != null ? this.currentFloor.toString() : "");
+		info.put("population", this.population != null ? this.population.toString() : "");
+		info.put("nextFloor", this.nextFloor != null ? this.nextFloor.toString() : "");
+		info.put("state", this.state != null ? this.state.toString() : "");
+		info.put("alertThreshold", this.alertThreshold != null ? this.alertThreshold.toString() : "");
+		info.put("panicThreshold", this.panicThreshold != null ? this.panicThreshold.toString() : "");
+		info.put("mode", this.getMode() != null ? this.getMode().toString() : "");
+		info.put("lastDirection", this.lastDirection != null ? this.lastDirection : "");
+		info.put("selectOpenDirection", Boolean.toString(this.selectOpenDirection));
+		info.put("openAllDoors", Boolean.toString(this.openAllDoors));
+		info.put("sameFloorCount", this.sameFloorCount != null ? this.sameFloorCount.toString() : "");
+
+		return info;
+	}
+
+	@Override
 	public String toString(boolean pretty) {
 		StringBuilder sb = new StringBuilder();
 
-		TreeMap<String, Object> info = new TreeMap<>();
-		info.put("id", this.id);
-		info.put("size", this.size);
-		info.put("startFloor", this.startFloor);
-		info.put("currentFloor", this.currentFloor);
-		info.put("population", this.population);
-		info.put("nextFloor", this.nextFloor);
-		info.put("state", this.state);
-		info.put("alertThreshold", this.alertThreshold);
-		info.put("panicThreshold", this.panicThreshold);
-		info.put("mode", this.getMode());
-		info.put("lastDirection", this.lastDirection);
-		info.put("selectOpenDirection", this.selectOpenDirection);
-		info.put("openAllDoors", this.openAllDoors);
-		info.put("sameFloorCount", this.sameFloorCount);
-
-		for (Entry<String, Object> currentInfo : info.entrySet()) {
+		for (Entry<String, String> currentInfo : this.getStatusInfo().entrySet()) {
 			sb.append(currentInfo.getKey());
 			sb.append(" : ");
 			sb.append(currentInfo.getValue());

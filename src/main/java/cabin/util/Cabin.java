@@ -23,4 +23,6 @@ public interface Cabin {
 	public void setLastDirection(String lastDirection);
 	public void setOpenAllDoors(boolean openAllDoors);
 
+	public String toString(boolean pretty);
+
 }
