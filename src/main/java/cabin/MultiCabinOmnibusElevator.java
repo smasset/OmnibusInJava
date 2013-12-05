@@ -18,7 +18,7 @@ public class MultiCabinOmnibusElevator extends MultiCabinElevator {
 	public Integer getNextFloor(Integer cabinId) {
 		Integer nextFloor = null;
 
-		Cabin currentCabin = this.cabins.get(cabinId);
+		Cabin currentCabin = (Cabin) this.cabins.get(cabinId);
 		if (currentCabin != null) {
 			Integer currentFloor = currentCabin.getCurrentFloor();
 			switch (count % 3) {

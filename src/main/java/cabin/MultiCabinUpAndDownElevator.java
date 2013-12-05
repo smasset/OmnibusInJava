@@ -35,7 +35,7 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 	}
 
 	private void removeRequest(Integer cabinId, String direction) {
-		Cabin cabin = this.cabins.get(cabinId);
+		Cabin cabin = (Cabin) this.cabins.get(cabinId);
 
 		if (cabin != null) {
 			Integer currentFloor = cabin.getCurrentFloor();
@@ -54,7 +54,7 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 	protected Integer getNextFloor(Integer cabinId, String direction) {
 		Integer nextFloor = null;
 
-		Cabin cabin = this.cabins.get(cabinId);
+		Cabin cabin = (Cabin) this.cabins.get(cabinId);
 
 		if (cabin != null) {
 			boolean sortRequests = false;
@@ -133,7 +133,7 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 	public Integer getNextFloor(Integer cabinId) {
 		Integer nextFloor = null;
 
-		Cabin cabin = this.cabins.get(cabinId);
+		Cabin cabin = (Cabin) this.cabins.get(cabinId);
 		if (cabin != null) {
 
 			switch (cabin.getLastDirection()) {
@@ -168,7 +168,7 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 
 	@Override
 	public void go(Integer floor, Integer cabinId) {
-		Cabin cabin = this.cabins.get(cabinId);
+		Cabin cabin = (Cabin) this.cabins.get(cabinId);
 
 		if (cabin != null) {
 			// Remove current floor request
