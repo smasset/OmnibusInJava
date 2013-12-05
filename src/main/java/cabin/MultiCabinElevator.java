@@ -14,7 +14,7 @@ import cabin.util.DefaultCabin;
 public class MultiCabinElevator implements Elevator {
 	private static final Logger logger = Logger.getLogger(MultiCabinElevator.class);
 
-	protected final SortedMap<Integer, Cabin> cabins = new TreeMap<>();
+	protected final SortedMap<Integer, ? super Cabin> cabins = new TreeMap<>();
 	protected Integer minFloor = null;
 	protected Integer maxFloor = null;
 	protected Integer cabinSize = null;
@@ -42,9 +42,9 @@ public class MultiCabinElevator implements Elevator {
 		Cabin cabin = null;
 		Integer nextFloor = null;
 		Command command = null;
-		for (Entry<Integer, Cabin> currentCabin : cabins.entrySet()) {
+		for (Entry<Integer, ? super Cabin> currentCabin : cabins.entrySet()) {
 			cabinId = currentCabin.getKey();
-			cabin = currentCabin.getValue();
+			cabin = (Cabin) currentCabin.getValue();
 
 			nextFloor = this.getNextFloor(cabinId);
 			cabin.setNextFloor(nextFloor);
@@ -72,7 +72,7 @@ public class MultiCabinElevator implements Elevator {
 
 	@Override
 	public void userHasEntered(Integer cabin) {
-		Cabin inCabin = this.cabins.get(cabin);
+		Cabin inCabin = (Cabin) this.cabins.get(cabin);
 
 		if (inCabin != null) {
 			inCabin.getIn();
@@ -81,7 +81,7 @@ public class MultiCabinElevator implements Elevator {
 
 	@Override
 	public void userHasExited(Integer cabin) {
-		Cabin outCabin = this.cabins.get(cabin);
+		Cabin outCabin = (Cabin) this.cabins.get(cabin);
 
 		if (outCabin != null) {
 			outCabin.getOut();
@@ -145,10 +145,10 @@ public class MultiCabinElevator implements Elevator {
 
 		sb.append("{");
 		if (this.cabins != null) {
-			for (Entry<Integer, Cabin> currentCabin : this.cabins.entrySet()) {
+			for (Entry<Integer, ? super Cabin> currentCabin : this.cabins.entrySet()) {
 				sb.append(currentCabin.getKey());
 				sb.append(" : ");
-				sb.append(this.getCabinStatus(currentCabin.getValue()));
+				sb.append(this.getCabinStatus((Cabin) currentCabin.getValue()));
 				sb.append(", ");
 			}
 		}
@@ -192,8 +192,8 @@ public class MultiCabinElevator implements Elevator {
 	@Override
 	public void thresholds(Integer alertThreshold, Integer panicThreshold) {
 		if (this.cabins != null){
-			for (Cabin currentCabin : this.cabins.values()) {
-				currentCabin.thresholds(alertThreshold, panicThreshold);
+			for (Entry<Integer, ? super Cabin> currentCabin : this.cabins.entrySet()) {
+				((Cabin)currentCabin.getValue()).thresholds(alertThreshold, panicThreshold);
 			}
 		}
 	}

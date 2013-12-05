@@ -32,7 +32,7 @@ public class MultiCabinYoungAndRestlessElevator extends MultiCabinElevator {
 	private Integer getNextFloor(Integer cabinId, Map<Integer, FloorRequest> requests, boolean forceOut) {
 		Integer nextFloor = null;
 
-		Cabin currentCabin = this.cabins.get(cabinId);
+		Cabin currentCabin = (Cabin) this.cabins.get(cabinId);
 		if (currentCabin != null) {
 			if (cabinId == 0 && (this.currentTick  < (this.maxFloor - 1))) {
 				nextFloor = this.maxFloor - 1;
@@ -66,7 +66,7 @@ public class MultiCabinYoungAndRestlessElevator extends MultiCabinElevator {
 	public Integer getNextFloor(Integer cabinId) {
 		Integer nextFloor = null;
 
-		Cabin currentCabin = this.cabins.get(cabinId);
+		Cabin currentCabin = (Cabin) this.cabins.get(cabinId);
 		if (currentCabin != null) {
 			nextFloor = this.getNextFloor(cabinId, this.youngRequests, false);
 
@@ -96,7 +96,7 @@ public class MultiCabinYoungAndRestlessElevator extends MultiCabinElevator {
 	private boolean removeRequest(Integer cabinId, Map<Integer, FloorRequest> requests, String direction) {
 		boolean removed = false;
 
-		Cabin cabin = this.cabins.get(cabinId);
+		Cabin cabin = (Cabin) this.cabins.get(cabinId);
 		if (cabin != null) {
 
 			FloorRequest currentFloorRequest = requests.get(cabin.getCurrentFloor());
@@ -148,8 +148,8 @@ public class MultiCabinYoungAndRestlessElevator extends MultiCabinElevator {
 		if (cabinId == null) {
 			// Request from outside any cabin : compute closest cabin distance
 			Integer currentDistance = null;
-			for (Cabin currentCabin : this.cabins.values()) {
-				currentDistance = Math.abs(floor - currentCabin.getCurrentFloor());
+			for (Entry<Integer, ? super Cabin> currentCabin : this.cabins.entrySet()) {
+				currentDistance = Math.abs(floor - ((Cabin) currentCabin.getValue()).getCurrentFloor());
 				if ((shortestDistance == null) || (currentDistance.compareTo(shortestDistance) < 0)) {
 					shortestDistance = currentDistance;
 				}
@@ -158,7 +158,7 @@ public class MultiCabinYoungAndRestlessElevator extends MultiCabinElevator {
 		} else {
 			// User just got in a cabin get the distance from its current floor
 			// to destination
-			Cabin cabin = this.cabins.get(cabinId);
+			Cabin cabin = (Cabin) this.cabins.get(cabinId);
 			if (cabin != null) {
 				shortestDistance = Math.abs(floor - cabin.getCurrentFloor());
 			}
@@ -176,7 +176,7 @@ public class MultiCabinYoungAndRestlessElevator extends MultiCabinElevator {
 
 	@Override
 	public void go(Integer floor, Integer cabin) {
-		Cabin currentCabin = this.cabins.get(cabin);
+		Cabin currentCabin = (Cabin) this.cabins.get(cabin);
 
 		if (currentCabin != null) {
 			Integer currentFloor = currentCabin.getCurrentFloor();
