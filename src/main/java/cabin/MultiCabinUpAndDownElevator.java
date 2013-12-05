@@ -26,8 +26,11 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 	}
 
 	protected void initCabins(Integer cabinCount) {
+		Integer currentStartFloor = null;
+
 		for (int cabinIndex = 0; cabinIndex < cabinCount; ++cabinIndex) {
-			this.cabins.put(cabinIndex, new SelectiveCabin(cabinIndex, this.cabinSize, Cabin.DEFAULT_START_FLOOR));
+			currentStartFloor = cabinIndex % 2 == 0 ? this.minFloor : this.maxFloor;
+			this.cabins.put(cabinIndex, new SelectiveCabin(cabinIndex, this.cabinSize, Cabin.DEFAULT_START_FLOOR, currentStartFloor));
 		}
 	}
 
@@ -48,7 +51,7 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 		}
 	}
 
-	private Integer getNextFloor(Integer cabinId, String direction) {
+	protected Integer getNextFloor(Integer cabinId, String direction) {
 		Integer nextFloor = null;
 
 		Cabin cabin = this.cabins.get(cabinId);
@@ -133,39 +136,30 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 		Cabin cabin = this.cabins.get(cabinId);
 		if (cabin != null) {
 
-			Integer halfwayFloor = Double.valueOf(Math.ceil((this.maxFloor + this.minFloor) / 2d)).intValue();
-			Long halfwayTick = Long.valueOf(halfwayFloor - cabin.getStartFloor());
-			
-			if (this.currentTick < halfwayTick) {
-				nextFloor = halfwayFloor;
-			} else if ((cabinId == 0) && (this.currentTick == halfwayTick)) {
-				nextFloor = halfwayFloor - 1;
-			} else {
-				switch (cabin.getLastDirection()) {
+			switch (cabin.getLastDirection()) {
 
-				case Direction.UP:
-					nextFloor = this.getNextFloor(cabinId, Direction.UP);
-					if (nextFloor == null) {
-						nextFloor = this.getNextFloor(cabinId, Direction.DOWN);
-						if (nextFloor !=null) {
-							cabin.setLastDirection(Direction.DOWN);
-						}
-					}
-					break;
-
-				case Direction.DOWN:
+			case Direction.UP:
+				nextFloor = this.getNextFloor(cabinId, Direction.UP);
+				if (nextFloor == null) {
 					nextFloor = this.getNextFloor(cabinId, Direction.DOWN);
-					if (nextFloor == null) {
-						nextFloor = this.getNextFloor(cabinId, Direction.UP);
-						if (nextFloor !=null) {
-							cabin.setLastDirection(Direction.UP);
-						}
+					if (nextFloor !=null) {
+						cabin.setLastDirection(Direction.DOWN);
 					}
-					break;
-
-				default:
-					break;
 				}
+				break;
+
+			case Direction.DOWN:
+				nextFloor = this.getNextFloor(cabinId, Direction.DOWN);
+				if (nextFloor == null) {
+					nextFloor = this.getNextFloor(cabinId, Direction.UP);
+					if (nextFloor !=null) {
+						cabin.setLastDirection(Direction.UP);
+					}
+				}
+				break;
+
+			default:
+				break;
 			}
 		}
 
