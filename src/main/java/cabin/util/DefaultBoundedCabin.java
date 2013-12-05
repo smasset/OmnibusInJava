@@ -70,4 +70,27 @@ public class DefaultBoundedCabin extends DefaultCabin implements BoundedCabin {
 
 		return isWithinLimits;
 	}
+
+	@Override
+	public Command nextCommand() {
+		Command command = super.nextCommand();
+
+		switch(command) {
+		case OPEN:
+		case OPEN_DOWN:
+		case OPEN_UP:
+			if (!this.isWithinLimits(this.currentFloor)) {
+				if (this.currentFloor < this.lowerLimit) {
+					command = Command.OPEN_UP;
+				} else {
+					command = Command.OPEN_DOWN;
+				}
+			}
+			break;
+		default:
+			break;
+		}
+
+		return command;
+	}
 }
