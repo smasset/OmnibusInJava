@@ -2,9 +2,7 @@ package cabin;
 
 import java.util.Iterator;
 import java.util.NavigableMap;
-import java.util.SortedMap;
 import java.util.SortedSet;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
 import cabin.comparator.ClosestOutComparator;
@@ -16,8 +14,6 @@ import cabin.util.RequestType;
 import cabin.util.SelectiveBoundedCabin;
 
 public class MultiBoundedCabinUpAndDownElevator extends MultiCabinUpAndDownElevator {
-	protected final SortedMap<Integer, BoundedCabin> cabins = new TreeMap<>();
-
 	public MultiBoundedCabinUpAndDownElevator() {
 		this(Elevator.DEFAULT_MIN_FLOOR, Elevator.DEFAULT_MAX_FLOOR, Elevator.DEFAULT_CABIN_SIZE, Elevator.DEFAULT_CABIN_COUNT);
 	}
@@ -56,7 +52,7 @@ public class MultiBoundedCabinUpAndDownElevator extends MultiCabinUpAndDownEleva
 	protected Integer getNextFloor(Integer cabinId, String direction) {
 		Integer nextFloor = null;
 
-		BoundedCabin cabin = this.cabins.get(cabinId);
+		BoundedCabin cabin = (BoundedCabin) this.cabins.get(cabinId);
 
 		if (cabin != null) {
 			boolean sortRequests = false;
@@ -110,7 +106,7 @@ public class MultiBoundedCabinUpAndDownElevator extends MultiCabinUpAndDownEleva
 					}
 				} else if (serveOnlySameRequests) {
 					if (currentRequest.hasSameDirection(cabinId, direction)) {
-						if (cabin.isWithinLimits(currentRequest.getFloor())) {
+						if (RequestType.OUT.equals(currentRequest.getType(cabinId)) || cabin.isWithinLimits(currentRequest.getFloor())) {
 							nextFloor = currentRequest.getFloor();
 						}
 					}
