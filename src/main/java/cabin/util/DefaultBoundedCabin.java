@@ -65,7 +65,7 @@ public class DefaultBoundedCabin extends DefaultCabin implements BoundedCabin {
 			isWithinLimits = true;
 
 			isWithinLimits &= ((this.lowerLimit == null) || (floor >= this.lowerLimit));
-			isWithinLimits &= ((this.upperLimit == null) || (floor  < this.upperLimit));
+			isWithinLimits &= ((this.upperLimit == null) || (floor <= this.upperLimit));
 		}
 
 		return isWithinLimits;
