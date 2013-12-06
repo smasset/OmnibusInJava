@@ -78,8 +78,10 @@ public class DefaultCabin implements Cabin {
 			break;
 
 		case STOPPED:
-			if ((this.nextFloor != null) && (this.currentFloor != null)) {
-				int comparison = Integer.compare(this.currentFloor, nextFloor);
+			Integer comparedToFloor = this.noFloorCount > 5 ? this.initFloor : this.nextFloor;
+
+			if ((comparedToFloor != null) && (this.currentFloor != null)) {
+				int comparison = Integer.compare(this.currentFloor, comparedToFloor);
 
 				if (comparison == 0) {
 					if (this.sameFloorCount > 2) {
@@ -141,10 +143,6 @@ public class DefaultCabin implements Cabin {
 	public void setNextFloor(Integer nextFloor) {
 		if (nextFloor == null) {
 			this.noFloorCount++;
-
-			if (this.noFloorCount > 5) {
-				this.state = CabinState.INIT;
-			}
 		} else {
 			this.noFloorCount = 0;
 		}
