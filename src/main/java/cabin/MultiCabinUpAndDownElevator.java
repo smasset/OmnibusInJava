@@ -26,11 +26,22 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 	}
 
 	protected void initCabins(Integer cabinCount) {
-		Integer currentStartFloor = null;
+		Integer initFloor = 0;
+		Cabin currentCabin = null;
+		Integer floorRange = (this.maxFloor - this.minFloor + 1) / (cabinCount - 2);
 
 		for (int cabinIndex = 0; cabinIndex < cabinCount; ++cabinIndex) {
-			currentStartFloor = cabinIndex % 2 == 0 ? this.minFloor : this.maxFloor;
-			this.cabins.put(cabinIndex, new SelectiveCabin(cabinIndex, this.cabinSize, Cabin.DEFAULT_START_FLOOR, currentStartFloor));
+			if (cabinIndex == 0) {
+				currentCabin = new SelectiveCabin(cabinIndex, this.cabinSize, Cabin.DEFAULT_START_FLOOR, this.minFloor);
+			} else if (cabinIndex == cabinCount - 1) {
+				currentCabin = new SelectiveCabin(cabinIndex, this.cabinSize, Cabin.DEFAULT_START_FLOOR, this.maxFloor);
+			} else {
+				initFloor = this.minFloor + (cabinIndex -1) * floorRange + Double.valueOf(Math.floor(floorRange / 2)).intValue();
+
+				currentCabin = new SelectiveCabin(cabinIndex, this.cabinSize, Cabin.DEFAULT_START_FLOOR, initFloor);
+			}
+
+			this.cabins.put(cabinIndex, currentCabin);
 		}
 	}
 
