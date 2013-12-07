@@ -23,6 +23,7 @@ public class DefaultCabin implements Cabin {
 	protected boolean openAllDoors = false;
 	protected Integer sameFloorCount = null;
 	protected Integer noFloorCount = null;
+	protected Integer noUserCount = null;
 
 	public DefaultCabin(Integer id) {
 		this(id, Cabin.DEFAULT_CABIN_SIZE, Cabin.DEFAULT_START_FLOOR);
@@ -124,6 +125,14 @@ public class DefaultCabin implements Cabin {
 		case OPENED:
 			nextCommand = Command.CLOSE;
 			this.state = CabinState.STOPPED;
+
+			if (this.population <= 5) {
+				this.noUserCount++;
+			}
+
+			if (this.noUserCount > 1) {
+				this.lastDirection = Direction.UP.equals(this.lastDirection) ? Direction.DOWN : Direction.UP;
+			}
 			break;
 
 		default:
@@ -168,11 +177,13 @@ public class DefaultCabin implements Cabin {
 	@Override
 	public void getIn() {
 		this.addPopulsation(1);
+		this.noUserCount = 0;
 	}
 
 	@Override
 	public void getOut() {
 		this.addPopulsation(-1);
+		this.noUserCount = 0;
 	}
 
 	protected void setThresholds() {
@@ -235,6 +246,7 @@ public class DefaultCabin implements Cabin {
 		this.state = CabinState.INIT;
 		this.sameFloorCount = 0;
 		this.noFloorCount = 0;
+		this.noUserCount = 0;
 		this.lastDirection = Direction.UP;
 	}
 
