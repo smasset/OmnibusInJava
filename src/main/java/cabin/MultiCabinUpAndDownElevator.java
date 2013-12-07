@@ -119,14 +119,18 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 					}
 				} else if (serveOnlySameRequests) {
 					if (currentRequest.hasSameDirection(cabinId, direction)) {
-						nextFloor = currentRequest.getFloor();
+						if (RequestType.OUT.equals(currentRequest.getType(cabinId)) || currentRequest.getAbsoluteDistance(cabin.getCurrentFloor()) <= 10) {
+							nextFloor = currentRequest.getFloor();
+						}
 					}
 				} else {
 					nextFloor = currentRequest.getFloor();
 				}
 
 				if (returnDefaultFloor && (currentRequest.getCount(cabinId) > 0)) {
-					defaultFloor = currentRequest.getFloor();
+					if (currentRequest.getAbsoluteDistance(cabin.getCurrentFloor()) <= 10) {
+						defaultFloor = currentRequest.getFloor();
+					}
 				}
 			}
 
