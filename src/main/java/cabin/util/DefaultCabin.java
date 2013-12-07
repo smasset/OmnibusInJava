@@ -22,6 +22,8 @@ public class DefaultCabin implements Cabin {
 	protected boolean selectOpenDirection = false;
 	protected boolean openAllDoors = false;
 	protected Integer sameFloorCount = null;
+	protected Integer noFloorCount = null;
+	protected Integer noUserCount = null;
 
 	public DefaultCabin(Integer id) {
 		this(id, Cabin.DEFAULT_CABIN_SIZE, Cabin.DEFAULT_START_FLOOR);
@@ -62,23 +64,24 @@ public class DefaultCabin implements Cabin {
 					int comparison = Integer.compare(this.currentFloor, this.initFloor);
 
 					if (comparison == 0) {
+						this.lastDirection = this.id % 2 == 0 ? Direction.UP : Direction.DOWN;
 						this.state = CabinState.STOPPED;
 					} else if (comparison > 0) {
 						this.currentFloor--;
 						nextCommand = Command.DOWN;
-						this.lastDirection = Direction.UP;
 					} else {
 						this.currentFloor++;
 						nextCommand = Command.UP;
-						this.lastDirection = Direction.DOWN;
 					}
 				}
 			}
 			break;
 
 		case STOPPED:
-			if ((this.nextFloor != null) && (this.currentFloor != null)) {
-				int comparison = Integer.compare(this.currentFloor, nextFloor);
+			Integer comparedToFloor = this.noFloorCount > 5 ? this.initFloor : this.nextFloor;
+
+			if ((comparedToFloor != null) && (this.currentFloor != null)) {
+				int comparison = Integer.compare(this.currentFloor, comparedToFloor);
 
 				if (comparison == 0) {
 					if (this.sameFloorCount > 2) {
@@ -116,11 +119,20 @@ public class DefaultCabin implements Cabin {
 					this.lastDirection = Direction.UP;
 				}
 			}
+
 			break;
 
 		case OPENED:
 			nextCommand = Command.CLOSE;
 			this.state = CabinState.STOPPED;
+
+			if (this.population <= 5) {
+				this.noUserCount++;
+			}
+
+			if (this.noUserCount > 1) {
+				this.lastDirection = Direction.UP.equals(this.lastDirection) ? Direction.DOWN : Direction.UP;
+			}
 			break;
 
 		default:
@@ -137,6 +149,12 @@ public class DefaultCabin implements Cabin {
 
 	@Override
 	public void setNextFloor(Integer nextFloor) {
+		if (nextFloor == null) {
+			this.noFloorCount++;
+		} else {
+			this.noFloorCount = 0;
+		}
+
 		if (ObjectUtils.equals(nextFloor, this.currentFloor)) {
 			this.sameFloorCount++;
 		} else {
@@ -159,11 +177,13 @@ public class DefaultCabin implements Cabin {
 	@Override
 	public void getIn() {
 		this.addPopulsation(1);
+		this.noUserCount = 0;
 	}
 
 	@Override
 	public void getOut() {
 		this.addPopulsation(-1);
+		this.noUserCount = 0;
 	}
 
 	protected void setThresholds() {
@@ -225,6 +245,8 @@ public class DefaultCabin implements Cabin {
 		this.nextFloor = null;
 		this.state = CabinState.INIT;
 		this.sameFloorCount = 0;
+		this.noFloorCount = 0;
+		this.noUserCount = 0;
 		this.lastDirection = Direction.UP;
 	}
 

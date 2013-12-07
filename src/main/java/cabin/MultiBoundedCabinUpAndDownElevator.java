@@ -23,7 +23,7 @@ public class MultiBoundedCabinUpAndDownElevator extends MultiCabinUpAndDownEleva
 	}
 
 	@Override
-	protected void initCabins(final Integer cabinCount) {
+	protected void initCabins(Integer cabinCount) {
 		Integer floorRange = (this.maxFloor - this.minFloor + 1) / (cabinCount - 2);
 
 		Integer initFloor = 0;
