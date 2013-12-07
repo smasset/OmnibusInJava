@@ -63,15 +63,14 @@ public class DefaultCabin implements Cabin {
 					int comparison = Integer.compare(this.currentFloor, this.initFloor);
 
 					if (comparison == 0) {
+						this.lastDirection = this.id % 2 == 0 ? Direction.UP : Direction.DOWN;
 						this.state = CabinState.STOPPED;
 					} else if (comparison > 0) {
 						this.currentFloor--;
 						nextCommand = Command.DOWN;
-						this.lastDirection = Direction.UP;
 					} else {
 						this.currentFloor++;
 						nextCommand = Command.UP;
-						this.lastDirection = Direction.DOWN;
 					}
 				}
 			}
