@@ -2,6 +2,7 @@ package cabin.util;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class FloorRequest {
 	private Integer floor = null;
@@ -185,6 +186,23 @@ public class FloorRequest {
 		return Math.abs(this.getRelativeDistance(currentFloor));
 	}
 
+	private String outCountMap() {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("{");
+		if (this.outCounts != null) {
+			for (Entry<Integer, Integer> currentCount : this.outCounts.entrySet()) {
+				sb.append(currentCount.getKey());
+				sb.append("=");
+				sb.append(currentCount.getValue());
+				sb.append("; ");
+			}
+		}
+		sb.append("}");
+
+		return sb.toString();
+	}
+
 	@Override
 	public String toString() {
 		return this.toString(null, null);
@@ -200,7 +218,7 @@ public class FloorRequest {
 		string.append("; count: ");
 		string.append(this.getCount());
 		string.append("; outCounts: ");
-		string.append(this.outCounts);
+		string.append(this.outCountMap());
 		string.append("; upCount: ");
 		string.append(this.upCount);
 		string.append("; downCount: ");
