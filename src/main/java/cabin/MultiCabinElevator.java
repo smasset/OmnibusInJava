@@ -1,15 +1,20 @@
 package cabin;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Queue;
 import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
 
 import cabin.util.Cabin;
 import cabin.util.Command;
 import cabin.util.DefaultCabin;
+import cabin.util.FloorRequest;
 
 public class MultiCabinElevator implements Elevator {
 	private static final Logger logger = Logger.getLogger(MultiCabinElevator.class);
@@ -32,6 +37,67 @@ public class MultiCabinElevator implements Elevator {
 
 	public Integer getNextFloor(Integer cabinId) {
 		return null;
+	}
+
+	private Cabin getClosestCabin(FloorRequest floor, SortedSet<Cabin> cabins) {
+		Cabin closestCabin = null;
+
+		// Only one cabin for this floor : go there
+		if (cabins.size() == 1) {
+			closestCabin =  cabins.first();
+		} else {
+			
+		}
+
+		return closestCabin;
+	}
+
+	private Map<Cabin, FloorRequest> getDestinations(Map<Cabin, FloorRequest> finalDestinations, Map<Cabin, Queue<FloorRequest>> allDestinations) {
+		Map<Cabin, FloorRequest> destinations = new HashMap<Cabin, FloorRequest>(allDestinations.size());
+		Map<FloorRequest, SortedSet<Cabin>> cabins = new HashMap<FloorRequest, SortedSet<Cabin>>();
+
+		FloorRequest currentFloorRequest = null;
+		SortedSet<Cabin> currentCabins = null;
+		for(Entry<Cabin, Queue<FloorRequest>> currentDestination : allDestinations.entrySet()) {
+			currentFloorRequest = finalDestinations.containsKey(currentDestination.getKey()) ? finalDestinations.get(currentDestination.getKey()) : currentDestination.getValue().peek();
+
+			if (currentFloorRequest != null) {
+				currentCabins = cabins.get(currentFloorRequest);
+				if (currentCabins == null) {
+					currentCabins = new TreeSet<>();
+				}
+				currentCabins.add(currentDestination.getKey());
+
+				cabins.put(currentFloorRequest, currentCabins);
+				destinations.put(currentDestination.getKey(), currentFloorRequest);
+			} else {
+				allDestinations.remove(currentDestination.getKey());
+			}
+		}
+
+		Cabin closestCabin = null;
+		for(Entry<FloorRequest, SortedSet<Cabin>> current : cabins.entrySet()) {
+			closestCabin = getClosestCabin(current.getKey(), current.getValue());
+
+			for (Cabin currentCabin : current.getValue()) {
+				if (!closestCabin.equals(currentCabin)) {
+					allDestinations.get(currentCabin).poll();
+				}
+			}
+
+			finalDestinations.put(closestCabin, current.getKey());
+		}
+
+		// Exit conditions
+		if (finalDestinations.size() < allDestinations.size() && !allDestinations.isEmpty()) {
+			finalDestinations = this.getDestinations(finalDestinations, allDestinations);
+		}
+
+		return finalDestinations;
+	}
+
+	private Map<Cabin, FloorRequest> getDestinations(Map<Cabin, Queue<FloorRequest>> allDestinations) {
+		return this.getDestinations(new HashMap<Cabin, FloorRequest>(), allDestinations);
 	}
 
 	@Override
