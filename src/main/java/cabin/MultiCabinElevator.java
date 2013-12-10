@@ -3,6 +3,7 @@ package cabin;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Iterator;
 import java.util.Queue;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -10,7 +11,9 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jetty.util.ConcurrentArrayQueue;
 
+import cabin.comparator.ClosestCabinComparator;
 import cabin.util.Cabin;
 import cabin.util.Command;
 import cabin.util.DefaultCabin;
@@ -46,7 +49,8 @@ public class MultiCabinElevator implements Elevator {
 		if (cabins.size() == 1) {
 			closestCabin =  cabins.first();
 		} else {
-			
+			// TODO
+			closestCabin =  cabins.first();
 		}
 
 		return closestCabin;
@@ -56,22 +60,25 @@ public class MultiCabinElevator implements Elevator {
 		Map<Cabin, FloorRequest> destinations = new HashMap<Cabin, FloorRequest>(allDestinations.size());
 		Map<FloorRequest, SortedSet<Cabin>> cabins = new HashMap<FloorRequest, SortedSet<Cabin>>();
 
+		Entry<Cabin, Queue<FloorRequest>> currentDestination = null;
 		FloorRequest currentFloorRequest = null;
 		SortedSet<Cabin> currentCabins = null;
-		for(Entry<Cabin, Queue<FloorRequest>> currentDestination : allDestinations.entrySet()) {
+
+		for (Iterator<Entry<Cabin, Queue<FloorRequest>>> allDestinationIterator = allDestinations.entrySet().iterator(); allDestinationIterator.hasNext();) {
+			currentDestination = allDestinationIterator.next();
 			currentFloorRequest = finalDestinations.containsKey(currentDestination.getKey()) ? finalDestinations.get(currentDestination.getKey()) : currentDestination.getValue().peek();
 
 			if (currentFloorRequest != null) {
 				currentCabins = cabins.get(currentFloorRequest);
 				if (currentCabins == null) {
-					currentCabins = new TreeSet<>();
+					currentCabins = new TreeSet<>(new ClosestCabinComparator(currentFloorRequest));
 				}
 				currentCabins.add(currentDestination.getKey());
 
 				cabins.put(currentFloorRequest, currentCabins);
 				destinations.put(currentDestination.getKey(), currentFloorRequest);
 			} else {
-				allDestinations.remove(currentDestination.getKey());
+				allDestinationIterator.remove();
 			}
 		}
 
@@ -264,4 +271,21 @@ public class MultiCabinElevator implements Elevator {
 		}
 	}
 
+	public static void main(String[] args) {
+		MultiCabinElevator elevator = new MultiCabinElevator(2);
+		Map<Cabin, Queue<FloorRequest>> destinations = new HashMap<>(2);
+
+		FloorRequest request = new FloorRequest(0);
+		ConcurrentArrayQueue<FloorRequest> cabin0Destinations = new ConcurrentArrayQueue<FloorRequest>();
+		cabin0Destinations.add(request);
+		destinations.put((Cabin) elevator.cabins.get(0), cabin0Destinations);
+
+		ConcurrentArrayQueue<FloorRequest> cabin1Destinations = new ConcurrentArrayQueue<FloorRequest>();
+		cabin1Destinations.add(request);
+		DefaultCabin cabin1 = new DefaultCabin(1, null, 1, 1);
+		elevator.cabins.put(1, cabin1);
+		destinations.put((Cabin) elevator.cabins.get(1), cabin1Destinations);
+
+		elevator.getDestinations(destinations);
+	}
 }
