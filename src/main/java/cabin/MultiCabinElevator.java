@@ -56,8 +56,7 @@ public class MultiCabinElevator implements Elevator {
 		return closestCabin;
 	}
 
-	private Map<Cabin, FloorRequest> getDestinations(Map<Cabin, FloorRequest> finalDestinations, Map<Cabin, Queue<FloorRequest>> allDestinations) {
-		Map<Cabin, FloorRequest> destinations = new HashMap<Cabin, FloorRequest>(allDestinations.size());
+	private Map<Cabin, FloorRequest> getDestinations(Map<Cabin, FloorRequest> destinations, Map<Cabin, Queue<FloorRequest>> allDestinations) {
 		Map<FloorRequest, SortedSet<Cabin>> cabins = new HashMap<FloorRequest, SortedSet<Cabin>>();
 
 		Entry<Cabin, Queue<FloorRequest>> currentDestination = null;
@@ -66,7 +65,7 @@ public class MultiCabinElevator implements Elevator {
 
 		for (Iterator<Entry<Cabin, Queue<FloorRequest>>> allDestinationIterator = allDestinations.entrySet().iterator(); allDestinationIterator.hasNext();) {
 			currentDestination = allDestinationIterator.next();
-			currentFloorRequest = finalDestinations.containsKey(currentDestination.getKey()) ? finalDestinations.get(currentDestination.getKey()) : currentDestination.getValue().peek();
+			currentFloorRequest = destinations.containsKey(currentDestination.getKey()) ? destinations.get(currentDestination.getKey()) : currentDestination.getValue().peek();
 
 			if (currentFloorRequest != null) {
 				currentCabins = cabins.get(currentFloorRequest);
@@ -86,25 +85,30 @@ public class MultiCabinElevator implements Elevator {
 		for(Entry<FloorRequest, SortedSet<Cabin>> current : cabins.entrySet()) {
 			closestCabin = getClosestCabin(current.getKey(), current.getValue());
 
+			boolean isClosest = false;
+			boolean isOut = false;
 			for (Cabin currentCabin : current.getValue()) {
-				if (!closestCabin.equals(currentCabin)) {
+				isClosest = closestCabin.equals(currentCabin);
+				isOut = current.getKey().getOutCount(currentCabin.getId()) > 0;
+				
+				if (!isClosest && !isOut) {
 					allDestinations.get(currentCabin).poll();
+					destinations.remove(currentCabin);
 				}
 			}
-
-			finalDestinations.put(closestCabin, current.getKey());
 		}
 
 		// Exit conditions
-		if (finalDestinations.size() < allDestinations.size() && !allDestinations.isEmpty()) {
-			finalDestinations = this.getDestinations(finalDestinations, allDestinations);
+		if (destinations.size() < allDestinations.size() && !allDestinations.isEmpty()) {
+			destinations = this.getDestinations(destinations, allDestinations);
 		}
 
-		return finalDestinations;
+		return destinations;
 	}
 
 	private Map<Cabin, FloorRequest> getDestinations(Map<Cabin, Queue<FloorRequest>> allDestinations) {
-		return this.getDestinations(new HashMap<Cabin, FloorRequest>(), allDestinations);
+		Map<Cabin, FloorRequest> destinations = this.getDestinations(new HashMap<Cabin, FloorRequest>(), allDestinations);
+		return destinations;
 	}
 
 	@Override
@@ -272,19 +276,32 @@ public class MultiCabinElevator implements Elevator {
 	}
 
 	public static void main(String[] args) {
-		MultiCabinElevator elevator = new MultiCabinElevator(2);
-		Map<Cabin, Queue<FloorRequest>> destinations = new HashMap<>(2);
+		MultiCabinElevator elevator = new MultiCabinElevator(3);
+		Map<Cabin, Queue<FloorRequest>> destinations = new HashMap<>(3);
+
+		DefaultCabin cabin0 = new DefaultCabin(0, null, 0, 0);
+		elevator.cabins.put(0, cabin0);
+		DefaultCabin cabin1 = new DefaultCabin(1, null, 1, 1);
+		elevator.cabins.put(1, cabin1);
+		DefaultCabin cabin2 = new DefaultCabin(2, null, 2, 2);
+		elevator.cabins.put(2, cabin2);
 
 		FloorRequest request = new FloorRequest(0);
+		request.incrementCount(2, null);
+		FloorRequest request1 = new FloorRequest(1);
+
 		ConcurrentArrayQueue<FloorRequest> cabin0Destinations = new ConcurrentArrayQueue<FloorRequest>();
 		cabin0Destinations.add(request);
 		destinations.put((Cabin) elevator.cabins.get(0), cabin0Destinations);
 
 		ConcurrentArrayQueue<FloorRequest> cabin1Destinations = new ConcurrentArrayQueue<FloorRequest>();
 		cabin1Destinations.add(request);
-		DefaultCabin cabin1 = new DefaultCabin(1, null, 1, 1);
-		elevator.cabins.put(1, cabin1);
+		cabin1Destinations.add(request1);
 		destinations.put((Cabin) elevator.cabins.get(1), cabin1Destinations);
+
+		ConcurrentArrayQueue<FloorRequest> cabin2Destinations = new ConcurrentArrayQueue<FloorRequest>();
+		cabin2Destinations.add(request);
+		destinations.put((Cabin) elevator.cabins.get(2), cabin2Destinations);
 
 		elevator.getDestinations(destinations);
 	}
