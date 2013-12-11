@@ -279,12 +279,10 @@ public class MultiCabinElevator implements Elevator {
 		MultiCabinElevator elevator = new MultiCabinElevator(3);
 		Map<Cabin, Queue<FloorRequest>> destinations = new HashMap<>(3);
 
-		DefaultCabin cabin0 = new DefaultCabin(0, null, 0, 0);
-		elevator.cabins.put(0, cabin0);
-		DefaultCabin cabin1 = new DefaultCabin(1, null, 1, 1);
-		elevator.cabins.put(1, cabin1);
-		DefaultCabin cabin2 = new DefaultCabin(2, null, 2, 2);
-		elevator.cabins.put(2, cabin2);
+		elevator.cabins.put(0, new DefaultCabin(0, null, 0, 0));
+		elevator.cabins.put(1, new DefaultCabin(1, null, 1, 1));
+		elevator.cabins.put(2, new DefaultCabin(2, null, 2, 2));
+		elevator.cabins.put(3, new DefaultCabin(3, null, 3, 3));
 
 		FloorRequest request = new FloorRequest(0);
 		request.incrementCount(2, null);
@@ -302,6 +300,9 @@ public class MultiCabinElevator implements Elevator {
 		ConcurrentArrayQueue<FloorRequest> cabin2Destinations = new ConcurrentArrayQueue<FloorRequest>();
 		cabin2Destinations.add(request);
 		destinations.put((Cabin) elevator.cabins.get(2), cabin2Destinations);
+
+		ConcurrentArrayQueue<FloorRequest> cabin3Destinations = new ConcurrentArrayQueue<FloorRequest>();
+		destinations.put((Cabin) elevator.cabins.get(3), cabin3Destinations);
 
 		elevator.getDestinations(destinations);
 	}
