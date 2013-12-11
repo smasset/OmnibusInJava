@@ -1,8 +1,10 @@
 package cabin;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.NavigableMap;
+import java.util.Queue;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -62,17 +64,14 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 		}
 	}
 
-	protected Integer getNextFloor(Integer cabinId, String direction) {
-		Integer nextFloor = null;
-
-		Cabin cabin = (Cabin) this.cabins.get(cabinId);
+	protected Queue<FloorRequest> getNextFloors(Cabin cabin, String direction) {
+		Queue<FloorRequest> nextFloors = new LinkedList<>();
 
 		if (cabin != null) {
 			boolean sortRequests = false;
 			boolean serveOnlyOutRequests = false;
 			boolean serveOnlySameRequests = false;
 			boolean returnDefaultFloor = false;
-			int requestDepth = 0;
 
 			switch (cabin.getMode()) {
 			case PANIC:
@@ -94,7 +93,6 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 				SortedSet<FloorRequest> requestSet = new TreeSet<>(new ClosestOutComparator(cabin, this.currentTick));
 				requestSet.addAll(this.requests.values());
 
-				requestDepth = requestSet.size();
 				requestIterator = requestSet.iterator();
 			} else {
 				NavigableMap<Integer, FloorRequest> nextRequests = null;
@@ -104,73 +102,61 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 					nextRequests = this.requests.headMap(cabin.getCurrentFloor(), true).descendingMap();
 				}
 
-				requestDepth = nextRequests != null ? nextRequests.size() : 0;
 				requestIterator = nextRequests.values().iterator();
 			}
 
-			Integer defaultFloor = null;
+			FloorRequest defaultFloor = null;
 			FloorRequest currentRequest = null;
-			while ((nextFloor == null) && (requestIterator.hasNext())) {
+			while (requestIterator.hasNext()) {
 				currentRequest = requestIterator.next();
 
 				if (serveOnlyOutRequests) {
-					if (RequestType.OUT.equals(currentRequest.getType(cabinId))) {
-						nextFloor = currentRequest.getFloor();
+					if (RequestType.OUT.equals(currentRequest.getType(cabin.getId()))) {
+						nextFloors.add(currentRequest);
 					}
 				} else if (serveOnlySameRequests) {
-					if (currentRequest.hasSameDirection(cabinId, direction)) {
-						if (RequestType.OUT.equals(currentRequest.getType(cabinId)) || currentRequest.getAbsoluteDistance(cabin.getCurrentFloor()) <= 10) {
-							nextFloor = currentRequest.getFloor();
+					if (currentRequest.hasSameDirection(cabin.getId(), direction)) {
+						if (RequestType.OUT.equals(currentRequest.getType(cabin.getId())) || currentRequest.getAbsoluteDistance(cabin.getCurrentFloor()) <= 10) {
+							nextFloors.add(currentRequest);
 						}
 					}
 				} else {
-					nextFloor = currentRequest.getFloor();
+					nextFloors.add(currentRequest);
 				}
 
-				if (returnDefaultFloor && (currentRequest.getCount(cabinId) > 0)) {
+				if (returnDefaultFloor && (currentRequest.getCount(cabin.getId()) > 0)) {
 					if (currentRequest.getAbsoluteDistance(cabin.getCurrentFloor()) <= 10) {
-						defaultFloor = currentRequest.getFloor();
+						defaultFloor = currentRequest;
 					}
 				}
 			}
 
-			if (returnDefaultFloor && (nextFloor == null)) {
-				nextFloor = defaultFloor;
+			if (returnDefaultFloor && !nextFloors.contains(defaultFloor)) {
+				nextFloors.add(defaultFloor);
 			}
-
-			cabin.setOpenAllDoors(requestDepth <= 3);
 		}
 
-		return nextFloor;
+		return nextFloors;
 	}
 
 	@Override
-	public Integer getNextFloor(Integer cabinId) {
-		Integer nextFloor = null;
+	public Queue<FloorRequest> getNextFloors(Cabin cabin) {
+		Queue<FloorRequest> nextFloors = new LinkedList<>();
 
-		Cabin cabin = (Cabin) this.cabins.get(cabinId);
 		if (cabin != null) {
 
 			switch (cabin.getLastDirection()) {
 
 			case Direction.UP:
-				nextFloor = this.getNextFloor(cabinId, Direction.UP);
-				if (nextFloor == null) {
-					nextFloor = this.getNextFloor(cabinId, Direction.DOWN);
-					if (nextFloor !=null) {
-						cabin.setLastDirection(Direction.DOWN);
-					}
-				}
+				nextFloors.addAll(this.getNextFloors(cabin, Direction.UP));
+				cabin.setOpenAllDoors(nextFloors.size() <= 3);
+				nextFloors.addAll(this.getNextFloors(cabin, Direction.DOWN));
 				break;
 
 			case Direction.DOWN:
-				nextFloor = this.getNextFloor(cabinId, Direction.DOWN);
-				if (nextFloor == null) {
-					nextFloor = this.getNextFloor(cabinId, Direction.UP);
-					if (nextFloor !=null) {
-						cabin.setLastDirection(Direction.UP);
-					}
-				}
+				nextFloors.addAll(this.getNextFloors(cabin, Direction.DOWN));
+				cabin.setOpenAllDoors(nextFloors.size() <= 3);
+				nextFloors.addAll(this.getNextFloors(cabin, Direction.UP));
 				break;
 
 			default:
@@ -178,7 +164,7 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 			}
 		}
 
-		return nextFloor;
+		return nextFloors;
 	}
 
 	@Override

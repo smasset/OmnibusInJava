@@ -7,7 +7,7 @@ public interface Cabin {
 	public static final Integer DEFAULT_START_FLOOR = 0;
 
 	public Command nextCommand();
-	public void setNextFloor(Integer nextFloor);
+	public void setNextFloor(FloorRequest nextFloor);
 
 	public Integer getId();
 	public Integer getStartFloor();

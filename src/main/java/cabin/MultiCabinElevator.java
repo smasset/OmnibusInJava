@@ -1,9 +1,9 @@
 package cabin;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Iterator;
 import java.util.Queue;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -42,21 +42,15 @@ public class MultiCabinElevator implements Elevator {
 		return null;
 	}
 
-	private Cabin getClosestCabin(FloorRequest floor, SortedSet<Cabin> cabins) {
-		Cabin closestCabin = null;
-
-		// Only one cabin for this floor : go there
-		if (cabins.size() == 1) {
-			closestCabin =  cabins.first();
-		} else {
-			// TODO
-			closestCabin =  cabins.first();
-		}
-
-		return closestCabin;
+	public Queue<FloorRequest> getNextFloors(Cabin cabin) {
+		return null;
 	}
 
-	private Map<Cabin, FloorRequest> getDestinations(Map<Cabin, FloorRequest> destinations, Map<Cabin, Queue<FloorRequest>> allDestinations) {
+	protected Cabin getClosestCabin(FloorRequest floor, SortedSet<Cabin> cabins) {
+		return cabins != null ? cabins.first() : null;
+	}
+
+	protected Map<Cabin, FloorRequest> getDestinations(Map<Cabin, FloorRequest> destinations, Map<Cabin, Queue<FloorRequest>> allDestinations) {
 		Map<FloorRequest, SortedSet<Cabin>> cabins = new HashMap<FloorRequest, SortedSet<Cabin>>();
 
 		Entry<Cabin, Queue<FloorRequest>> currentDestination = null;
@@ -106,34 +100,50 @@ public class MultiCabinElevator implements Elevator {
 		return destinations;
 	}
 
-	private Map<Cabin, FloorRequest> getDestinations(Map<Cabin, Queue<FloorRequest>> allDestinations) {
-		Map<Cabin, FloorRequest> destinations = this.getDestinations(new HashMap<Cabin, FloorRequest>(), allDestinations);
-		return destinations;
+	protected Map<Cabin, FloorRequest> getDestinations(Map<Cabin, Queue<FloorRequest>> allDestinations) {
+		return this.getDestinations(new HashMap<Cabin, FloorRequest>(), allDestinations);
 	}
 
 	@Override
 	public Command[] nextCommands() {
 		Command[] commands = new Command[cabins.size()];
 
-		Integer cabinId = null;
+		Map<Cabin, Queue<FloorRequest>> nextFloors = new HashMap<>();
+		Iterator<? super Cabin> cabinIterator = cabins.values().iterator();
+
+		// Gather possible destinations for all cabins
 		Cabin cabin = null;
-		Integer nextFloor = null;
+		while (cabinIterator.hasNext()) {
+			cabin = (Cabin) cabinIterator.next();
+
+			nextFloors.put(cabin, this.getNextFloors(cabin));
+		}
+
+		// Compute destination for each cabin
+		Map<Cabin, FloorRequest> destinations = this.getDestinations(nextFloors);
+
+		// Assign destincation to each cabin and get next command
+		Integer cabinId = null;
 		Command command = null;
 		for (Entry<Integer, ? super Cabin> currentCabin : cabins.entrySet()) {
 			cabinId = currentCabin.getKey();
 			cabin = (Cabin) currentCabin.getValue();
 
-			nextFloor = this.getNextFloor(cabinId);
-			cabin.setNextFloor(nextFloor);
+			cabin.setNextFloor(destinations.get(cabin));
 			command = cabin.nextCommand();
 
-			if ((this.minFloor.equals(nextFloor)) && (Command.OPEN_DOWN.equals(command))) {
+			if ((this.minFloor.equals(cabin.getCurrentFloor())) && (Command.OPEN_DOWN.equals(command))) {
 				command = Command.OPEN_UP;
-			} else if ((this.maxFloor.equals(nextFloor)) && (Command.OPEN_UP.equals(command))) {
+			} else if ((this.maxFloor.equals(cabin.getCurrentFloor())) && (Command.OPEN_UP.equals(command))) {
 				command = Command.OPEN_DOWN;
 			}
-			commands[currentCabin.getKey()] = command;
+
+			commands[cabinId] = command;
 		}
+
+
+
+		
 		this.currentTick++;
 
 		return commands;

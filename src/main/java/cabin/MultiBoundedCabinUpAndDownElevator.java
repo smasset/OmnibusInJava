@@ -1,7 +1,9 @@
 package cabin;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.NavigableMap;
+import java.util.Queue;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -49,17 +51,18 @@ public class MultiBoundedCabinUpAndDownElevator extends MultiCabinUpAndDownEleva
 	}
 
 	@Override
-	protected Integer getNextFloor(Integer cabinId, String direction) {
-		Integer nextFloor = null;
+	protected Queue<FloorRequest> getNextFloors(Cabin cabin, String direction) {
+		return this.getNextFloors((BoundedCabin) cabin);
+	}
 
-		BoundedCabin cabin = (BoundedCabin) this.cabins.get(cabinId);
+	protected Queue<FloorRequest> getNextFloors(BoundedCabin cabin, String direction) {
+		Queue<FloorRequest> nextFloors = new LinkedList<>();
 
 		if (cabin != null) {
 			boolean sortRequests = false;
 			boolean serveOnlyOutRequests = false;
 			boolean serveOnlySameRequests = false;
 			boolean returnDefaultFloor = false;
-			int requestDepth = 0;
 
 			switch (cabin.getMode()) {
 			case PANIC:
@@ -81,7 +84,6 @@ public class MultiBoundedCabinUpAndDownElevator extends MultiCabinUpAndDownEleva
 				SortedSet<FloorRequest> requestSet = new TreeSet<>(new ClosestOutComparator(cabin, this.currentTick));
 				requestSet.addAll(this.requests.values());
 
-				requestDepth = requestSet.size();
 				requestIterator = requestSet.iterator();
 			} else {
 				NavigableMap<Integer, FloorRequest> nextRequests = null;
@@ -91,45 +93,40 @@ public class MultiBoundedCabinUpAndDownElevator extends MultiCabinUpAndDownEleva
 					nextRequests = this.requests.headMap(cabin.getCurrentFloor(), true).descendingMap();
 				}
 
-				requestDepth = nextRequests != null ? nextRequests.size() : 0;
 				requestIterator = nextRequests.values().iterator();
 			}
 
-			Integer defaultFloor = null;
+			FloorRequest defaultFloor = null;
 			FloorRequest currentRequest = null;
-			while ((nextFloor == null) && (requestIterator.hasNext())) {
+			while (requestIterator.hasNext()) {
 				currentRequest = requestIterator.next();
 
 				if (serveOnlyOutRequests) {
-					if (RequestType.OUT.equals(currentRequest.getType(cabinId))) {
-						nextFloor = currentRequest.getFloor();
+					if (RequestType.OUT.equals(currentRequest.getType(cabin.getId()))) {
+						nextFloors.add(currentRequest);
 					}
 				} else if (serveOnlySameRequests) {
-					if (currentRequest.hasSameDirection(cabinId, direction)) {
-						if (RequestType.OUT.equals(currentRequest.getType(cabinId)) || cabin.isWithinLimits(currentRequest.getFloor())) {
-							nextFloor = currentRequest.getFloor();
+					if (currentRequest.hasSameDirection(cabin.getId(), direction)) {
+						if (RequestType.OUT.equals(currentRequest.getType(cabin.getId())) || cabin.isWithinLimits(currentRequest.getFloor())) {
+							nextFloors.add(currentRequest);
 						}
 					}
 				} else {
-					nextFloor = currentRequest.getFloor();
+					nextFloors.add(currentRequest);
 				}
 
-				if (returnDefaultFloor && (currentRequest.getCount(cabinId) > 0)) {
+				if (returnDefaultFloor && (currentRequest.getCount(cabin.getId()) > 0)) {
 					if (cabin.isWithinLimits(currentRequest.getFloor())) {
-						defaultFloor = currentRequest.getFloor();
+						defaultFloor = currentRequest;
 					}
 				}
 			}
 
-			if (returnDefaultFloor && (nextFloor == null)) {
-				nextFloor = defaultFloor;
-			}
-
-			if (cabin.isWithinLimits(nextFloor)) {
-				cabin.setOpenAllDoors(requestDepth <= 3);
+			if (returnDefaultFloor && !nextFloors.contains(defaultFloor)) {
+				nextFloors.add(defaultFloor);
 			}
 		}
 
-		return nextFloor;
+		return nextFloors;
 	}
 }

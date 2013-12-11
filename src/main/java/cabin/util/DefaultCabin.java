@@ -148,7 +148,7 @@ public class DefaultCabin implements Cabin {
 	}
 
 	@Override
-	public void setNextFloor(Integer nextFloor) {
+	public void setNextFloor(FloorRequest nextFloor) {
 		if (nextFloor == null) {
 			this.noFloorCount++;
 		} else {
@@ -161,7 +161,7 @@ public class DefaultCabin implements Cabin {
 			this.sameFloorCount=0;
 		}
 
-		this.nextFloor = nextFloor;
+		this.nextFloor = nextFloor.getFloor();
 	}
 
 	@Override
