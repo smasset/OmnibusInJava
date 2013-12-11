@@ -131,7 +131,7 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 				}
 			}
 
-			if (returnDefaultFloor && !nextFloors.contains(defaultFloor)) {
+			if (returnDefaultFloor && (defaultFloor != null) && !nextFloors.contains(defaultFloor)) {
 				nextFloors.add(defaultFloor);
 			}
 		}

@@ -161,7 +161,7 @@ public class DefaultCabin implements Cabin {
 			this.sameFloorCount=0;
 		}
 
-		this.nextFloor = nextFloor.getFloor();
+		this.nextFloor = nextFloor != null ? nextFloor.getFloor() : null;
 	}
 
 	@Override
