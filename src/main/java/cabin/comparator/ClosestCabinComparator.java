@@ -18,11 +18,15 @@ public class ClosestCabinComparator implements Comparator<Cabin> {
 		return this.request.getAbsoluteDistance(cabin.getCurrentFloor());
 	}
 
+	protected Integer getOutCount(Cabin cabin) {
+		return this.request.getOutCount(cabin.getId());
+	}
+
 	@Override
 	public int compare(Cabin o1, Cabin o2) {
 		return new CompareToBuilder()
 				.append(this.getDistance(o1), this.getDistance(o2))
-				.append(o1.getPopulation(), o2.getPopulation())
+				.append(-1 * this.getOutCount(o1), -1 * this.getOutCount(o2))
 				.append(o1.getId(), o2.getId()).toComparison();
 	}
 
