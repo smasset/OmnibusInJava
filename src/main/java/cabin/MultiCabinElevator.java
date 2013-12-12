@@ -11,7 +11,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jetty.util.ConcurrentArrayQueue;
 
 import cabin.comparator.ClosestCabinComparator;
 import cabin.util.Cabin;
@@ -283,37 +282,5 @@ public class MultiCabinElevator implements Elevator {
 				((Cabin)currentCabin.getValue()).thresholds(alertThreshold, panicThreshold);
 			}
 		}
-	}
-
-	public static void main(String[] args) {
-		MultiCabinElevator elevator = new MultiCabinElevator(3);
-		Map<Cabin, Queue<FloorRequest>> destinations = new HashMap<>(3);
-
-		elevator.cabins.put(0, new DefaultCabin(0, null, 0, 0));
-		elevator.cabins.put(1, new DefaultCabin(1, null, 1, 1));
-		elevator.cabins.put(2, new DefaultCabin(2, null, 2, 2));
-		elevator.cabins.put(3, new DefaultCabin(3, null, 3, 3));
-
-		FloorRequest request = new FloorRequest(0);
-		request.incrementCount(2, null);
-		FloorRequest request1 = new FloorRequest(1);
-
-		ConcurrentArrayQueue<FloorRequest> cabin0Destinations = new ConcurrentArrayQueue<FloorRequest>();
-		cabin0Destinations.add(request);
-		destinations.put((Cabin) elevator.cabins.get(0), cabin0Destinations);
-
-		ConcurrentArrayQueue<FloorRequest> cabin1Destinations = new ConcurrentArrayQueue<FloorRequest>();
-		cabin1Destinations.add(request);
-		cabin1Destinations.add(request1);
-		destinations.put((Cabin) elevator.cabins.get(1), cabin1Destinations);
-
-		ConcurrentArrayQueue<FloorRequest> cabin2Destinations = new ConcurrentArrayQueue<FloorRequest>();
-		cabin2Destinations.add(request);
-		destinations.put((Cabin) elevator.cabins.get(2), cabin2Destinations);
-
-		ConcurrentArrayQueue<FloorRequest> cabin3Destinations = new ConcurrentArrayQueue<FloorRequest>();
-		destinations.put((Cabin) elevator.cabins.get(3), cabin3Destinations);
-
-		elevator.getDestinations(destinations);
 	}
 }
