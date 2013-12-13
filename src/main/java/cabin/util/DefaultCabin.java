@@ -78,7 +78,8 @@ public class DefaultCabin implements Cabin {
 			break;
 
 		case STOPPED:
-			Integer comparedToFloor = this.noFloorCount > 5 ? this.initFloor : this.nextFloor;
+			Integer defaultFloor = this.currentFloor != this.initFloor ? this.initFloor : null;
+			Integer comparedToFloor = this.noFloorCount > 5 ? defaultFloor : this.nextFloor;
 
 			if ((comparedToFloor != null) && (this.currentFloor != null)) {
 				int comparison = Integer.compare(this.currentFloor, comparedToFloor);
