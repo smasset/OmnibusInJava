@@ -143,29 +143,20 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 	@Override
 	public Deque<FloorRequest> getNextFloors(Cabin cabin) {
 		Deque<FloorRequest> nextFloors = new LinkedList<>();
-		FloorRequest lastRequest = null;
 
 		if (cabin != null) {
+			String lastDirection = cabin.getLastDirection();
+			String nextDirection = Direction.UP.equals(lastDirection) ? Direction.DOWN : Direction.UP;
 
-			switch (cabin.getLastDirection()) {
+			// Continue in same direction
+			nextFloors.addAll(this.getNextFloors(cabin, lastDirection));
 
-			case Direction.UP:
-				nextFloors.addAll(this.getNextFloors(cabin, Direction.UP));
-				lastRequest = nextFloors.peekLast();
-				nextFloors.addAll(this.getNextFloors(cabin, Direction.DOWN));
-				break;
-
-			case Direction.DOWN:
-				nextFloors.addAll(this.getNextFloors(cabin, Direction.DOWN));
-				lastRequest = nextFloors.peekLast();
-				nextFloors.addAll(this.getNextFloors(cabin, Direction.UP));
-				break;
-
-			default:
-				break;
-			}
-
+			// Handle turns
+			FloorRequest lastRequest = nextFloors.peekLast();
 			cabin.setOpenAllDoors(lastRequest != null && lastRequest.getAbsoluteDistance(cabin.getCurrentFloor()) <= 3);
+
+			// Then get request in opposite direction
+			nextFloors.addAll(this.getNextFloors(cabin, nextDirection));
 		}
 
 		return nextFloors;
