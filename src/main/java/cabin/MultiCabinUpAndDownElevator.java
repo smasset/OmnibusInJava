@@ -1,16 +1,14 @@
 package cabin;
 
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.NavigableMap;
-import java.util.Queue;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentSkipListMap;
-
-import org.eclipse.jetty.util.ConcurrentArrayQueue;
 
 import cabin.comparator.ClosestOutComparator;
 import cabin.util.Cabin;
@@ -67,8 +65,8 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 		}
 	}
 
-	protected Queue<FloorRequest> getNextFloors(Cabin cabin, String direction) {
-		Queue<FloorRequest> nextFloors = new LinkedList<>();
+	protected Deque<FloorRequest> getNextFloors(Cabin cabin, String direction) {
+		Deque<FloorRequest> nextFloors = new LinkedList<>();
 
 		if (cabin != null) {
 			boolean sortRequests = false;
@@ -143,8 +141,8 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 	}
 
 	@Override
-	public Queue<FloorRequest> getNextFloors(Cabin cabin) {
-		Queue<FloorRequest> nextFloors = new LinkedList<>();
+	public Deque<FloorRequest> getNextFloors(Cabin cabin) {
+		Deque<FloorRequest> nextFloors = new LinkedList<>();
 
 		if (cabin != null) {
 
@@ -245,7 +243,7 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 
 	public static void main(String[] args) {
 		MultiCabinUpAndDownElevator elevator = new MultiCabinUpAndDownElevator(-5, 48, 30, 8);
-		Map<Cabin, Queue<FloorRequest>> destinations = new HashMap<>(3);
+		Map<Cabin, Deque<FloorRequest>> destinations = new HashMap<>(3);
 
 		elevator.cabins.put(0, new SelectiveCabin(0, null, 0, 0));
 		elevator.cabins.put(1, new SelectiveCabin(1, null, 0, 0));
@@ -259,20 +257,20 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 		FloorRequest request2 = new FloorRequest(3);
 		request2.incrementCount(0, null);
 
-		ConcurrentArrayQueue<FloorRequest> cabin0Destinations = new ConcurrentArrayQueue<FloorRequest>();
+		Deque<FloorRequest> cabin0Destinations = new LinkedList<FloorRequest>();
 		cabin0Destinations.add(request0);
 		cabin0Destinations.add(request2);
 		destinations.put((Cabin) elevator.cabins.get(0), cabin0Destinations);
 
-		ConcurrentArrayQueue<FloorRequest> cabin1Destinations = new ConcurrentArrayQueue<FloorRequest>();
+		Deque<FloorRequest> cabin1Destinations = new LinkedList<FloorRequest>();
 		cabin1Destinations.add(request0);
 		cabin1Destinations.add(request1);
 		destinations.put((Cabin) elevator.cabins.get(1), cabin1Destinations);
 
-		ConcurrentArrayQueue<FloorRequest> cabin2Destinations = new ConcurrentArrayQueue<FloorRequest>();
+		Deque<FloorRequest> cabin2Destinations = new LinkedList<FloorRequest>();
 		destinations.put((Cabin) elevator.cabins.get(2), cabin2Destinations);
 
-		ConcurrentArrayQueue<FloorRequest> cabin3Destinations = new ConcurrentArrayQueue<FloorRequest>();
+		Deque<FloorRequest> cabin3Destinations = new LinkedList<FloorRequest>();
 		destinations.put((Cabin) elevator.cabins.get(3), cabin3Destinations);
 
 		System.out.println("INPUT  : " + destinations);

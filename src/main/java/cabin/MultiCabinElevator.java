@@ -1,10 +1,10 @@
 package cabin;
 
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Queue;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
@@ -41,7 +41,7 @@ public class MultiCabinElevator implements Elevator {
 		return null;
 	}
 
-	public Queue<FloorRequest> getNextFloors(Cabin cabin) {
+	public Deque<FloorRequest> getNextFloors(Cabin cabin) {
 		return null;
 	}
 
@@ -49,14 +49,14 @@ public class MultiCabinElevator implements Elevator {
 		return cabins != null ? cabins.first() : null;
 	}
 
-	protected Map<Cabin, FloorRequest> getDestinations(Map<Cabin, FloorRequest> destinations, Map<Cabin, Queue<FloorRequest>> allDestinations) {
+	protected Map<Cabin, FloorRequest> getDestinations(Map<Cabin, FloorRequest> destinations, Map<Cabin, Deque<FloorRequest>> allDestinations) {
 		Map<FloorRequest, SortedSet<Cabin>> cabins = new HashMap<FloorRequest, SortedSet<Cabin>>();
 
-		Entry<Cabin, Queue<FloorRequest>> currentDestination = null;
+		Entry<Cabin, Deque<FloorRequest>> currentDestination = null;
 		FloorRequest currentFloorRequest = null;
 		SortedSet<Cabin> currentCabins = null;
 
-		for (Iterator<Entry<Cabin, Queue<FloorRequest>>> allDestinationIterator = allDestinations.entrySet().iterator(); allDestinationIterator.hasNext();) {
+		for (Iterator<Entry<Cabin, Deque<FloorRequest>>> allDestinationIterator = allDestinations.entrySet().iterator(); allDestinationIterator.hasNext();) {
 			currentDestination = allDestinationIterator.next();
 			currentFloorRequest = destinations.containsKey(currentDestination.getKey()) ? destinations.get(currentDestination.getKey()) : currentDestination.getValue().peek();
 
@@ -99,7 +99,7 @@ public class MultiCabinElevator implements Elevator {
 		return destinations;
 	}
 
-	protected Map<Cabin, FloorRequest> getDestinations(Map<Cabin, Queue<FloorRequest>> allDestinations) {
+	protected Map<Cabin, FloorRequest> getDestinations(Map<Cabin, Deque<FloorRequest>> allDestinations) {
 		return this.getDestinations(new HashMap<Cabin, FloorRequest>(), allDestinations);
 	}
 
@@ -107,7 +107,7 @@ public class MultiCabinElevator implements Elevator {
 	public Command[] nextCommands() {
 		Command[] commands = new Command[cabins.size()];
 
-		Map<Cabin, Queue<FloorRequest>> nextFloors = new HashMap<>();
+		Map<Cabin, Deque<FloorRequest>> nextFloors = new HashMap<>();
 		Iterator<? super Cabin> cabinIterator = cabins.values().iterator();
 
 		// Gather possible destinations for all cabins

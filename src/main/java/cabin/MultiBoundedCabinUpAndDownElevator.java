@@ -1,9 +1,9 @@
 package cabin;
 
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.NavigableMap;
-import java.util.Queue;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -51,12 +51,12 @@ public class MultiBoundedCabinUpAndDownElevator extends MultiCabinUpAndDownEleva
 	}
 
 	@Override
-	protected Queue<FloorRequest> getNextFloors(Cabin cabin, String direction) {
+	protected Deque<FloorRequest> getNextFloors(Cabin cabin, String direction) {
 		return this.getNextFloors((BoundedCabin) cabin);
 	}
 
-	protected Queue<FloorRequest> getNextFloors(BoundedCabin cabin, String direction) {
-		Queue<FloorRequest> nextFloors = new LinkedList<>();
+	protected Deque<FloorRequest> getNextFloors(BoundedCabin cabin, String direction) {
+		Deque<FloorRequest> nextFloors = new LinkedList<>();
 
 		if (cabin != null) {
 			boolean sortRequests = false;
