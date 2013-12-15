@@ -1,7 +1,6 @@
 package cabin;
 
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
@@ -233,41 +232,5 @@ public class MultiCabinUpAndDownElevator extends MultiCabinElevator {
 		info.put("requests", this.requests != null ? this.requests.descendingMap().toString() : "");
 
 		return info;
-	}
-
-	public static void main(String[] args) {
-		MultiCabinUpAndDownElevator elevator = new MultiCabinUpAndDownElevator(-5, 48, 30, 8);
-		Map<Cabin, Deque<FloorRequest>> destinations = new HashMap<>(3);
-
-		elevator.cabins.put(0, new SelectiveCabin(0, null, 0, 0));
-		elevator.cabins.put(1, new SelectiveCabin(1, null, 0, 0));
-		elevator.cabins.put(2, new SelectiveCabin(2, null, 3, 3));
-		elevator.cabins.put(3, new SelectiveCabin(3, null, 3, 3));
-
-		FloorRequest request0 = new FloorRequest(1);
-		request0.incrementCount(Direction.UP);
-		FloorRequest request1 = new FloorRequest(2);
-		request1.incrementCount(1, null);
-		FloorRequest request2 = new FloorRequest(3);
-		request2.incrementCount(0, null);
-
-		Deque<FloorRequest> cabin0Destinations = new LinkedList<FloorRequest>();
-		cabin0Destinations.add(request0);
-		cabin0Destinations.add(request2);
-		destinations.put((Cabin) elevator.cabins.get(0), cabin0Destinations);
-
-		Deque<FloorRequest> cabin1Destinations = new LinkedList<FloorRequest>();
-		cabin1Destinations.add(request0);
-		cabin1Destinations.add(request1);
-		destinations.put((Cabin) elevator.cabins.get(1), cabin1Destinations);
-
-		Deque<FloorRequest> cabin2Destinations = new LinkedList<FloorRequest>();
-		destinations.put((Cabin) elevator.cabins.get(2), cabin2Destinations);
-
-		Deque<FloorRequest> cabin3Destinations = new LinkedList<FloorRequest>();
-		destinations.put((Cabin) elevator.cabins.get(3), cabin3Destinations);
-
-		System.out.println("INPUT  : " + destinations);
-		System.out.println("OUTPUT : " + elevator.getDestinations(destinations));
 	}
 }
